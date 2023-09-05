@@ -6,12 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
 
-namespace FietsDemo
-{
+
     class Program
     {
         static async Task Main(string[] args)
         {
+        
             int errorCode = 0;
             BLE bleBike = new BLE();
             BLE bleHeart = new BLE();
@@ -59,6 +59,7 @@ namespace FietsDemo
 
             Console.Read();
         }
+
 
         private static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
@@ -110,11 +111,5 @@ namespace FietsDemo
             return result;
         }
 
-        private static void handleData(byte dataPage, byte[] packetData)
-        {
-          if (dataPage == 0x10) {
-
-            }
-        }
+        
     }
-}
