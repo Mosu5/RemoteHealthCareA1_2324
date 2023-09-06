@@ -27,7 +27,7 @@ namespace FietsDemo
             }
 
             // Connecting
-            errorCode = errorCode = await bleBike.OpenDevice("Tacx Flux 00472");
+            errorCode = errorCode = await bleBike.OpenDevice("Tacx Flux 01140");
             // __TODO__ Error check
 
             var services = bleBike.GetServices;
@@ -64,7 +64,7 @@ namespace FietsDemo
 
             if (ifVerified)
             {
-                DecodeData(receivedData);
+                DecodeSpeedData(receivedData);
             }
             else
             {
@@ -72,15 +72,16 @@ namespace FietsDemo
             }
         }
 
-        private static void DecodeData(byte[] message)
+        private static void DecodeSpeedData(byte[] message)
         {
+            // The fifth byte is the datapage pointer (index 4)
             var dataPage = message[4];
             if (dataPage == 16)
             {
                 // check if type is of data page 16      
-                byte msb = message[8];
-                byte lsb = message[9];
-                int mergedValue = (msb << 8) | lsb;
+                byte msb = message[8]; // byte 9 is most signifacnt byte
+                byte lsb = message[9]; // byte 10 is the least significant byte
+                int mergedValue = (lsb << 8) | msb;
                 double speed = mergedValue * 0.001;
                 int distance = message[7];
                 // Console.WriteLine("MSB: " + message[8] + " LSB: " + message[9]);
@@ -90,6 +91,7 @@ namespace FietsDemo
                 Console.WriteLine("Speed: " + speed + " m/s");
             }
         }
+
 
         private static byte CalculateChecksum(byte[] message, int messageLength)
         {
