@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,82 +15,46 @@ namespace FietsDemo
         static async Task Main(string[] args)
         {
             int errorCode = 0;
-            BLE bleBike = new BLE();
             BLE bleHeart = new BLE();
             Thread.Sleep(1000); // We need some time to list available devices
 
             // List available devices
-            List<String> bleBikeList = bleBike.ListDevices();
+            List<String> bleBikeList = bleHeart.ListDevices();
             Console.WriteLine("Devices found: ");
             foreach (var name in bleBikeList)
             {
                 Console.WriteLine($"Device: {name}");
             }
 
-            // Connecting
-            errorCode = errorCode = await bleBike.OpenDevice("Tacx Flux 01140");
-            // __TODO__ Error check
-
-            var services = bleBike.GetServices;
-            foreach (var service in services)
-            {
-                Console.WriteLine($"Service: {service.Name}");
-            }
-
-            // Set service
-            errorCode = await bleBike.SetService("6e40fec1-b5a3-f393-e0a9-e50e24dcca9e");
-            // __TODO__ error check
-
-            // Subscribe
-            bleBike.SubscriptionValueChanged += BleBike_SubscriptionValueChanged;
-            errorCode = await bleBike.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e");
-
             // Heart rate
             errorCode = await bleHeart.OpenDevice("Decathlon Dual HR");
 
             await bleHeart.SetService("HeartRate");
 
-            bleHeart.SubscriptionValueChanged += BleBike_SubscriptionValueChanged;
+            bleHeart.SubscriptionValueChanged += SubscriptionValueChanged;
             await bleHeart.SubscribeToCharacteristic("HeartRateMeasurement");
-
 
             Console.Read();
         }
 
-        private static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
+        private static void SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             byte[] receivedData = e.Data;
 
             bool ifVerified = VerifyMessage(receivedData);
 
-            if (ifVerified)
-            {
-                DecodeSpeedData(receivedData);
-            }
-            else
-            {
-                Console.WriteLine("Invalid Data");
-            }
+            DecodeSpeedData(receivedData);
         }
 
         private static void DecodeSpeedData(byte[] message)
         {
-            // The fifth byte is the datapage pointer (index 4)
-            var dataPage = message[4];
-            if (dataPage == 16)
+            string stringValue = "";
+            foreach (byte b in message)
             {
-                // check if type is of data page 16      
-                byte msb = message[8]; // byte 9 is most signifacnt byte
-                byte lsb = message[9]; // byte 10 is the least significant byte
-                int mergedValue = (lsb << 8) | msb;
-                double speed = mergedValue * 0.001;
-                int distance = message[7];
-                // Console.WriteLine("MSB: " + message[8] + " LSB: " + message[9]);
-                Console.WriteLine("Data:  {0}",
-                    BitConverter.ToString(message).Replace("-", " "));
-                Console.WriteLine("Distance " + distance + " m");
-                Console.WriteLine("Speed: " + speed + " m/s");
+                int integerValue = b; // Convert byte to integer
+                stringValue += integerValue.ToString() + "\t"; // Convert integer to string
             }
+            Console.WriteLine(stringValue);
         }
 
 
