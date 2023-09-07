@@ -86,32 +86,6 @@ namespace FietsDemo
             Console.Read();
         }
 
-
-        /// </summary>
-        /// <param name="resistance">0-255</param>
-        /// <returns>
-        /// The resistance is being returned.
-        /// </returns>
-        //public void SetResistanceAsync(int resistance)
-        //{
-        //    if (bleBike == null)
-        //        return;
-        //    byte[] output = new byte[13];
-        //    output[0] = 0x4A; //sync byte
-        //    output[1] = 0x09; //Message Length
-        //    output[2] = 0x4E; //Message type
-        //    output[3] = 0x05; //Message type
-        //    output[4] = 0x30; //Datatype
-        //    output[11] = (byte)resistance;
-        //    byte checksum = output[0];
-        //    for (int i = 1; i < 12; i++)
-        //    {
-        //        checksum ^= output[i];
-        //    }
-        //    output[12] = checksum;
-        //    bleBike.WriteCharacteristic("6e40fec3-b5a3-f393-e0a9-e50e24dcca9e", output);
-        //}
-
         // General method to handle everything regarding data changed
         private static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
