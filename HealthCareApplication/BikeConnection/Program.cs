@@ -60,6 +60,11 @@ namespace FietsDemo
         {
             byte[] receivedData = e.Data;
 
+            Console.WriteLine("Received from {0}: {1}, {2}", e.ServiceName,
+
+             ByteArrayToString(e.Data),
+               Encoding.Default.GetString(e.Data));
+
             bool ifVerified = VerifyMessage(receivedData);
 
             if (ifVerified)
@@ -70,6 +75,15 @@ namespace FietsDemo
             {
                 Console.WriteLine("Invalid Data");
             }
+        }
+
+        public static string ByteArrayToString(byte[] ba)
+        {
+            String hexString = BitConverter.ToString(ba).ToLower().Replace("-", " 0x");
+            StringBuilder sb = new StringBuilder();
+            sb.Append("0x");
+            sb.Append(hexString);
+            return sb.ToString();
         }
 
         private static void DecodeSpeedData(byte[] message)
