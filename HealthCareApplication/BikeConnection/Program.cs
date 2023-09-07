@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
+using BikeConnection;
 
 namespace FietsDemo
 {
@@ -13,11 +15,35 @@ namespace FietsDemo
     {
         static async Task Main(string[] args)
         {
+            //DEBUG
+            foreach (var s in Emulator.GenerateBikeData(0))
+            {
+                Console.WriteLine(s);
+            }
+
+            Console.WriteLine("-------------------------");
+            byte[] bytes = Emulator.GenerateSpeedData();
+
+            foreach(var b in bytes)
+            {
+                Console.WriteLine(b);
+            }
+            Console.WriteLine(bytes.Length);
+
+            byte lsb = bytes[0];
+            byte msb = bytes[1];
+
+            int mergedValue = (msb << 8) | lsb;
+
+            Console.WriteLine(mergedValue);
+            //DEBUG
+
+           
             int errorCode = 0;
             BLE bleBike = new BLE();
             BLE bleHeart = new BLE();
             Thread.Sleep(1000); // We need some time to list available devices
-
+            
             // List available devices
             List<String> bleBikeList = bleBike.ListDevices();
             Console.WriteLine("Devices found: ");
@@ -37,24 +63,23 @@ namespace FietsDemo
             }
 
             // Set service
-            errorCode = await bleBike.SetService("6e40fec1-b5a3-f393-e0a9-e50e24dcca9e");
+            errorCode = await bleBike.SetService("6e40fec1-b5a3-f393-e0a9-e50e24dcca9e"); //6e40fec1
             // __TODO__ error check
 
             // Subscribe
             bleBike.SubscriptionValueChanged += BleBike_SubscriptionValueChanged;
-            errorCode = await bleBike.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e");
-
+            errorCode = await bleBike.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e"); // 6e40fec2
             // Heart rate
             errorCode = await bleHeart.OpenDevice("Decathlon Dual HR");
 
             await bleHeart.SetService("HeartRate");
 
-            bleHeart.SubscriptionValueChanged += BleBike_SubscriptionValueChanged;
+            bleHeart.SubscriptionValueChanged += BleHeart_SubscriptionValueChanged;
             await bleHeart.SubscribeToCharacteristic("HeartRateMeasurement");
-
 
             Console.Read();
         }
+        
 
         private static void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
@@ -71,7 +96,12 @@ namespace FietsDemo
                 Console.WriteLine("Invalid Data");
             }
         }
-
+        private static void BleHeart_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
+        {
+            Console.WriteLine("Heart Data:  {0}", BitConverter.ToString(e.Data).Replace("-", " "));
+            Console.WriteLine("Heart Rate: {0}", (int) e.Data[1]); // 2e byte
+        }
+        
         private static void DecodeSpeedData(byte[] message)
         {
             // The fifth byte is the datapage pointer (index 4)
@@ -81,12 +111,11 @@ namespace FietsDemo
                 // check if type is of data page 16      
                 byte msb = message[8]; // byte 9 is most signifacnt byte
                 byte lsb = message[9]; // byte 10 is the least significant byte
-                int mergedValue = (lsb << 8) | msb;
+                int mergedValue = (msb << 8) | lsb;
                 double speed = mergedValue * 0.001;
                 int distance = message[7];
                 // Console.WriteLine("MSB: " + message[8] + " LSB: " + message[9]);
-                Console.WriteLine("Data:  {0}",
-                    BitConverter.ToString(message).Replace("-", " "));
+                Console.WriteLine("Data:  {0}", BitConverter.ToString(message).Replace("-", " "));
                 Console.WriteLine("Distance " + distance + " m");
                 Console.WriteLine("Speed: " + speed + " m/s");
             }
