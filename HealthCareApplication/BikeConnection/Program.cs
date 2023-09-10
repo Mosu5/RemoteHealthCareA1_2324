@@ -17,24 +17,35 @@ namespace FietsDemo
         //bool readOther = false;
         static async Task Main(string[] args)
         {
+            Emulator emulator = new Emulator();
+            emulator.SimulateSpeedVariation();
+
+            //Testing Emultor
+            Console.WriteLine("-------------------------");
+
+            // Generate bike data
+            byte[] bikeData = emulator.GenerateBikeData();
+
+            // Display generated bike data
+            Console.WriteLine("Generated Bike Data:");
+            foreach (var b in bikeData)
+            {
+                Console.Write(b + " ");
+            }
+        
+            Console.WriteLine("-------------------------");
+
+
             //DEBUG
-            foreach (var s in Emulator.GenerateBikeData(0))
+            byte[] bikeDataDebug = emulator.GenerateBikeData();
+            
+            foreach (var s in bikeData)
             {
                 Console.WriteLine(s);
             }
 
-            Console.WriteLine("-------------------------");
-            byte[] bytes = Emulator.GenerateSpeedData();
-
-            foreach (var b in bytes)
-            {
-                Console.WriteLine(b);
-            }
-
-            Console.WriteLine(bytes.Length);
-
-            byte lsb = bytes[0];
-            byte msb = bytes[1];
+            byte lsb = bikeDataDebug[8];
+            byte msb = bikeDataDebug[9];
 
             int mergedValue = (msb << 8) | lsb;
 
