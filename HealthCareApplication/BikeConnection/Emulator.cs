@@ -171,7 +171,7 @@ namespace BikeConnection
         //Resets the distance when it reaches 256
         public void ResetDistance()
         {
-            if (distance == 256)
+            if (distance == 255)
             {
                 distance = 0;
             }
