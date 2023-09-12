@@ -7,7 +7,7 @@ using Avans.TI.BLE;
 
 namespace TrainerDataTesting.Receiver
 {
-    public class SimulatedReceiver : IReceiver
+    public class EmulatedReceiver : IReceiver
     {
         public event EventHandler<EventArgs> ConnectedToTrainer;
         public event EventHandler<EventArgs> DisconnectedFromTrainer;
@@ -20,7 +20,7 @@ namespace TrainerDataTesting.Receiver
 
         private BLEReceiver bleReceiver;
 
-        public SimulatedReceiver()
+        public EmulatedReceiver()
         {
             bleReceiver = new BLEReceiver();
 
@@ -34,11 +34,11 @@ namespace TrainerDataTesting.Receiver
             ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
             ConnectedToHRM?.Invoke(this, EventArgs.Empty);
 
-            Thread thread = new Thread(Simulate);
+            Thread thread = new Thread(Emulate);
             thread.Start();
         }
 
-        private void Simulate()
+        private void Emulate()
         {
             while (true)
             {
@@ -61,7 +61,7 @@ namespace TrainerDataTesting.Receiver
             message[message.Length - 1] = bleReceiver.CalculateChecksum(message);
 
             BLESubscriptionValueChangedEventArgs trainerArgs = new BLESubscriptionValueChangedEventArgs();
-            trainerArgs.ServiceName = "SimulatedTrainer";
+            trainerArgs.ServiceName = "EmulatedTrainer";
             trainerArgs.Data = message;
             return trainerArgs;
         }

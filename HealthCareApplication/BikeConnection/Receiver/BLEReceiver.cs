@@ -92,7 +92,7 @@ namespace TrainerDataTesting.Receiver
 
         /// <summary>
         /// Extracts the useful data from the trainer's messages and fires events containing this data.
-        /// This method may also be called by the SimulatedReceiver class.
+        /// This method may also be called by the EmulatedReceiver class.
         /// </summary>
         public void ReceivedTrainerMessage(object sender, BLESubscriptionValueChangedEventArgs e)
         {
@@ -124,7 +124,7 @@ namespace TrainerDataTesting.Receiver
 
         /// <summary>
         /// Extracts the useful data from the heart rate monitor's messages and fires events containing this data.
-        /// This method may also be called by the SimulatedReceiver class.
+        /// This method may also be called by the EmulatedReceiver class.
         /// </summary>
         public void ReceivedHRMMessage(object sender, BLESubscriptionValueChangedEventArgs e)
         {
