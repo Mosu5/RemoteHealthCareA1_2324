@@ -44,8 +44,8 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Receiver\BLEReceiver.cs" />
+    <Compile Include="Receiver\EmulatedReceiver.cs" />
     <Compile Include="Receiver\IReceiver.cs" />
-    <Compile Include="Receiver\SimulatedReceiver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
