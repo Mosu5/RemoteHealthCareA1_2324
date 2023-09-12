@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace TrainerDataTesting.Receiver
+namespace BikeConnection.Receiver
 {
     public interface IReceiver
     {
         event EventHandler<EventArgs> ConnectedToTrainer;
         event EventHandler<EventArgs> DisconnectedFromTrainer;
-        event EventHandler<EventArgs> ConnectedToHRM;
-        event EventHandler<EventArgs> DisconnectedFromHRM;
+        event EventHandler<EventArgs> ConnectedToHrm;
+        event EventHandler<EventArgs> DisconnectedFromHrm;
 
         event EventHandler<double> ReceivedSpeed;
         event EventHandler<int> ReceivedDistance;

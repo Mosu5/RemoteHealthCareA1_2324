@@ -1,5 +1,5 @@
 ﻿using System;
-using TrainerDataTesting.Receiver;
+using BikeConnection.Receiver;
 
 namespace TrainerDataTesting
 {
@@ -23,14 +23,14 @@ namespace TrainerDataTesting
             receiver.Connect();
         }
 
-        private static void OnReceiveSpeed(object sender, double data)
+        private static void OnReceiveSpeed(object sender, double speed)
         {
-            Console.WriteLine("Speed: {0} km/h", data);
+            Console.WriteLine("Speed: {0} km/h", speed);
         }
 
-        private static void OnReceiveDistance(object sender, int data)
+        private static void OnReceiveDistance(object sender, int distance)
         {
-            Console.WriteLine("Distance: {0} meters", data);
+            Console.WriteLine("Distance: {0} meters", distance);
         }
     }
 }

@@ -1,18 +1,15 @@
-﻿using Avans.TI.BLE;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
+using Avans.TI.BLE;
 
-namespace TrainerDataTesting.Receiver
+namespace BikeConnection.Receiver
 {
     public class BLEReceiver : IReceiver
     {
         public event EventHandler<EventArgs> ConnectedToTrainer;
         public event EventHandler<EventArgs> DisconnectedFromTrainer;
-        public event EventHandler<EventArgs> ConnectedToHRM;
-        public event EventHandler<EventArgs> DisconnectedFromHRM;
+        public event EventHandler<EventArgs> ConnectedToHrm;
+        public event EventHandler<EventArgs> DisconnectedFromHrm;
 
         public event EventHandler<double> ReceivedSpeed;
         public event EventHandler<int> ReceivedDistance;
@@ -25,7 +22,7 @@ namespace TrainerDataTesting.Receiver
         public async void Connect()
         {
             BLE bleTrainer = new BLE();
-            BLE bleHRM = new BLE();
+            BLE bleHrm = new BLE();
 
             Thread.Sleep(1000);
 
@@ -60,7 +57,7 @@ namespace TrainerDataTesting.Receiver
             ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
 
             // Pairing the heart rate monitor
-            errorCode = await bleHRM.OpenDevice("Decathlon Dual HR");
+            errorCode = await bleHrm.OpenDevice("Decathlon Dual HR");
             if (errorCode != 0)
             {
                 Console.WriteLine("Failed to connect to heart rate monitor with error code " + errorCode);
@@ -68,7 +65,7 @@ namespace TrainerDataTesting.Receiver
             }
 
             // Setting one of the heart rate monitor's services
-            errorCode = await bleHRM.SetService("HeartRate");
+            errorCode = await bleHrm.SetService("HeartRate");
             if (errorCode != 0)
             {
                 Console.WriteLine("Failed to connect to heart rate monitor with error code " + errorCode);
@@ -76,7 +73,7 @@ namespace TrainerDataTesting.Receiver
             }
 
             // Subscribing to one of the heart rate monitor's characteristics
-            errorCode = await bleHRM.SubscribeToCharacteristic("HeartRateMeasurement");
+            errorCode = await bleHrm.SubscribeToCharacteristic("HeartRateMeasurement");
             if (errorCode != 0)
             {
                 Console.WriteLine("Failed to connect to heart rate monitor with error code " + errorCode);
@@ -84,10 +81,10 @@ namespace TrainerDataTesting.Receiver
             }
 
             // Subscribing to the heart rate monitor's messages
-            bleHRM.SubscriptionValueChanged += ReceivedHRMMessage;
+            bleHrm.SubscriptionValueChanged += ReceivedHrmMessage;
 
             // Signal successful connection
-            ConnectedToHRM?.Invoke(this, EventArgs.Empty);
+            ConnectedToHrm?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -108,7 +105,7 @@ namespace TrainerDataTesting.Receiver
             double speed = DecodeTrainerSpeed(message);
             int distance = DecodeTrainerDistance(message);
 
-            if (speed == -1d)
+            if (speed == -1d) // TODO fix floating point precision
             {
                 Console.WriteLine("Error: invalid speed value received.");
             }
@@ -116,7 +113,7 @@ namespace TrainerDataTesting.Receiver
             {
                 Console.WriteLine("Error: invalid distance value received.");
             }
-            if (speed == -1d || distance == -1) return;
+            if (speed == -1d || distance == -1) return; // TODO fix floating point precision
 
             ReceivedSpeed?.Invoke(this, speed);
             ReceivedDistance?.Invoke(this, distance);
@@ -126,7 +123,7 @@ namespace TrainerDataTesting.Receiver
         /// Extracts the useful data from the heart rate monitor's messages and fires events containing this data.
         /// This method may also be called by the EmulatedReceiver class.
         /// </summary>
-        public void ReceivedHRMMessage(object sender, BLESubscriptionValueChangedEventArgs e)
+        public void ReceivedHrmMessage(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             throw new NotImplementedException();
         }
