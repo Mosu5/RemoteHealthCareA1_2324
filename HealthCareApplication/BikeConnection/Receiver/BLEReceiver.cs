@@ -95,6 +95,12 @@ namespace BikeConnection.Receiver
         {
             byte[] message = e.Data;
 
+            if (message.Length != 13)
+            {
+                Console.WriteLine("Error: invalid trainer message received.");
+                return;
+            }
+
             // Checks if checksums are equal to each other
             if (CalculateChecksum(message) != message[message.Length - 1])
             {
@@ -125,7 +131,23 @@ namespace BikeConnection.Receiver
         /// </summary>
         public void ReceivedHrmMessage(object sender, BLESubscriptionValueChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            byte[] message = e.Data;
+
+            if (message.Length < 4)
+            {
+                Console.WriteLine("Error: invalid trainer message received.");
+                return;
+            }
+
+            byte hrmFlags = message[0];
+            bool isUint8 = (hrmFlags & 0b1) == 0;
+            bool hasSkinContact = (hrmFlags & 0b10) == 1;
+            bool rrIntervalsPresent = (hrmFlags & 0b00010000) == 1;
+
+            byte heartRate = message[1];
+            byte[] rrInterval = new byte[] { message[2], message[3] };
+
+            
         }
 
         /// <summary>
