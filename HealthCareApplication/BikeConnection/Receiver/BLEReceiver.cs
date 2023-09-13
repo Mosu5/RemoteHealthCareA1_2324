@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Avans.TI.BLE;
 
 namespace BikeConnection.Receiver
@@ -14,39 +16,40 @@ namespace BikeConnection.Receiver
         public event EventHandler<double> ReceivedSpeed;
         public event EventHandler<int> ReceivedDistance;
         public event EventHandler<int> ReceivedHeartRate;
+        public event EventHandler<int[]> ReceivedRrIntervals;
+
+        private IReceiver emulatedReceiver = null;
+        private readonly int _maxConnectionAttempts = 5;
 
         /// <summary>
-        /// Attempts connection to both the trainer and the heart rate monitor. Upon successful connection,
-        /// events are fired to signal to other classes.
+        /// Attempts connection to both the trainer. Upon successful connection, events are fired to signal to other classes.
+        /// Otherwise, after some amount of connection attempts, it will automatically use the simulated environment.
         /// </summary>
-        public async void Connect()
+        public async void ConnectToTrainer()
         {
             BLE bleTrainer = new BLE();
-            BLE bleHrm = new BLE();
 
             Thread.Sleep(1000);
 
-            // Pairing the trainer
-            int errorCode = await bleTrainer.OpenDevice("Tacx Flux 01140");
-            if (errorCode != 0)
+            bool connected = await PairDevice(
+                bleTrainer,
+                "Tacx Flux 01140",
+                "6e40fec1-b5a3-f393-e0a9-e50e24dcca9e",
+                "6e40fec2-b5a3-f393-e0a9-e50e24dcca9e"
+            );
+            if (!connected)
             {
-                Console.WriteLine("Failed to connect to trainer with error code " + errorCode);
-                return;
-            }
+                Console.WriteLine("Could not connect to trainer, switching to emulated trainer environment.");
+                if (emulatedReceiver == null) emulatedReceiver = new EmulatedReceiver(this);
 
-            // Setting one of the trainer's services
-            errorCode = await bleTrainer.SetService("6e40fec1-b5a3-f393-e0a9-e50e24dcca9e");
-            if (errorCode != 0)
-            {
-                Console.WriteLine("Failed to connect to trainer with error code " + errorCode);
-                return;
-            }
+                // Subscribe to trainer events from the EmulatedReceiver class, so that whenever the EmulatedReceiver's
+                // events fire, this class's corresponding events will fire as well.
+                emulatedReceiver.ConnectedToTrainer += (sender, _) => ConnectedToTrainer?.Invoke(sender, EventArgs.Empty);
+                emulatedReceiver.DisconnectedFromTrainer += (sender, _) => DisconnectedFromTrainer?.Invoke(sender, EventArgs.Empty);
+                emulatedReceiver.ReceivedSpeed += (sender, speed) => ReceivedSpeed?.Invoke(sender, speed);
+                emulatedReceiver.ReceivedDistance += (sender, distance) => ReceivedDistance?.Invoke(sender, distance);
 
-            // Subscribing to one of the trainer's characteristics
-            errorCode = await bleTrainer.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e");
-            if (errorCode != 0)
-            {
-                Console.WriteLine("Failed to connect to trainer with error code " + errorCode);
+                emulatedReceiver.ConnectToTrainer();
                 return;
             }
 
@@ -55,36 +58,74 @@ namespace BikeConnection.Receiver
 
             // Signaling successful connection
             ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
+        }
 
-            // Pairing the heart rate monitor
-            errorCode = await bleHrm.OpenDevice("Decathlon Dual HR");
-            if (errorCode != 0)
+        /// <summary>
+        /// Attempts connection to both the heart rate monitor. Upon successful connection, events are fired to signal to other classes.
+        /// Otherwise, after some amount of connection attempts, it will automatically use the simulated environment.
+        /// </summary>
+        public async void ConnectToHrm()
+        {
+            BLE bleHrm = new BLE();
+
+            Thread.Sleep(1000);
+
+            bool connected = await PairDevice(
+                bleHrm,
+                "Decathlon Dual HR",
+                "HeartRate",
+                "HeartRateMeasurement"
+            );
+            if (!connected)
             {
-                Console.WriteLine("Failed to connect to heart rate monitor with error code " + errorCode);
+                Console.WriteLine("Could not connect to heart rate monitor, switching to emulated heart rate monitor environment.");
+                if (emulatedReceiver == null) emulatedReceiver = new EmulatedReceiver(this);
+
+                // Subscribe to heart rate monitor events from the EmulatedReceiver class, so that whenever the EmulatedReceiver's
+                // events fire, this class's corresponding events will fire as well.
+                emulatedReceiver.ConnectedToHrm += (sender, _) => ConnectedToHrm?.Invoke(sender, EventArgs.Empty);
+                emulatedReceiver.DisconnectedFromHrm += (sender, _) => DisconnectedFromHrm?.Invoke(sender, EventArgs.Empty);
+                emulatedReceiver.ReceivedHeartRate += (sender, heartRate) => ReceivedHeartRate?.Invoke(sender, heartRate);
+                emulatedReceiver.ReceivedRrIntervals += (sender, rrInterval) => ReceivedRrIntervals?.Invoke(sender, rrInterval);
+
+                emulatedReceiver.ConnectToHrm();
                 return;
             }
 
-            // Setting one of the heart rate monitor's services
-            errorCode = await bleHrm.SetService("HeartRate");
-            if (errorCode != 0)
-            {
-                Console.WriteLine("Failed to connect to heart rate monitor with error code " + errorCode);
-                return;
-            }
-
-            // Subscribing to one of the heart rate monitor's characteristics
-            errorCode = await bleHrm.SubscribeToCharacteristic("HeartRateMeasurement");
-            if (errorCode != 0)
-            {
-                Console.WriteLine("Failed to connect to heart rate monitor with error code " + errorCode);
-                return;
-            }
-
-            // Subscribing to the heart rate monitor's messages
+            // Subscribing to the trainer's messages
             bleHrm.SubscriptionValueChanged += ReceivedHrmMessage;
 
-            // Signal successful connection
+            // Signaling successful connection
             ConnectedToHrm?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Attempts to pair a device using the BLE library. Stops after exceeding the maximum amount of connection attempts.
+        /// </summary>
+        /// <returns>Wether the device has paired successfully</returns>
+        private async Task<bool> PairDevice(BLE bleDevice, string deviceName, string serviceName, string characteristicName)
+        {
+            int errorCode;
+            int connectionAttempts = 0;
+
+            // Attempt to connect until the maximum amount of attempts is reached
+            do
+            {
+                if (connectionAttempts == _maxConnectionAttempts) return false;
+                connectionAttempts++;
+
+                errorCode = await bleDevice.OpenDevice(deviceName);
+            } while (errorCode != 0);
+
+            // Setting one of the device's services
+            errorCode = await bleDevice.SetService(serviceName);
+            if (errorCode != 0) return false;
+
+            // Subscribing to one of the device's characteristics
+            errorCode = await bleDevice.SubscribeToCharacteristic(characteristicName);
+            if (errorCode != 0) return false;
+
+            return true;
         }
 
         /// <summary>
@@ -97,32 +138,26 @@ namespace BikeConnection.Receiver
 
             if (message.Length != 13)
             {
-                Console.WriteLine("Error: invalid trainer message received.");
+                Console.WriteLine("Error: invalid message length from trainer message.");
                 return;
             }
 
             // Checks if checksums are equal to each other
             if (CalculateChecksum(message) != message[message.Length - 1])
             {
-                Console.WriteLine("Error: message from trainer had an invalid checksum.");
+                Console.WriteLine("Error: invalid checksum from trainer message.");
                 return;
             }
 
             double speed = DecodeTrainerSpeed(message);
             int distance = DecodeTrainerDistance(message);
 
-            if (speed == -1d) // TODO fix floating point precision
-            {
-                Console.WriteLine("Error: invalid speed value received.");
-            }
-            if (distance == -1)
-            {
-                Console.WriteLine("Error: invalid distance value received.");
-            }
-            if (speed == -1d || distance == -1) return; // TODO fix floating point precision
+            // TODO fix floating point precision
+            if (speed != -1d) ReceivedSpeed?.Invoke(this, speed);
+            else Console.WriteLine("Error: invalid speed value from trainer message.");
 
-            ReceivedSpeed?.Invoke(this, speed);
-            ReceivedDistance?.Invoke(this, distance);
+            if (distance != -1) ReceivedDistance?.Invoke(this, distance);
+            else Console.WriteLine("Error: invalid distance value from trainer message.");
         }
 
         /// <summary>
@@ -133,21 +168,32 @@ namespace BikeConnection.Receiver
         {
             byte[] message = e.Data;
 
-            if (message.Length < 4)
+            if (message.Length < 3)
             {
-                Console.WriteLine("Error: invalid trainer message received.");
+                Console.WriteLine("Error: invalid message length from HRM message.");
                 return;
             }
 
+            // Byte containing flags for interpreting the message
             byte hrmFlags = message[0];
-            bool isUint8 = (hrmFlags & 0b1) == 0;
-            bool hasSkinContact = (hrmFlags & 0b10) == 1;
-            bool rrIntervalsPresent = (hrmFlags & 0b00010000) == 1;
 
-            byte heartRate = message[1];
-            byte[] rrInterval = new byte[] { message[2], message[3] };
+            // Wether the heart rate value was sent using uint8 format (true) or uint16 format (false)
+            bool isUint8 = (hrmFlags & 0b1) == 0b0;
 
+            if (!isUint8)
+            {
+                Console.WriteLine("Warning: skipping message, cannot read heart rate in uint16 format.");
+                return;
+            }
             
+            int heartRate = DecodeHeartRate(message);
+            int[] rrIntervals = DecodeRrIntervals(message);
+
+            if (heartRate != -1) ReceivedHeartRate?.Invoke(this, heartRate);
+            else Console.WriteLine("Error: invalid heart rate value from HRM message.");
+
+            if (rrIntervals != new int[0]) ReceivedRrIntervals?.Invoke(this, rrIntervals);
+            else Console.WriteLine("Error: invalid R-R interval value from HRM message.");
         }
 
         /// <summary>
@@ -172,9 +218,10 @@ namespace BikeConnection.Receiver
 
             if (dataPage != 16) return -1d; 
             
-            byte msb = message[8];
-            byte lsb = message[9];
-            int mergedValue = (lsb << 8) | msb;
+            // Combine the most significant and least significant bytes to one value
+            byte lsb = message[8];
+            byte msb = message[9];
+            int mergedValue = (msb << 8) | lsb;
 
             return mergedValue * 0.001;
         }
@@ -196,7 +243,36 @@ namespace BikeConnection.Receiver
         /// </summary>
         private int DecodeHeartRate(byte[] message)
         {
-            throw new NotImplementedException();
+            byte hrmFlags = message[0];
+            // Whether the HRM has skin contact
+            bool hasSkinContact = (hrmFlags & 0b10) == 0b10;
+            byte heartRate = message[1];
+
+            return hasSkinContact ? heartRate : -1;
+        }
+
+        /// <summary>
+        /// Extracts the heart rate monitor's R-R intervals from the message
+        /// </summary>
+        private int[] DecodeRrIntervals(byte[] message)
+        {
+            byte hrmFlags = message[0];
+
+            // Whether R-R intervals are present in the message
+            bool rrIntervalsPresent = (hrmFlags & 0b10000) == 0b10000;
+
+            // Wether the energy expension byte is present in the message.
+            // The presence of this changes the positions of the R-R intervals in the message.
+            bool energyExpensionPresent = (hrmFlags & 0b1000) == 0b10;
+
+            // Skip the first 3 elements if the energy expension byte is present, otherwise skip 2.
+            byte[] rrIntervals = message.Skip(energyExpensionPresent ? 3 : 2).ToArray();
+
+            if (rrIntervalsPresent)
+                // Returns byte array as int array
+                return rrIntervals.Select(b => (int)b).ToArray();
+
+            return new int[0];
         }
     }
 }

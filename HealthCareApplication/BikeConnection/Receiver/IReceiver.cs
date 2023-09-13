@@ -12,7 +12,9 @@ namespace BikeConnection.Receiver
         event EventHandler<double> ReceivedSpeed;
         event EventHandler<int> ReceivedDistance;
         event EventHandler<int> ReceivedHeartRate;
+        event EventHandler<int[]> ReceivedRrIntervals;
 
-        void Connect();
+        void ConnectToTrainer();
+        void ConnectToHrm();
     }
 }
