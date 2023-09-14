@@ -25,11 +25,13 @@ namespace VRConnection
             int totalRead = 0;
 
             // Read bytes untill no more
-            while(networkStream.DataAvailable)
+            
+            while(totalRead < lenght)
             {
                 int read = networkStream.Read(buffer, totalRead, buffer.Length - totalRead);
                 totalRead += read;
                 Console.WriteLine("ReadMessage: " + read);
+
             }
 
             return Encoding.ASCII.GetString(buffer, 0, totalRead);

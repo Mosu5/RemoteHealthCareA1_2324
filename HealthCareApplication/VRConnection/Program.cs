@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace VRConnection
 {
@@ -31,7 +32,7 @@ namespace VRConnection
                 TunnelHandler.SendMessage(networkStream, message);
 
                 string response = TunnelHandler.ReadMessage(networkStream);
-                Console.WriteLine("Response:" + response);
+                Console.WriteLine("Response:" + JsonObject.Parse(response));
 
             }
             tcpClient.Close();
