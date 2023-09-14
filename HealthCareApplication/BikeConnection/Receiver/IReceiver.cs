@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace BikeConnection.Receiver
 {
@@ -16,5 +17,6 @@ namespace BikeConnection.Receiver
 
         void ConnectToTrainer();
         void ConnectToHrm();
+        Task SetResistance(int percentage);
     }
 }
