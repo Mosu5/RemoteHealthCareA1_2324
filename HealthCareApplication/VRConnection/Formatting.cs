@@ -9,20 +9,21 @@ namespace VRConnection
     internal class Formatting
     {
 
-        public static object TunnelAdd(string session)
+        public static object TunnelAdd(string sessionId)
         {
             return new
             {
                 id = "tunnel/create",
                 data = new
                 {
-                    session,
+                    session = sessionId,
+                    key = "muffins"
                 }
             };
         }
 
 
-        public static object GetListID()
+        public static object GetSessionList()
         {
             return new
             {
