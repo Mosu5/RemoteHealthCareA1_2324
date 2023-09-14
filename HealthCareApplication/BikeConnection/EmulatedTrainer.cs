@@ -5,7 +5,7 @@ using System.Threading;
 namespace BikeConnection
 {
     // Class to generate bike/heartbeat data
-    internal class Emulator
+    internal class EmulatedTrainer
     {
         public byte elapsedTime { get; private set; }
         public byte distance { get; private set; }
@@ -20,7 +20,7 @@ namespace BikeConnection
 
         private Random random;
 
-        public Emulator()
+        public EmulatedTrainer()
         {
             random = new Random();
             elapsedTime = 0;
@@ -171,7 +171,7 @@ namespace BikeConnection
         //Resets the distance when it reaches 256
         public void ResetDistance()
         {
-            if (distance == 255)
+            if (distance == 256)
             {
                 distance = 0;
             }
