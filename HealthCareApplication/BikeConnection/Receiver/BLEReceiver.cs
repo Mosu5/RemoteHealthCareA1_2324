@@ -21,6 +21,7 @@ namespace BikeConnection.Receiver
         private IReceiver _emulatedReceiver = null;
         private readonly int _maxConnectionAttempts = 5;
         private readonly BLE _bleTrainer = new BLE();
+        private bool _trainerConnected = false;
 
         /// <summary>
         /// Attempts connection to both the trainer. Upon successful connection, events are fired to signal to other classes.
@@ -49,6 +50,7 @@ namespace BikeConnection.Receiver
                 _emulatedReceiver.ReceivedDistance += (sender, distance) => ReceivedDistance?.Invoke(sender, distance);
 
                 _emulatedReceiver.ConnectToTrainer();
+                _trainerConnected = true;
                 return;
             }
 
@@ -56,6 +58,7 @@ namespace BikeConnection.Receiver
             _bleTrainer.SubscriptionValueChanged += ReceivedTrainerMessage;
 
             // Signaling successful connection
+            _trainerConnected = true;
             ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
         }
 
@@ -196,19 +199,33 @@ namespace BikeConnection.Receiver
         }
 
         /// <summary>
-        /// TODO make sure to check if the device is connected first before setting resistance.
+        /// Send the trainer a message to change its resistance. The trainer does not send
+        /// anything back, so we'll have to trust the message has arrived successfully.
         /// TODO test
+        /// TODO maybe send message multiple times, in case the message does not fully reach
+        /// the trainer.
         /// </summary>
         public async Task SetResistance(int resistance)
         {
+            if (!_trainerConnected)
+            {
+                Console.WriteLine("Error: trainer is not yet connected. Call the connect method first.");
+                return;
+            }
+
             if (resistance < 0 || resistance > 100)
             {
                 Console.WriteLine("Error: resistance must be between 0 and 100 percent.");
                 return;
             }
 
+            // Create the message
             byte[] data = new byte[] { 0xA4, 0x09, 0x4E, 0x05, 0x30, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, (byte)(resistance * 2), 0 };
+
+            // Change the last byte to be the checksum
             data[12] = CalculateChecksum(data);
+
+            // Attempt to send the message and check if there are errors
             int errorCode = await _bleTrainer.WriteCharacteristic("6e40fec3-b5a3-f393-e0a9-e50e24dcca9e", data);
             if (errorCode != 0) Console.WriteLine("Could not send resistance message.");
         }
