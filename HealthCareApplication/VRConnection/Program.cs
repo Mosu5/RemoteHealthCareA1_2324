@@ -33,7 +33,6 @@ namespace VRConnection
 
                 string response = TunnelHandler.ReadMessage(networkStream);
                 Console.WriteLine("Response:" + JsonObject.Parse(response));
-                Console.WriteLine("test");
 
             }
             tcpClient.Close();
