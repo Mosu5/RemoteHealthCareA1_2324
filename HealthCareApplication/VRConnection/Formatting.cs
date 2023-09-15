@@ -8,7 +8,6 @@ namespace VRConnection
 {
     internal class Formatting
     {
-
         public static object TunnelAdd(string sessionId)
         {
             return new
@@ -18,6 +17,19 @@ namespace VRConnection
                 {
                     session = sessionId,
                     key = "muffins"
+                }
+            };
+        }
+
+        public static object TunnelSend(string tunnelId, object commandData)
+        {
+            return new
+            {
+                id = "tunnel/send",
+                data = new
+                {
+                    dest = tunnelId,
+                    data = commandData
                 }
             };
         }
@@ -53,7 +65,6 @@ namespace VRConnection
                 id = "scene/terrain/delete",
                 data = new
                 {
-
                 }
             };
         }
