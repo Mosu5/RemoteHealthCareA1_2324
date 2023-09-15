@@ -35,11 +35,20 @@ namespace VRConnection
         }
 
 
-        public static object GetSessionList()
+        public static object SessionListGet()
         {
             return new
             {
                 id = "session/list"
+            };
+        }
+
+
+        public static object SceneGet()
+        {
+            return new
+            {
+                id = "scene/get"
             };
         }
 

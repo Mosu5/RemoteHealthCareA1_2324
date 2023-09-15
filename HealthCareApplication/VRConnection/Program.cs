@@ -16,8 +16,17 @@ namespace VRConnection
             TcpClient tcpClient = new TcpClient("145.48.6.10", 6666);
             NetworkStream networkStream = tcpClient.GetStream();
 
-            TunnelHandler.CreateTunnel(networkStream);
-            //
+            TunnelHandler tunnelHandler = new TunnelHandler(networkStream);
+            // tunnelHandler.CreateTunnel();
+            VrManager vrManager = new VrManager(tunnelHandler);
+            var size = new int[2] { 256, 256 };
+            var heightMap = new float[65536];
+            vrManager.AddTerrain(size, heightMap);
+            Console.WriteLine(tunnelHandler.ReadString());
+            
+            vrManager.GetScene();
+            Console.WriteLine(tunnelHandler.ReadString());
+            
             //
             // bool running = true;
             //

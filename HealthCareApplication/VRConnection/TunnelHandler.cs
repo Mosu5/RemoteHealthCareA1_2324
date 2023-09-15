@@ -15,34 +15,39 @@ namespace VRConnection
     /// </summary>
     public class TunnelHandler
     {
-        public static string TunnelId;
+        public string TunnelId;
+        private NetworkStream _networkStream;
+
+        public TunnelHandler(NetworkStream networkStream)
+        {
+            _networkStream = networkStream;
+        }
         
         /// <summary>
         /// Create tunnel for VR communication
         /// </summary>
         /// <param name="networkStream">data stream where messages are sent through</param>
-        public static void CreateTunnel(NetworkStream networkStream)
+        public void CreateTunnel()
         {
-            var sessionId = GetSessionId(networkStream);
+            var sessionId = GetSessionId();
 
             var tunnelCommand = Formatting.TunnelAdd(sessionId); // create command
 
-            SendMessage(networkStream, tunnelCommand); // request tunnel connection
+            SendMessage(tunnelCommand); // request tunnel connection
 
-            var tunnelConfirmation = ReadJsonObject(networkStream); // get confirmation from server
+            var tunnelConfirmation = ReadJsonObject(); // get confirmation from server
             
             TunnelId = tunnelConfirmation?["data"]?["id"]?.ToString() ?? string.Empty; // get tunnelId or set to empty if no id is found
-            Console.WriteLine("Tunnel id: {0}", TunnelId);
         }
 
-        public static string GetSessionId(NetworkStream networkStream)
+        public string GetSessionId()
         {
             // get the sessionlist
-            var sessionListCommand = Formatting.GetSessionList();
-            SendMessage(networkStream, sessionListCommand);
+            var sessionListCommand = Formatting.SessionListGet();
+            SendMessage(sessionListCommand);
 
             // find pc running the sim/vr 
-            var sessionListData = ReadJsonObject(networkStream);
+            var sessionListData = ReadJsonObject();
             var sessions = sessionListData["data"]?.AsArray();
             var sessionId = "";
 
@@ -68,23 +73,23 @@ namespace VRConnection
         }
 
 
-        public static JsonObject? ReadJsonObject(NetworkStream networkStream)
+        public JsonObject? ReadJsonObject()
         {
             byte[] lengthArray = new byte[4];
 
-            networkStream.Read(lengthArray, 0, 4);
-            uint lenght = BitConverter.ToUInt32(lengthArray, 0);
+            _networkStream.Read(lengthArray, 0, 4);
+            uint length = BitConverter.ToUInt32(lengthArray, 0);
 
-            Console.WriteLine(lenght);
+            Console.WriteLine(length);
 
-            byte[] buffer = new byte[lenght];
+            byte[] buffer = new byte[length];
             int totalRead = 0;
 
             // Read bytes untill no more
 
-            while (totalRead < lenght)
+            while (totalRead < length)
             {
-                int read = networkStream.Read(buffer, totalRead, buffer.Length - totalRead);
+                int read = _networkStream.Read(buffer, totalRead, buffer.Length - totalRead);
                 totalRead += read;
                 Console.WriteLine("ReadMessage: " + read);
             }
@@ -98,11 +103,11 @@ namespace VRConnection
         }
 
 
-        public static string ReadString(NetworkStream networkStream)
+        public string ReadString()
         {
             byte[] lenghtArray = new byte[4];
 
-            networkStream.Read(lenghtArray, 0, 4);
+            _networkStream.Read(lenghtArray, 0, 4);
             uint lenght = BitConverter.ToUInt32(lenghtArray, 0);
 
             Console.WriteLine(lenght);
@@ -114,7 +119,7 @@ namespace VRConnection
 
             while (totalRead < lenght)
             {
-                int read = networkStream.Read(buffer, totalRead, buffer.Length - totalRead);
+                int read = _networkStream.Read(buffer, totalRead, buffer.Length - totalRead);
                 totalRead += read;
                 Console.WriteLine("ReadMessage: " + read);
             }
@@ -128,7 +133,7 @@ namespace VRConnection
         /// </summary>
         /// <param name="networkStream">stream where the data is sent through</param>
         /// <param name="message">message that you want to send</param>
-        public static void SendMessage(NetworkStream networkStream, object message)
+        public void SendMessage(object message)
         {
             var jsonString = JsonSerializer.Serialize(message);
 
@@ -136,10 +141,10 @@ namespace VRConnection
             byte[] length = BitConverter.GetBytes((uint)jsonString.Length);
             bytes = length.Concat(bytes).ToArray();
 
-            networkStream.Write(bytes, 0, bytes.Length);
+            _networkStream.Write(bytes, 0, bytes.Length);
         }
 
-        public static void SendMessage(NetworkStream networkStream, string message)
+        public void SendMessage(string message)
         {
             //make sure the other end decodes with the same format!
             byte[] bytes = Encoding.ASCII.GetBytes(message);
@@ -149,7 +154,7 @@ namespace VRConnection
             // Takes the first four bytes that indicate lenght and adds it to the total load
             bytes = length.Concat(bytes).ToArray();
 
-            networkStream.Write(bytes, 0, bytes.Length);
+            _networkStream.Write(bytes, 0, bytes.Length);
         }
     }
 }
