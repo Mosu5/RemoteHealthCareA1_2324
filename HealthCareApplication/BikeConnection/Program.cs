@@ -15,9 +15,10 @@ namespace BikeConnection
     class Program
     {
   
-        static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            new Client();
+            EmulatedTrainer simulator = new EmulatedTrainer();
+            simulator.SimulateSpeedVariation();
         }
     }
 }
