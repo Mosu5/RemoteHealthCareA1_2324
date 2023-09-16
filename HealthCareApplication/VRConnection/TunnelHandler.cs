@@ -39,6 +39,7 @@ namespace VRConnection
             
             TunnelId = tunnelConfirmation?["data"]?["id"]?.ToString() ?? string.Empty; // get tunnelId or set to empty if no id is found
         }
+        
 
         public string GetSessionId()
         {

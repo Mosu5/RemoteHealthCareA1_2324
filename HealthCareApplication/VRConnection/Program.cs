@@ -4,10 +4,8 @@ using System.Text.Json.Nodes;
 
 namespace VRConnection
 {
-
     public class Program
     {
-
         public static void Main(string[] args)
         {
             // Application to test connection to VR server
@@ -23,10 +21,17 @@ namespace VRConnection
             var heightMap = new float[65536];
             vrManager.AddTerrain(size, heightMap);
             Console.WriteLine(tunnelHandler.ReadString());
-            
-            vrManager.GetScene();
+
+            // vrManager.GetScene();
+            // Console.WriteLine(tunnelHandler.ReadString());
+            //
+            vrManager.AddTerrainNode();
             Console.WriteLine(tunnelHandler.ReadString());
             
+
+           vrManager.AddTerrainLayer();
+           Console.WriteLine(tunnelHandler.ReadString());
+
             //
             // bool running = true;
             //
@@ -47,12 +52,6 @@ namespace VRConnection
             // }
             tcpClient.Close();
             networkStream.Close();
-
-
-
         }
-
     }
-
-
 }

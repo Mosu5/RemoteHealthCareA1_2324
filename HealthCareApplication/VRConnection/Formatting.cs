@@ -52,6 +52,18 @@ namespace VRConnection
             };
         }
 
+        public static object SceneNodeFind(string name)
+        {
+            return new
+            {
+                id = "scene/node/find",
+                data = new
+                {
+                    name
+                }
+            };
+        }
+
 
         public static object TerrainAdd(int[] size, float[] heights)
         {
@@ -105,13 +117,54 @@ namespace VRConnection
                         transform,
                         model = new
                         {
-                            fileName
+                            file = fileName
                         }
                     }
                 }
             };
         }
 
+        public static object TerrainAddNode()
+        {
+            return new
+            {
+                id = "scene/node/add",
+                data = new
+                {
+                    name = "terrain",
+                    components = new
+                    {
+                        transform = new
+                        {
+                            position = new[] { -128, 0, -128 },
+                            scale = 1,
+                            rotation = new[] { 0, 0, 0 }
+                        },
+                        terrain = new
+                        {
+                            smoothnormals = true
+                        },
+                    }
+                }
+            };
+        }
+
+        public static object TerrainAddLayer(string nodeId, string diffuseFilePath, string normalFilePath)
+        {
+            return new
+            {
+                id = "scene/node/addlayer",
+                data = new
+                {
+                    id = nodeId,
+                    diffuse = diffuseFilePath,
+                    normal = normalFilePath,
+                    minHeight = -100,
+                    maxHeight = 100,
+                    fadeDist = 1
+                }
+            };
+        }
 
         public static object TerrainHeightUpdate(int[] heights)
         {
