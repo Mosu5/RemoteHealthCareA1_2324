@@ -6,8 +6,8 @@ namespace BikeConnection
 {
     internal class EmulatedTrainer
     {
-        private double smoothedSpeed = 2.5; // start speed with 2.5 m/s
-        private double smoothingFactor = 0.1;// smoothingfactor
+        private double smoothedSpeed = 2.5; //Start speed with 2.5 m/s
+        private double smoothingFactor = 0.1;//Smoothingfactor for speed adjustments
         private double maxSpeed = 10;
 
         private Random random;
@@ -15,8 +15,7 @@ namespace BikeConnection
         public byte distance { get; private set; }
         public int gear { get; private set; }
         public TerrainType currentTerrain { get; private set; }
-        public byte[] speed; 
-
+        public byte[] speed;
         private byte[] previousSpeedData;
 
         public EmulatedTrainer()
@@ -25,30 +24,31 @@ namespace BikeConnection
             this.elapsedTime = 0;
             this.distance = 0;
             this.gear = 1;
-            this.currentTerrain = TerrainType.Flat; // Initialize to flat terrain
-            this.previousSpeedData = GenerateSpeedData(); // Initialize with some realistic speed
+            this.currentTerrain = TerrainType.Flat; //Initializing to flat terrain
+            this.previousSpeedData = GenerateSpeedData(); //Initializing with some realistic speed
         }
 
+        //Method that calculates speed based on gear and current Terraintype
         private double CalculateSpeed(TerrainType terrain, int gear)
         {
-            byte previousSpeed = 0;
+            byte previousSpeed = 0;//Attribute that stores previous speed for check on line 53 and 57
             if (previousSpeedData != null)
             {
                 previousSpeed = this.previousSpeedData[0];
             }
 
-            if (terrain == TerrainType.Uphill)
+            if (terrain == TerrainType.Uphill)//Speed will decrease when current TerrainType is uphill. Random gears between 1-3.
             {
-                this.smoothedSpeed *= 0.92; // Adjust as needed for uphill terrain, 0.8 will decrease the speed
+                this.smoothedSpeed *= 0.92; 
                 this.gear = random.Next(1,4);
                 
             }
-            else if (terrain == TerrainType.Downhill)
+            else if (terrain == TerrainType.Downhill)//Speed will increase when current TerrainType is downhill. Random gears between 5-7.
             { 
-                this.smoothedSpeed *= 1.05; // Adjust as needed for downhill terrain
+                this.smoothedSpeed *= 1.05; 
                 this.gear = random.Next(5, 8);
             }
-            else // Flat terrain
+            else //Gear will vary based on current speed
             {
                 if (previousSpeed > 5) 
                 {
@@ -63,15 +63,15 @@ namespace BikeConnection
 
             double gearMultiplier = 1 + (gear - 1) * 0.1; // Adjust gear effect
 
-            double speed = this.smoothedSpeed * gearMultiplier;
-            double result = Math.Min(Math.Max(speed, 0), maxSpeed);
-
-            return result; // Cap speed at maxSpeed if it exceeds
+            double speed = this.smoothedSpeed * gearMultiplier;//Calculating speed after applying gear effect
+            double result = Math.Min(Math.Max(speed, 0), maxSpeed);//Ensures that speed stays within range
+            return result;// Cap speed at maxSpeed if it exceeds
         }
 
+        //Simulating Bike data array
         public byte[] GenerateBikeData()
         {
-            //Getting random values
+            //Generating speed data
             speed = GenerateSpeedData();
 
             byte[] data = new byte[13];
@@ -98,30 +98,27 @@ namespace BikeConnection
             return data;
         }
 
+        //Generator of the speed data
         public byte[] GenerateSpeedData()
         {
             this.elapsedTime++;
             this.distance++;
-            ResetDistance();
-            if (elapsedTime % 5 == 0)
+            ResetDistance();//Check the 
+            if (elapsedTime % 5 == 0)//Changes terrain each 5 secs
             {
                 currentTerrain = (TerrainType)random.Next(0, 3);
-                Console.WriteLine($"Changed to {currentTerrain} terrain and gear {gear}");
             }
 
-
-            // Calculate speed based on terrain and gear
-            double speed = CalculateSpeed(currentTerrain, gear);
-
-            // Apply smoothing
-            this.smoothedSpeed += (speed - this.smoothedSpeed) * smoothingFactor;
-
-            // Convert smoothedSpeed to bytes
-            byte[] bytes = BitConverter.GetBytes((ushort)Math.Round(this.smoothedSpeed * 1000));
-            Console.WriteLine("Current terrain: " + currentTerrain  + "----------------------------------------------------------" + gear);
+            double speed = CalculateSpeed(currentTerrain, gear);// Calculate speed based on terrain and gear
+            
+            this.smoothedSpeed += (speed - this.smoothedSpeed) * smoothingFactor;// Apply smoothing
+            
+            byte[] bytes = BitConverter.GetBytes((ushort)Math.Round(this.smoothedSpeed * 1000));// Convert smoothedSpeed to bytes
+            
             return bytes;
         }
-
+        
+        //Resets distance when reaching 255
         public void ResetDistance()
         {
             if (distance == 256)
@@ -130,6 +127,7 @@ namespace BikeConnection
             }
         }
 
+        //Simulate the used for DEBUG
         public void SimulateSpeedVariation()
         {
             while (true)
@@ -140,7 +138,7 @@ namespace BikeConnection
                 Console.WriteLine($"Generated Speed Data: {speed[0]}");
                 Console.WriteLine($"Current Terrain: {currentTerrain}, Current Gear: {gear}");
 
-                // Change terrain and gear randomly at regular intervals
+                // Change terrain and gear randomly each 5 seconds
                 if (elapsedTime % 5 == 0)
                 {
                     currentTerrain = (TerrainType)random.Next(0, 3);
@@ -155,6 +153,7 @@ namespace BikeConnection
         }
     }
 
+    //Different terrain type
     enum TerrainType
     {
         Flat, Downhill, Uphill
