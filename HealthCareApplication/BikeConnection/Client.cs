@@ -33,7 +33,7 @@ namespace BikeConnection
 
         private void OnReceiveSpeed(object sender, double speed)
         {
-            Console.WriteLine("Speed: {0} km/h", speed);
+            Console.WriteLine("Speed: {0} m/s", speed);
         }
 
         private void OnReceiveDistance(object sender, int distance)

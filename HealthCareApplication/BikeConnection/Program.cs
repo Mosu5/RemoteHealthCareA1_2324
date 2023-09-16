@@ -17,8 +17,9 @@ namespace BikeConnection
   
         public static void Main(string[] args)
         {
-            EmulatedTrainer simulator = new EmulatedTrainer();
-            simulator.SimulateSpeedVariation();
+            //EmulatedTrainer emi = new EmulatedTrainer();
+            //emi.SimulateSpeedVariation();
+            new Client();
         }
     }
 }
