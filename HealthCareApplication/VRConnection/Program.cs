@@ -23,9 +23,7 @@ namespace VRConnection
             Console.WriteLine(tunnelHandler.ReadString()); // TODO implement a way to limit duplicate code
                                                            // when reading response
 
-            // vrManager.GetScene();
-            // Console.WriteLine(tunnelHandler.ReadString());
-            //
+           
             vrManager.AddTerrainNode();
             Console.WriteLine(tunnelHandler.ReadString());
             
@@ -33,6 +31,13 @@ namespace VRConnection
            vrManager.AddTerrainLayer();
            Console.WriteLine(tunnelHandler.ReadString());
 
+           var fileName = @"data\NetworkEngine\models\trees\fantasy\tree1.obj";
+           int[] pos = { 30, 0, 30 };
+           vrManager.AddModel("testTree", pos, fileName);
+           Console.WriteLine(tunnelHandler.ReadString());
+           vrManager.GetScene();
+           Console.WriteLine(tunnelHandler.ReadString());
+           
             //
             // bool running = true;
             //

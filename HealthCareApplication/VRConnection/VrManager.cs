@@ -33,7 +33,26 @@ public class VrManager
         object sceneGetCommand = Formatting.SceneGet();
         // TODO create separate tunnel message
         object tunnelMessage = Formatting.TunnelSend(_tunnelHandler.TunnelId, sceneGetCommand);
+        _tunnelHandler.SendMessage(tunnelMessage);
+    }
 
+    public void AddModel(string name, int[] position, string fileName)
+    {
+        // TODO add position data
+        object modelAddCommand = Formatting.Add3DObject(name,position, fileName);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelHandler.TunnelId, modelAddCommand);
+        Console.WriteLine(tunnelMessage);
+
+        _tunnelHandler.SendMessage(tunnelMessage);
+    }
+    
+    public void AddAnimatedModel(string name,int[] position, string fileName, string animationName)
+    {
+        // TODO add position data
+        // TODO add position data
+        object modelAddCommand = Formatting.AddAnimatedObject(name, position, fileName, animationName);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelHandler.TunnelId, modelAddCommand);
+        
         _tunnelHandler.SendMessage(tunnelMessage);
     }
 
@@ -59,7 +78,7 @@ public class VrManager
     {
         object addTerrainNodeCommand = Formatting.TerrainAddNode();
         object tunnelMessage = Formatting.TunnelSend(_tunnelHandler.TunnelId, addTerrainNodeCommand);
-
+        Console.WriteLine(tunnelMessage);
         _tunnelHandler.SendMessage(tunnelMessage);
     }
 
