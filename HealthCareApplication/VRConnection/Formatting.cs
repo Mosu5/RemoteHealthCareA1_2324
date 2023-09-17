@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace VRConnection
@@ -243,6 +244,69 @@ namespace VRConnection
                     speed
                 }
             };
+        }
+
+        public static string? ValidateAndGetSessionId(JsonObject? serverResponse)
+        {
+            if (serverResponse == null ||
+                !HasValidIdAndData(serverResponse) ||
+                !(serverResponse["data"] is JsonArray))
+            {
+                Console.WriteLine("Error: received invalid data.");
+                return null;
+            }
+
+            JsonArray sessionList = serverResponse["data"].AsArray();
+            string? sessionId = null;
+
+            foreach (var session in sessionList)
+            {
+                string? hostName = session?["clientinfo"]?["host"]?.ToString();
+                if (hostName == null || session?["id"] == null) continue;
+
+                if (hostName.Equals(Environment.MachineName, StringComparison.CurrentCultureIgnoreCase))
+                    sessionId = session?["id"]?.ToString();
+            }
+
+            return sessionId;
+        }
+
+        public static string? ValidateAndGetTunnelId(JsonObject? serverResponse)
+        {
+            if (serverResponse == null ||
+                !HasValidIdAndData(serverResponse) ||
+                !(serverResponse is JsonObject))
+            {
+                Console.WriteLine("Error: received invalid data.");
+                return null;
+            }
+
+            JsonObject payload = serverResponse["data"].AsObject();
+            if (!payload.ContainsKey("status") ||
+                !payload.ContainsKey("id") ||
+                !(payload["status"] is JsonValue) ||
+                !(payload["id"] is JsonValue))
+            {
+                Console.WriteLine("Error: received invalid status and/or id field.");
+                return null;
+            }
+
+            if (payload["status"].ToString() != "ok")
+            {
+                Console.WriteLine("Error: the response has a status of {0}.", payload["status"].ToString());
+                return null;
+            }
+
+            string tunnelId = payload["id"].ToString();
+            return tunnelId;
+        }
+
+        private static bool HasValidIdAndData(JsonObject data)
+        {
+            return
+                data.ContainsKey("id") &&
+                data.ContainsKey("data") &&
+                data["id"] is JsonValue;
         }
     }
 }
