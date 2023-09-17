@@ -20,7 +20,8 @@ namespace VRConnection
             var size = new int[2] { 256, 256 };
             var heightMap = new float[65536];
             vrManager.AddTerrain(size, heightMap);
-            Console.WriteLine(tunnelHandler.ReadString());
+            Console.WriteLine(tunnelHandler.ReadString()); // TODO implement a way to limit duplicate code
+                                                           // when reading response
 
             // vrManager.GetScene();
             // Console.WriteLine(tunnelHandler.ReadString());

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace VRConnection
 {
+    /// <summary>
+    /// Helper for creating 
+    /// </summary>
     internal class Formatting
     {
         public static object TunnelAdd(string sessionId)

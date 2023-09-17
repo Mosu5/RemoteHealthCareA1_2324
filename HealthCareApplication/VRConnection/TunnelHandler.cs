@@ -22,11 +22,10 @@ namespace VRConnection
         {
             _networkStream = networkStream;
         }
-        
+
         /// <summary>
         /// Create tunnel for VR communication
         /// </summary>
-        /// <param name="networkStream">data stream where messages are sent through</param>
         public void CreateTunnel()
         {
             var sessionId = GetSessionId();
@@ -40,7 +39,10 @@ namespace VRConnection
             TunnelId = tunnelConfirmation?["data"]?["id"]?.ToString() ?? string.Empty; // get tunnelId or set to empty if no id is found
         }
         
-
+        /// <summary>
+        /// Filter and return sessionId from VR session list
+        /// </summary>
+        /// <returns> sessionId as string </returns>
         public string GetSessionId()
         {
             // get the sessionlist
@@ -73,7 +75,10 @@ namespace VRConnection
             return sessionId;
         }
 
-
+        /// <summary>
+        /// Read message from VR server as object
+        /// </summary>
+        /// <returns> message as JsonObject </returns>
         public JsonObject? ReadJsonObject()
         {
             byte[] lengthArray = new byte[4];
@@ -103,7 +108,10 @@ namespace VRConnection
             return jsonData;
         }
 
-
+        /// <summary>
+        /// Read message from VR server as text
+        /// </summary>
+        /// <returns> message as string </returns>
         public string ReadString()
         {
             byte[] lenghtArray = new byte[4];
@@ -130,10 +138,9 @@ namespace VRConnection
 
 
         /// <summary>
-        /// Serializes and sends a (json) object
+        /// Serialize and send a message
         /// </summary>
-        /// <param name="networkStream">stream where the data is sent through</param>
-        /// <param name="message">message that you want to send</param>
+        /// <param name="message"> message to be send </param>
         public void SendMessage(object message)
         {
             var jsonString = JsonSerializer.Serialize(message);
@@ -145,6 +152,10 @@ namespace VRConnection
             _networkStream.Write(bytes, 0, bytes.Length);
         }
 
+        /// <summary>
+        /// Serialize and send a message
+        /// </summary>
+        /// <param name="message"> message to be send </param>
         public void SendMessage(string message)
         {
             //make sure the other end decodes with the same format!
