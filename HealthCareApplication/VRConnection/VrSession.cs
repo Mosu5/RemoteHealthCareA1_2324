@@ -7,110 +7,138 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Threading.Tasks;
+using VRConnection.Communication;
 
 namespace VRConnection
 {
     internal class VrSession
     {
-        private readonly string _ipAddress;
-        private readonly int _port;
+        private string? _sessionId;
+        private string? _tunnelId;
 
-        private readonly Encoding _encoding = Encoding.ASCII;
-        private TcpClient? _tcpClient;
-        private NetworkStream? _stream;
-
-        private bool _isSessionActive = false;
-
-        public VrSession(string serverIpAddress, int serverPort)
+        /// <summary>
+        /// Initialize the connection by receiving the session ID of the NetworkEngine running on the same
+        /// computer that is running the application, and the tunnel ID
+        /// </summary>
+        /// <returns>Wether a successful connection was established to the server.</returns>
+        public async Task<bool> Initialize(string serverIpAddress, int serverPort)
         {
-            _ipAddress = serverIpAddress;
-            _port = serverPort;
-        }
-
-        public async Task<bool> Initialize()
-        {
-            if (!await ConnectToServer())
+            if (!await VrCommunication.ConnectToServer(serverIpAddress, serverPort))
             {
-                await Console.Out.WriteLineAsync($"Could not connect to address {_ipAddress} on port {_port}. Maybe there is an already active session?");
+                await Console.Out.WriteLineAsync($"Could not connect to address {serverIpAddress} on port {serverPort}. Maybe there is an already active session?");
                 return false;
             }
 
-            try
+            await VrCommunication.SendAsJson(Formatting.SessionListGet());
+
+            JsonObject sessionListResponse = await VrCommunication.ReceiveJsonObject();
+            _sessionId = Formatting.ValidateAndGetSessionId(sessionListResponse);
+
+            await VrCommunication.SendAsJson(Formatting.TunnelAdd(_sessionId));
+
+            JsonObject tunnelCreateResponse = await VrCommunication.ReceiveJsonObject();
+            _tunnelId = Formatting.ValidateAndGetTunnelId(tunnelCreateResponse);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Close the connection with the VR server
+        /// </summary>
+        public void Close() => VrCommunication.CloseConnection();
+
+        /// <summary>
+        /// Send a request to VR server and retrieve the VR scene data
+        /// </summary>
+        public async Task<JsonObject> GetScene()
+        {
+            object sceneGetCommand = Formatting.SceneGet();
+            // TODO create separate tunnel message
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneGetCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+        /// <summary>
+        /// Add terrain data to VR scene
+        /// Since its only positional data, no visual component is rendered in the scene
+        /// </summary>
+        public async Task<JsonObject> AddTerrain(int[] size, float[] heightMap)
+        {
+            object terrainAddCommand = Formatting.TerrainAdd(size, heightMap);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, terrainAddCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+        /// <summary>
+        /// Add terrain node to VR scene
+        /// Visual component (layers) can be added after this
+        /// </summary>
+        public async Task<JsonObject> AddTerrainNode()
+        {
+            object addTerrainNodeCommand = Formatting.TerrainAddNode();
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, addTerrainNodeCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+        /// <summary>
+        /// Add visual component to terrain
+        /// Requires actual node to add visual component
+        /// </summary>
+        public async Task<JsonObject> AddTerrainLayer()
+        {
+            // command data
+            string terrainId = await GetNodeId("terrain");
+            string diffuseFilePath = @"data\NetworkEngine\textures\grass_diffuse.png";
+            string normalFilePath = @"data\NetworkEngine\textures\grass_normal.png";
+
+            // create command and send to VR
+            object addTerrainLayerCommand = Formatting.TerrainAddLayer(terrainId, diffuseFilePath, normalFilePath);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, addTerrainLayerCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+        /// <summary>
+        /// Get uuid from node based on name
+        /// </summary>
+        /// <param name="name">name of the requested node</param>
+        /// <returns>uuid as string</returns>
+        public async Task<string> GetNodeId(string name)
+        {
+            object sceneFindNodeCommand = Formatting.SceneNodeFind(name);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneFindNodeCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            JsonObject response = await VrCommunication.ReceiveJsonObject();
+            var nodes = response?["data"]?["data"]?["data"]?.AsArray();
+
+            if (nodes == null)
+                throw new CommunicationException("Could not retrieve the nodes JsonArray from message.");
+
+            return GetNode(nodes);
+        }
+
+        /// <summary>
+        /// Helper method to get the first node's UUID, or else an empty string.
+        /// It is assumed that the first node is the terrain node.
+        /// TODO check if the terrain is always the first node in this JsonArray
+        /// </summary>
+        private string GetNode(JsonArray nodes)
+        {
+            string uuid = string.Empty;
+            if (nodes != null)
             {
-                await SendAsJson(Formatting.SessionListGet());
-
-                JsonObject sessionListResponse = await ReceiveAsJsonObject();
-                string sessionId = Formatting.ValidateAndGetSessionId(sessionListResponse);
-
-                await SendAsJson(Formatting.TunnelAdd(sessionId));
-
-                JsonObject tunnelCreateResponse = await ReceiveAsJsonObject();
-                string tunnelId = Formatting.ValidateAndGetTunnelId(tunnelCreateResponse);
-
-                _isSessionActive = true;
-                return true;
+                var node = nodes.First(); // only need one node with the name needed
+                uuid = node?["uuid"]?.ToString() ?? string.Empty;
             }
-            catch (CommunicationException ex)
-            {
-                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
-            }
-
-            return false;
-        }
-
-        public void Close()
-        {
-            _isSessionActive = false;
-            _tcpClient?.Close();
-            _stream?.Close();
-        }
-
-        private async Task<bool> ConnectToServer()
-        {
-            if (_isSessionActive) return false;
-
-            _tcpClient = new TcpClient(_ipAddress, _port);
-            await _tcpClient.ConnectAsync(_ipAddress, _port);
-
-            if (_tcpClient.Connected) _stream = _tcpClient.GetStream();
-            return _tcpClient.Connected;
-        }
-
-        private async Task SendAsJson(object payload)
-        {
-            if (!_isSessionActive) throw new CommunicationException("There is no active communication between the application and the VR server.");
-
-            byte[] payloadAsBytes = _encoding.GetBytes(JsonSerializer.Serialize(payload));
-            byte[] lengthData = BitConverter.GetBytes((uint)payloadAsBytes.Length);
-            byte[] message = lengthData.Concat(payloadAsBytes).ToArray();
-
-            await _stream.WriteAsync(message, 0, message.Length);
-        }
-
-        private async Task<JsonObject> ReceiveAsJsonObject()
-        {
-            if (!_isSessionActive) throw new CommunicationException("There is no active communication between the application and the VR server.");
-
-            byte[] lengthArray = new byte[4];
-
-            await _stream.ReadAsync(lengthArray, 0, lengthArray.Length);
-            uint length = BitConverter.ToUInt32(lengthArray, 0);
-
-            byte[] payloadBuffer = new byte[length];
-            int totalBytesRead = 0;
-
-            while (totalBytesRead < length)
-            {
-                int bytesRead = await _stream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
-                totalBytesRead += bytesRead;
-            }
-
-            string messageAsString = _encoding.GetString(payloadBuffer, 0, totalBytesRead);
-            JsonObject? deserializedMessage = JsonSerializer.Deserialize<JsonObject>(messageAsString)?.AsObject();
-
-            if (deserializedMessage != null) return deserializedMessage;
-
-            throw new CommunicationException("Something went wrong while receiving a message from the VR server.");
+            return uuid;
         }
     }
 }

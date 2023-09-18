@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VRConnection
+namespace VRConnection.Communication
 {
     [Serializable]
     internal class CommunicationException : Exception

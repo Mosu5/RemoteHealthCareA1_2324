@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using VRConnection.Communication;
 
 namespace VRConnection
 {
@@ -269,7 +270,7 @@ namespace VRConnection
 
             if (sessionId != null) return sessionId;
 
-            throw new CommunicationException("Could not retrieve session ID from this message.");
+            throw new CommunicationException("Could not retrieve session ID from this message. Are you actually running NetworkEngine?");
         }
 
         public static string ValidateAndGetTunnelId(JsonObject serverResponse)
