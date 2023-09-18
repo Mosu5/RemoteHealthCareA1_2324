@@ -36,23 +36,39 @@ public class VrManager
         _tunnelHandler.SendMessage(tunnelMessage);
     }
 
-    public void AddModel(string name, int[] position, string fileName)
+    /// <summary>
+    ///  Add a model in VR scene
+    /// </summary>
+    /// <param name="name">name of node</param>
+    /// <param name="position">position array containing x, y, z</param>
+    /// <param name="scale">ses scaling of model</param>
+    /// <param name="fileName"> filepath of the obj file of the model</param>
+    public void AddModel(string name, int[] position, double scale, string fileName)
     {
         // TODO add position data
-        object modelAddCommand = Formatting.Add3DObject(name,position, fileName);
+        object modelAddCommand = Formatting.Add3DObject(name, position, scale, fileName);
         object tunnelMessage = Formatting.TunnelSend(_tunnelHandler.TunnelId, modelAddCommand);
         Console.WriteLine(tunnelMessage);
 
         _tunnelHandler.SendMessage(tunnelMessage);
     }
-    
-    public void AddAnimatedModel(string name,int[] position, string fileName, string animationName)
+
+
+    /// <summary>
+    ///  Add a model in VR scene
+    /// </summary>
+    /// <param name="name">name of node</param>
+    /// <param name="position">position array containing x, y, z</param>
+    /// <param name="scale">ses scaling of model</param>
+    /// <param name="fileName"> filepath of the obj file of the model</param>
+    /// <param name="animationName"> filepath of the animation file</param>
+    public void AddAnimatedModel(string name, int[] position, double scale, string fileName, string animationName)
     {
         // TODO add position data
         // TODO add position data
-        object modelAddCommand = Formatting.AddAnimatedObject(name, position, fileName, animationName);
+        object modelAddCommand = Formatting.AddAnimatedObject(name, position, scale, fileName, animationName);
         object tunnelMessage = Formatting.TunnelSend(_tunnelHandler.TunnelId, modelAddCommand);
-        
+
         _tunnelHandler.SendMessage(tunnelMessage);
     }
 
@@ -92,7 +108,7 @@ public class VrManager
         string terrainId = GetNodeId("terrain");
         string diffuseFilePath = "data\\NetworkEngine\\textures\\grass_diffuse.png";
         string normalFilePath = "data\\NetworkEngine\\textures\\grass_normal.png";
-        
+
         // create command and send to VR
         object addTerrainLayerCommand = Formatting.TerrainAddLayer(terrainId, diffuseFilePath, normalFilePath);
         object tunnelMessage = Formatting.TunnelSend(_tunnelHandler.TunnelId, addTerrainLayerCommand);
@@ -111,8 +127,8 @@ public class VrManager
 
         _tunnelHandler.SendMessage(tunnelMessage);
         var response = _tunnelHandler.ReadJsonObject(); // can also use ReadString()
-                                                        // when no parsing is required
-        
+        // when no parsing is required
+
         // TODO move to separate method (call it getNode())
         // <--
         var nodes = response?["data"]?["data"]?["data"]?.AsArray();
@@ -124,7 +140,7 @@ public class VrManager
             uuid = node?["uuid"]?.ToString() ?? string.Empty;
         }
         // -->
-        
+
         return uuid;
     }
 }
