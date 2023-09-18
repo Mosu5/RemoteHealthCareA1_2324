@@ -246,14 +246,13 @@ namespace VRConnection
             };
         }
 
-        public static string? ValidateAndGetSessionId(JsonObject? serverResponse)
+        public static string ValidateAndGetSessionId(JsonObject serverResponse)
         {
             if (serverResponse == null ||
                 !HasValidIdAndData(serverResponse) ||
                 !(serverResponse["data"] is JsonArray))
             {
-                Console.WriteLine("Error: received invalid data.");
-                return null;
+                throw new CommunicationException("Received invalid data.");
             }
 
             JsonArray sessionList = serverResponse["data"].AsArray();
@@ -268,17 +267,18 @@ namespace VRConnection
                     sessionId = session?["id"]?.ToString();
             }
 
-            return sessionId;
+            if (sessionId != null) return sessionId;
+
+            throw new CommunicationException("Could not retrieve session ID from this message.");
         }
 
-        public static string? ValidateAndGetTunnelId(JsonObject? serverResponse)
+        public static string ValidateAndGetTunnelId(JsonObject serverResponse)
         {
             if (serverResponse == null ||
                 !HasValidIdAndData(serverResponse) ||
                 !(serverResponse is JsonObject))
             {
-                Console.WriteLine("Error: received invalid data.");
-                return null;
+                throw new CommunicationException("Received invalid data.");
             }
 
             JsonObject payload = serverResponse["data"].AsObject();
@@ -287,14 +287,12 @@ namespace VRConnection
                 !(payload["status"] is JsonValue) ||
                 !(payload["id"] is JsonValue))
             {
-                Console.WriteLine("Error: received invalid status and/or id field.");
-                return null;
+                throw new CommunicationException("Received invalid status and/or id field.");
             }
 
             if (payload["status"].ToString() != "ok")
             {
-                Console.WriteLine("Error: the response has a status of {0}.", payload["status"].ToString());
-                return null;
+                throw new CommunicationException($"The response has a status of {payload["status"]}.");
             }
 
             string tunnelId = payload["id"].ToString();

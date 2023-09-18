@@ -14,6 +14,7 @@ namespace VRConnection
     {
         private readonly string _ipAddress;
         private readonly int _port;
+
         private readonly Encoding _encoding = Encoding.ASCII;
         private TcpClient? _tcpClient;
         private NetworkStream? _stream;
@@ -34,24 +35,32 @@ namespace VRConnection
                 return false;
             }
 
-            await SendAsJson(Formatting.SessionListGet());
+            try
+            {
+                await SendAsJson(Formatting.SessionListGet());
 
-            JsonObject? sessionListResponse = await ReceiveAsJsonObject();
-            string? sessionId = Formatting.ValidateAndGetSessionId(sessionListResponse);
-            if (sessionId == null) return false;
+                JsonObject sessionListResponse = await ReceiveAsJsonObject();
+                string sessionId = Formatting.ValidateAndGetSessionId(sessionListResponse);
 
-            await SendAsJson(Formatting.TunnelAdd(sessionId));
+                await SendAsJson(Formatting.TunnelAdd(sessionId));
 
-            JsonObject? tunnelCreateResponse = await ReceiveAsJsonObject();
-            string? tunnelId = Formatting.ValidateAndGetTunnelId(tunnelCreateResponse);
-            if (tunnelId == null) return false;
+                JsonObject tunnelCreateResponse = await ReceiveAsJsonObject();
+                string tunnelId = Formatting.ValidateAndGetTunnelId(tunnelCreateResponse);
 
-            _isSessionActive = true;
-            return true;
+                _isSessionActive = true;
+                return true;
+            }
+            catch (CommunicationException ex)
+            {
+                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
+            }
+
+            return false;
         }
 
         public void Close()
         {
+            _isSessionActive = false;
             _tcpClient?.Close();
             _stream?.Close();
         }
@@ -69,6 +78,8 @@ namespace VRConnection
 
         private async Task SendAsJson(object payload)
         {
+            if (!_isSessionActive) throw new CommunicationException("There is no active communication between the application and the VR server.");
+
             byte[] payloadAsBytes = _encoding.GetBytes(JsonSerializer.Serialize(payload));
             byte[] lengthData = BitConverter.GetBytes((uint)payloadAsBytes.Length);
             byte[] message = lengthData.Concat(payloadAsBytes).ToArray();
@@ -76,8 +87,10 @@ namespace VRConnection
             await _stream.WriteAsync(message, 0, message.Length);
         }
 
-        private async Task<JsonObject?> ReceiveAsJsonObject()
+        private async Task<JsonObject> ReceiveAsJsonObject()
         {
+            if (!_isSessionActive) throw new CommunicationException("There is no active communication between the application and the VR server.");
+
             byte[] lengthArray = new byte[4];
 
             await _stream.ReadAsync(lengthArray, 0, lengthArray.Length);
@@ -93,7 +106,11 @@ namespace VRConnection
             }
 
             string messageAsString = _encoding.GetString(payloadBuffer, 0, totalBytesRead);
-            return JsonSerializer.Deserialize<JsonObject>(messageAsString)?.AsObject();
+            JsonObject? deserializedMessage = JsonSerializer.Deserialize<JsonObject>(messageAsString)?.AsObject();
+
+            if (deserializedMessage != null) return deserializedMessage;
+
+            throw new CommunicationException("Something went wrong while receiving a message from the VR server.");
         }
     }
 }
