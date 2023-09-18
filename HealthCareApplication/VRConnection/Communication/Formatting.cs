@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using VRConnection.Graphics;
 
-namespace VRConnection
+namespace VRConnection.Communication
 {
     /// <summary>
-    /// Helper for creating 
+    /// Helper for creating objects to be parsed as JSON messages and validating incoming JSON messages.
     /// </summary>
-    internal class Formatting
+    public class Formatting
     {
         public static object TunnelAdd(string sessionId)
         {
@@ -107,7 +109,7 @@ namespace VRConnection
         }
 
 
-        public static object Add3DObject(string name, string fileName, Transform transform)
+        public static object Add3DObject(string name, int[] position, double scale, string fileName)
         {
             return new
             {
@@ -117,10 +119,42 @@ namespace VRConnection
                     name,
                     components = new
                     {
-                        transform,
+                        transform = new
+                        {
+                            position,
+                            scale,
+                            rotation = new[] { 0, 0, 0 }
+                        },
                         model = new
                         {
                             file = fileName
+                        }
+                    }
+                }
+            };
+        }
+
+        public static object AddAnimatedObject(string name, int[] position, double scale, string fileName, string animationName)
+        {
+            return new
+            {
+                id = "scene/node/add",
+                data = new
+                {
+                    name,
+                    components = new
+                    {
+                        transform = new
+                        {
+                            position,
+                            scale = scale,
+                            rotation = new[] { 0, 0, 0 }
+                        },
+                        model = new
+                        {
+                            file = fileName,
+                            animated = true,
+                            animation = animationName
                         }
                     }
                 }
@@ -181,7 +215,6 @@ namespace VRConnection
             };
         }
 
-
         public static object RouteAdd(PosVector[] nodes)
         {
             return new
@@ -193,7 +226,6 @@ namespace VRConnection
                 }
             };
         }
-
 
         public static object RoadAdd(string route, string diffuse, string normal, string specular)
         {
@@ -231,7 +263,6 @@ namespace VRConnection
             };
         }
 
-
         public static object RouteUpdate(string node, double speed)
         {
             return new
@@ -243,6 +274,67 @@ namespace VRConnection
                     speed
                 }
             };
+        }
+
+        public static string ValidateAndGetSessionId(JsonObject serverResponse)
+        {
+            if (serverResponse == null ||
+                !HasValidIdAndData(serverResponse) ||
+                !(serverResponse["data"] is JsonArray))
+            {
+                throw new CommunicationException("Received invalid data.");
+            }
+
+            JsonArray sessionList = serverResponse["data"].AsArray();
+            string? sessionId = null;
+
+            foreach (var session in sessionList)
+            {
+                string? hostName = session?["clientinfo"]?["host"]?.ToString();
+                if (hostName == null || session?["id"] == null) continue;
+
+                if (hostName.Equals(Environment.MachineName, StringComparison.CurrentCultureIgnoreCase))
+                    sessionId = session?["id"]?.ToString();
+            }
+
+            if (sessionId != null) return sessionId;
+
+            throw new CommunicationException("Could not retrieve session ID from this message. Are you actually running NetworkEngine?");
+        }
+
+        public static string ValidateAndGetTunnelId(JsonObject serverResponse)
+        {
+            if (serverResponse == null ||
+                !HasValidIdAndData(serverResponse) ||
+                !(serverResponse is JsonObject))
+            {
+                throw new CommunicationException("Received invalid data.");
+            }
+
+            JsonObject payload = serverResponse["data"].AsObject();
+            if (!payload.ContainsKey("status") ||
+                !payload.ContainsKey("id") ||
+                !(payload["status"] is JsonValue) ||
+                !(payload["id"] is JsonValue))
+            {
+                throw new CommunicationException("Received invalid status and/or id field.");
+            }
+
+            if (payload["status"].ToString() != "ok")
+            {
+                throw new CommunicationException($"The response has a status of {payload["status"]}.");
+            }
+
+            string tunnelId = payload["id"].ToString();
+            return tunnelId;
+        }
+
+        private static bool HasValidIdAndData(JsonObject data)
+        {
+            return
+                data.ContainsKey("id") &&
+                data.ContainsKey("data") &&
+                data["id"] is JsonValue;
         }
     }
 }

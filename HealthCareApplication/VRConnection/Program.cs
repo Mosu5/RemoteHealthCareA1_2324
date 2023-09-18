@@ -1,58 +1,59 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json.Nodes;
+using VRConnection.Communication;
 
 namespace VRConnection
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void ExecuteBatFile(string networkEnginePath)
         {
-            // Application to test connection to VR server
+            Process proc = null;
 
-            // Initialize Server connection
-            TcpClient tcpClient = new TcpClient("145.48.6.10", 6666);
-            NetworkStream networkStream = tcpClient.GetStream();
+            string _batDir = string.Format(networkEnginePath);
+            proc = new Process();
+            proc.StartInfo.WorkingDirectory = _batDir;
+            proc.StartInfo.FileName = Path.Combine(networkEnginePath, "sim.bat");
+            proc.StartInfo.CreateNoWindow = false;
+            proc.Start();
+            proc.WaitForExit();
+            var exitCode = proc.ExitCode;
+            proc.Close();
+            Console.WriteLine("Bat file executed...");
+        }
 
-            TunnelHandler tunnelHandler = new TunnelHandler(networkStream);
-            // tunnelHandler.CreateTunnel();
-            VrManager vrManager = new VrManager(tunnelHandler);
-            var size = new int[2] { 256, 256 };
-            var heightMap = new float[65536];
-            vrManager.AddTerrain(size, heightMap);
-            Console.WriteLine(tunnelHandler.ReadString()); // TODO implement a way to limit duplicate code
-                                                           // when reading response
+        static async Task Main(string[] args)
+        {
+            VrSession session = new();
 
-            // vrManager.GetScene();
-            // Console.WriteLine(tunnelHandler.ReadString());
-            //
-            vrManager.AddTerrainNode();
-            Console.WriteLine(tunnelHandler.ReadString());
-            
+            try
+            {
+                await session.Initialize("145.48.6.10", 6666);
 
-           vrManager.AddTerrainLayer();
-           Console.WriteLine(tunnelHandler.ReadString());
+                var size = new int[] { 256, 256 };
+                var heightMap = new float[65536];
 
-            //
-            // bool running = true;
-            //
-            // while (running)
-            // {
-            //     Console.Write("Write message: ");
-            //     string message = Console.ReadLine();
-            //     if (message.Equals("quit"))
-            //     {
-            //         running = false;
-            //     }
-            //
-            //     TunnelHandler.SendMessage(networkStream, message);
-            //
-            //     string response = TunnelHandler.ReadMessage(networkStream);
-            //     Console.WriteLine("Response:" + JsonObject.Parse(response));
-            //
-            // }
-            tcpClient.Close();
-            networkStream.Close();
+                // Opgave 3a Voeg plat terrein toe
+                JsonObject terrain = await session.AddTerrain(size, heightMap);
+                Console.WriteLine(terrain);
+
+                JsonObject scene = await session.GetScene();
+                Console.WriteLine(scene);
+
+                JsonObject terrainNode = await session.AddTerrainNode();
+                Console.WriteLine(terrainNode);
+
+                JsonObject terrainLayer = await session.AddTerrainLayer();
+                Console.WriteLine(terrainLayer);
+
+                session.Close();
+            }
+            catch (CommunicationException ex)
+            {
+                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
+            }
         }
     }
 }
