@@ -11,7 +11,7 @@ using VRConnection.Communication;
 
 namespace VRConnection
 {
-    internal class VrSession
+    public class VrSession
     {
         private string? _sessionId;
         private string? _tunnelId;

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using VRConnection.Communication;
+using VRConnection.Graphics;
 
-namespace VRConnection
+namespace VRConnection.Communication
 {
     /// <summary>
-    /// Helper for creating 
+    /// Helper for creating objects to be parsed as JSON messages and validating incoming JSON messages.
     /// </summary>
-    internal class Formatting
+    public class Formatting
     {
         public static object TunnelAdd(string sessionId)
         {
@@ -183,7 +183,6 @@ namespace VRConnection
             };
         }
 
-
         public static object RouteAdd(PosVector[] nodes)
         {
             return new
@@ -195,7 +194,6 @@ namespace VRConnection
                 }
             };
         }
-
 
         public static object RoadAdd(string route, string diffuse, string normal, string specular)
         {
@@ -232,7 +230,6 @@ namespace VRConnection
                 }
             };
         }
-
 
         public static object RouteUpdate(string node, double speed)
         {

@@ -9,7 +9,7 @@ namespace VRConnection
     {
         static async Task Main(string[] args)
         {
-            VrSession session = new VrSession();
+            VrSession session = new();
 
             try
             {
@@ -18,6 +18,7 @@ namespace VRConnection
                 var size = new int[] { 256, 256 };
                 var heightMap = new float[65536];
 
+                // Opgave 3a Voeg plat terrein toe
                 JsonObject terrain = await session.AddTerrain(size, heightMap);
                 Console.WriteLine(terrain);
 
