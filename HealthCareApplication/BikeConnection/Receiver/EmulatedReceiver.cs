@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Avans.TI.BLE;
 
 namespace BikeConnection.Receiver
@@ -132,6 +134,11 @@ namespace BikeConnection.Receiver
                 ServiceName = "EmulatedHrmService",
                 Data = message
             };
+        }
+
+        public async Task SetResistance(int percentage)
+        {
+            Console.WriteLine("The emulator cannot emulate sending resistance.");
         }
     }
 }

@@ -15,7 +15,7 @@ namespace BikeConnection
     class Program
     {
   
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             new Client();
         }
