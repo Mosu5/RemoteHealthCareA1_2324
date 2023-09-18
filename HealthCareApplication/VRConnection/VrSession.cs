@@ -61,6 +61,44 @@ namespace VRConnection
         }
 
         /// <summary>
+        ///  Add a model in VR scene
+        /// </summary>
+        /// <param name="name">name of node</param>
+        /// <param name="position">position array containing x, y, z</param>
+        /// <param name="scale">ses scaling of model</param>
+        /// <param name="fileName"> filepath of the obj file of the model</param>
+        public async Task<JsonObject> AddModel(string name, int[] position, double scale, string fileName)
+        {
+            // TODO add position data
+            object modelAddCommand = Formatting.Add3DObject(name, position, scale, fileName);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, modelAddCommand);
+            Console.WriteLine(tunnelMessage);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+
+        /// <summary>
+        ///  Add a model in VR scene
+        /// </summary>
+        /// <param name="name">name of node</param>
+        /// <param name="position">position array containing x, y, z</param>
+        /// <param name="scale">ses scaling of model</param>
+        /// <param name="fileName"> filepath of the obj file of the model</param>
+        /// <param name="animationName"> filepath of the animation file</param>
+        public async Task<JsonObject> AddAnimatedModel(string name, int[] position, double scale, string fileName, string animationName)
+        {
+            // TODO add position data
+            // TODO add position data
+            object modelAddCommand = Formatting.AddAnimatedObject(name, position, scale, fileName, animationName);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, modelAddCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+        /// <summary>
         /// Add terrain data to VR scene
         /// Since its only positional data, no visual component is rendered in the scene
         /// </summary>

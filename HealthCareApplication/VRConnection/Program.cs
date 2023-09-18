@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json.Nodes;
 using VRConnection.Communication;
@@ -7,6 +8,22 @@ namespace VRConnection
 {
     public class Program
     {
+        public static void ExecuteBatFile(string networkEnginePath)
+        {
+            Process proc = null;
+
+            string _batDir = string.Format(networkEnginePath);
+            proc = new Process();
+            proc.StartInfo.WorkingDirectory = _batDir;
+            proc.StartInfo.FileName = Path.Combine(networkEnginePath, "sim.bat");
+            proc.StartInfo.CreateNoWindow = false;
+            proc.Start();
+            proc.WaitForExit();
+            var exitCode = proc.ExitCode;
+            proc.Close();
+            Console.WriteLine("Bat file executed...");
+        }
+
         static async Task Main(string[] args)
         {
             VrSession session = new();
