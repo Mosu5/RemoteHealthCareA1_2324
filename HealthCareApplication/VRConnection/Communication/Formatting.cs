@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -109,7 +110,7 @@ namespace VRConnection.Communication
         }
 
 
-        public static object Add3DObject(string name, int[] position, double scale, string fileName)
+        public static object Add3DObject(string name, Vector3 pos, double scale, string fileName)
         {
             return new
             {
@@ -121,7 +122,7 @@ namespace VRConnection.Communication
                     {
                         transform = new
                         {
-                            position,
+                            position = new[] { pos.X, pos.Y, pos.Z },
                             scale,
                             rotation = new[] { 0, 0, 0 }
                         },
@@ -134,7 +135,8 @@ namespace VRConnection.Communication
             };
         }
 
-        public static object AddAnimatedObject(string name, int[] position, double scale, string fileName, string animationName)
+        public static object AddAnimatedObject(string name, Vector3 pos, double scale, Vector3 rot, string fileName,
+            string animationName)
         {
             return new
             {
@@ -146,9 +148,9 @@ namespace VRConnection.Communication
                     {
                         transform = new
                         {
-                            position,
-                            scale = scale,
-                            rotation = new[] { 0, 0, 0 }
+                            position = new[] { pos.X, pos.Y, pos.Z },
+                            scale,
+                            rotation = new[] { rot.X, rot.Y, rot.Z }
                         },
                         model = new
                         {
@@ -299,7 +301,8 @@ namespace VRConnection.Communication
 
             if (sessionId != null) return sessionId;
 
-            throw new CommunicationException("Could not retrieve session ID from this message. Are you actually running NetworkEngine?");
+            throw new CommunicationException(
+                "Could not retrieve session ID from this message. Are you actually running NetworkEngine?");
         }
 
         public static string ValidateAndGetTunnelId(JsonObject serverResponse)
@@ -335,6 +338,30 @@ namespace VRConnection.Communication
                 data.ContainsKey("id") &&
                 data.ContainsKey("data") &&
                 data["id"] is JsonValue;
+        }
+
+        public static object GetHeight(Vector3 position)
+        {
+            return new
+            {
+                id = "scene/terrain/getheight",
+                data = new
+                {
+                    position = new[] { position.X, position.Z }
+                }
+            };
+        }
+        
+        public static object GetHeights(Vector3[] positions)
+        {
+            return new
+            {
+                id = "scene/terrain/getheights",
+                data = new
+                {
+                    positions = positions.Select(p => new[] { p.X, p.Z }).ToArray()
+                }
+            };
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json;
@@ -25,7 +26,8 @@ namespace VRConnection
         {
             if (!await VrCommunication.ConnectToServer(serverIpAddress, serverPort))
             {
-                await Console.Out.WriteLineAsync($"Could not connect to address {serverIpAddress} on port {serverPort}. Maybe there is an already active session?");
+                await Console.Out.WriteLineAsync(
+                    $"Could not connect to address {serverIpAddress} on port {serverPort}. Maybe there is an already active session?");
                 return false;
             }
 
@@ -61,18 +63,36 @@ namespace VRConnection
         }
 
         /// <summary>
+        /// Get height of terrain at position
+        /// </summary>
+        /// <param name="position"> contains x, y, z position of model </param>
+        /// <returns></returns>
+        private async Task<JsonObject> GetHeight(Vector3 position)
+        {
+            object heightGetCommand = Formatting.GetHeight(position);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, heightGetCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+        /// <summary>
         ///  Add a model in VR scene
         /// </summary>
         /// <param name="name">name of node</param>
         /// <param name="position">position array containing x, y, z</param>
         /// <param name="scale">ses scaling of model</param>
         /// <param name="fileName"> filepath of the obj file of the model</param>
-        public async Task<JsonObject> AddModel(string name, int[] position, double scale, string fileName)
+        public async Task<JsonObject> AddModel(string name, Vector3 position, double scale, string fileName)
         {
-            // TODO add position data
+            // Get height of terrain at position
+            var heightJson = await GetHeight(position);
+            var height = heightJson["data"]["data"]["data"]["height"].GetValue<float>();
+            position.Y = height; // overwrite y position with height
+
             object modelAddCommand = Formatting.Add3DObject(name, position, scale, fileName);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, modelAddCommand);
-            Console.WriteLine(tunnelMessage);
+            Console.WriteLine(tunnelMessage.ToString());
 
             await VrCommunication.SendAsJson(tunnelMessage);
             return await VrCommunication.ReceiveJsonObject();
@@ -84,14 +104,16 @@ namespace VRConnection
         /// </summary>
         /// <param name="name">name of node</param>
         /// <param name="position">position array containing x, y, z</param>
-        /// <param name="scale">ses scaling of model</param>
+        /// <param name="scale">sets scaling of model</param>
+        /// <param name="rotation"> rotates model in x-, y-, z-ax </param>
         /// <param name="fileName"> filepath of the obj file of the model</param>
         /// <param name="animationName"> filepath of the animation file</param>
-        public async Task<JsonObject> AddAnimatedModel(string name, int[] position, double scale, string fileName, string animationName)
+        public async Task<JsonObject> AddAnimatedModel(string name, Vector3 position, double scale, Vector3 rotation,
+            string fileName, string animationName)
         {
-            // TODO add position data
-            // TODO add position data
-            object modelAddCommand = Formatting.AddAnimatedObject(name, position, scale, fileName, animationName);
+            object modelAddCommand = Formatting.AddAnimatedObject(
+                name, position, scale, rotation, fileName, animationName
+            );
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, modelAddCommand);
 
             await VrCommunication.SendAsJson(tunnelMessage);
@@ -110,6 +132,7 @@ namespace VRConnection
             await VrCommunication.SendAsJson(tunnelMessage);
             return await VrCommunication.ReceiveJsonObject();
         }
+
 
         /// <summary>
         /// Add terrain node to VR scene
@@ -176,6 +199,7 @@ namespace VRConnection
                 var node = nodes.First(); // only need one node with the name needed
                 uuid = node?["uuid"]?.ToString() ?? string.Empty;
             }
+
             return uuid;
         }
     }
