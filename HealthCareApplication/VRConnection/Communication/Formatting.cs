@@ -109,7 +109,7 @@ namespace VRConnection.Communication
         }
 
 
-        public static object Add3DObject(string name, string fileName, Transform transform)
+        public static object Add3DObject(string name, int[] position, double scale, string fileName)
         {
             return new
             {
@@ -119,10 +119,42 @@ namespace VRConnection.Communication
                     name,
                     components = new
                     {
-                        transform,
+                        transform = new
+                        {
+                            position,
+                            scale,
+                            rotation = new[] { 0, 0, 0 }
+                        },
                         model = new
                         {
                             file = fileName
+                        }
+                    }
+                }
+            };
+        }
+
+        public static object AddAnimatedObject(string name, int[] position, double scale, string fileName, string animationName)
+        {
+            return new
+            {
+                id = "scene/node/add",
+                data = new
+                {
+                    name,
+                    components = new
+                    {
+                        transform = new
+                        {
+                            position,
+                            scale = scale,
+                            rotation = new[] { 0, 0, 0 }
+                        },
+                        model = new
+                        {
+                            file = fileName,
+                            animated = true,
+                            animation = animationName
                         }
                     }
                 }
