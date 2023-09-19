@@ -287,7 +287,10 @@ public class VrSession
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public async Task<JsonObject> FollowRoute(string route, string node, double speed)
+    /// <summary>
+    /// Let an object follow the route
+    /// </summary>
+    public async Task<JsonObject> FollowRoute(string route, string node, double speed)
         {
             object routeFollowCommand = Formatting.RouteFollow(route, node, speed);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeFollowCommand);
