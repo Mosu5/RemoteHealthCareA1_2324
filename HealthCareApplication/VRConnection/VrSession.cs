@@ -281,56 +281,38 @@ public class VrSession
 
         return uuid;
     }
-}
-        /// <summary>
-        /// Helper method to get the first node's UUID, or else an empty string.
-        /// It is assumed that the first node is the terrain node.
-        /// TODO check if the terrain is always the first node in this JsonArray
-        /// </summary>
-        private string GetNode(JsonArray nodes)
-        {
-            string uuid = string.Empty;
-            if (nodes != null)
-            {
-                var node = nodes.First(); // only need one node with the name needed
-                uuid = node?["uuid"]?.ToString() ?? string.Empty;
-            }
-            return uuid;
-        }
 
-        /// <summary>
-        /// Add route to VR scene
-        /// Nodes are added in the order they are given
-        /// </summary>
-        public async Task<JsonObject> AddRoute(PosVector[] nodes)
-        {
-            object routeAddCommand = Formatting.RouteAdd(nodes);
-            object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeAddCommand);
+    /// <summary>
+    /// Add route to VR scene
+    /// Nodes are added in the order they are given
+    /// </summary>
+    public async Task<JsonObject> AddRoute(PosVector[] nodes)
+    {
+        object routeAddCommand = Formatting.RouteAdd(nodes);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeAddCommand);
 
-            await VrCommunication.SendAsJson(tunnelMessage);
-            return await VrCommunication.ReceiveJsonObject();
-        }
-        
-        /// <summary>
-        /// Add road to VR scene
-        /// Road follows route
-        /// The diffuse, normal and specular are textures used for the road
-        /// </summary>
-        public async Task<JsonObject> AddRoad()
-        {
-            // command data
-            string routeId = await GetNodeId("route");
-            string normal = @"data\NetworkEngine\textures\terrain\ground_cracked_n.jpg";
-            string diffuse = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
-            string specular = @"data\NetworkEngine\textures\terrain\ground_mud2_s.jpg";
-            
-            // create command and send to VR
-            object roadAddCommand = Formatting.RoadAdd(routeId, diffuse, normal, specular);
-            object tunnelMessage = Formatting.TunnelSend(_tunnelId, roadAddCommand);
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
 
-            await VrCommunication.SendAsJson(tunnelMessage);
-            return await VrCommunication.ReceiveJsonObject();
-        }
-        
+    /// <summary>
+    /// Add road to VR scene
+    /// Road follows route
+    /// The diffuse, normal and specular are textures used for the road
+    /// </summary>
+    public async Task<JsonObject> AddRoad()
+    {
+        // command data
+        string routeId = await GetNodeId("route");
+        string normal = @"data\NetworkEngine\textures\terrain\ground_cracked_n.jpg";
+        string diffuse = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
+        string specular = @"data\NetworkEngine\textures\terrain\ground_mud2_s.jpg";
+
+        // create command and send to VR
+        object roadAddCommand = Formatting.RoadAdd(routeId, diffuse, normal, specular);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, roadAddCommand);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
     }
 }

@@ -27,11 +27,9 @@ public class Program
             // Send the terrain to the server and receive the response
             var terrain = await session.AddTerrain(size, heightMap);
             Console.WriteLine(terrain);
-                var size = new int[] { 256, 256 };
-                var heightMap = new float[65536];
-                
-                PosVector[] posVectors = new PosVector[]
-                {
+
+            PosVector[] posVectors = new PosVector[]
+            {
                     new PosVector(new int[]{-22,0,40 }, new int[]{5,0,5}),
                     new PosVector(new int[]{0,0,62}, new int[]{5,0,5}),
                     new PosVector(new int[]{42,0, 63}, new int[]{5,0,-5}),
@@ -41,12 +39,7 @@ public class Program
                     new PosVector(new int[]{20,0,-40 }, new int[]{-5,0,-5}),
                     new PosVector(new int[]{-10,0,-30 }, new int[]{-5,0,5}),
                     new PosVector(new int[]{-25,0,-5 }, new int[]{-5,0,5})
-                };
-                
-                
-                // Opgave 3a Voeg plat terrein toe
-                JsonObject terrain = await session.AddTerrain(size, heightMap);
-                Console.WriteLine(terrain);
+            };
 
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
             Vector3 position = new(0, 0, 0);
@@ -79,33 +72,19 @@ public class Program
             JsonObject removeGroundPane = await session.RemoveNode("GroundPlane");
             Console.WriteLine(removeGroundPane);
 
+            // Opgave 3f Voeg route toe
+            JsonObject route = await session.AddRoute(posVectors);
+            Console.WriteLine(route);
 
+            // Opgave 3f Voeg route toe
+            JsonObject road = await session.AddRoad();
+            Console.WriteLine(road);
 
             session.Close();
         }
         catch (CommunicationException ex)
         {
             await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
-        }
-    }
-}
-                JsonObject terrainLayer = await session.AddTerrainLayer();
-                Console.WriteLine(terrainLayer);
-                
-                // Opgave 3f Voeg route toe
-                JsonObject route = await session.AddRoute(posVectors);
-                Console.WriteLine(route);
-                
-                // Opgave 3f Voeg route toe
-                JsonObject road = await session.AddRoad();
-                Console.WriteLine(road);
-
-                session.Close();
-            }
-            catch (CommunicationException ex)
-            {
-                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
-            }
         }
     }
 }
