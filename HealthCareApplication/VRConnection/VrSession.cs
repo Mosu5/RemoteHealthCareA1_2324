@@ -36,13 +36,20 @@ public class VrSession
         return true;
     }
 
-    /// <summary>
-    ///     Close the connection with the VR server
-    /// </summary>
-    public void Close()
-    {
-        VrCommunication.CloseConnection();
-    }
+        public async Task<JsonObject> SetSkyTime(double time)
+        {
+            object setSkyCommand = Formatting.SetSkyboxTime(time);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, setSkyCommand);
+            Console.WriteLine(tunnelMessage);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+        /// <summary>
+        /// Close the connection with the VR server
+        /// </summary>
+        public void Close() => VrCommunication.CloseConnection();
 
     /// <summary>
     ///     Send a request to VR server and retrieve the VR scene data

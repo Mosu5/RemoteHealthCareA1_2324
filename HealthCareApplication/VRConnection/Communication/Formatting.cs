@@ -248,25 +248,44 @@ public class Formatting
         };
     }
 
-    public static object RouteFollow(string route, string node, double speed)
-    {
-        return new
+        /// <summary>
+        /// Sets the time of the sky. If the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static object SetSkyboxTime(double time)
         {
-            id = "route/follow",
-            data = new
+            return new
             {
-                route,
-                node,
-                speed,
-                offset = 0.0,
-                rotate = "XZ",
-                smoothing = 1.0,
-                followHeight = false,
-                rotateOffset = new int[0, 0, 0],
-                positionOffset = new int[0, 0, 0]
-            }
-        };
-    }
+                id = "scene/skybox/settime",
+                data = new
+                {
+                    time
+                }
+
+            };
+            
+        }
+
+        public static object RouteFollow(string route, string node, double speed)
+        {
+            return new
+            {
+                id = "route/follow",
+                data = new
+                {
+                    route,
+                    node,
+                    speed,
+                    offset = 0.0,
+                    rotate = "XZ",
+                    smoothing = 1.0,
+                    followHeight = false,
+                    rotateOffset = new int[0, 0, 0],
+                    positionOffset = new int[0, 0, 0]
+                }
+            };
+        }
 
     public static object RouteUpdate(string node, double speed)
     {

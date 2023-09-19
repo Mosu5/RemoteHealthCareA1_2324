@@ -52,11 +52,15 @@ public class Program
             var terrainLayer = await session.AddTerrainLayer();
             Console.WriteLine(terrainLayer);
 
-            session.Close();
-        }
-        catch (CommunicationException ex)
-        {
-            await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
+                JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
+                Console.WriteLine(setSkyboxObj);
+
+                session.Close();
+            }
+            catch (CommunicationException ex)
+            {
+                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
+            }
         }
     }
 }
