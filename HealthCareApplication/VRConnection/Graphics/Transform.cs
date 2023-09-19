@@ -1,4 +1,4 @@
-﻿namespace VRConnection.Graphics
+namespace VRConnection.Graphics
 {
     public class Transform
     {

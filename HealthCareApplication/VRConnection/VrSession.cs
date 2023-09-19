@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Text.Json.Nodes;
 using VRConnection.Communication;
 using VRConnection.Graphics;
@@ -102,7 +102,7 @@ public class VrSession
         await VrCommunication.SendAsJson(tunnelMessage);
         var heightJson = await VrCommunication.ReceiveJsonObject();
 
-        var height = heightJson["data"]["data"]["data"]["height"].GetValue<float>();
+        var height = heightJson["data"]["data"]["data"]["height"].GetValue<float>(); //TODO error handling in case terrain is not added
         return height;
     }
 
@@ -237,8 +237,8 @@ public class VrSession
     /// <returns>uuid as string</returns>
     public async Task<string> GetNodeId(string name)
     {
-        var sceneFindNodeCommand = Formatting.SceneNodeFind(name);
-        var tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneFindNodeCommand);
+        object sceneFindNodeCommand = Formatting.SceneNodeFind(name);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneFindNodeCommand);
 
             await VrCommunication.SendAsJson(tunnelMessage);
             JsonObject response = await VrCommunication.ReceiveJsonObject();
@@ -279,7 +279,7 @@ public class VrSession
             uuid = node?["uuid"]?.ToString() ?? string.Empty;
         }
 
-        return uuid;
+        return uuid; 
     }
 
     /// <summary>
@@ -315,4 +315,57 @@ public class VrSession
         await VrCommunication.SendAsJson(tunnelMessage);
         return await VrCommunication.ReceiveJsonObject();
     }
+}
+
+        /// <summary>
+        /// Add route to VR scene
+        /// Nodes are added in the order they are given
+        /// </summary>
+        public async Task<JsonObject> AddRoute(PosVector[] nodes)
+        {
+            object routeAddCommand = Formatting.RouteAdd(nodes);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeAddCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+        
+        /// <summary>
+        /// Add road to VR scene
+        /// Road follows route
+        /// </summary>
+        public async Task<JsonObject> AddRoad(string route, string diffuse, string normal, string specular)
+        {
+            object roadAddCommand = Formatting.RoadAdd(route, diffuse, normal, specular);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, roadAddCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+    /// <summary>
+    /// Let an object follow the route
+    /// </summary>
+    public async Task<JsonObject> FollowRoute(string route, string node, double speed)
+        {
+            object routeFollowCommand = Formatting.RouteFollow(route, node, speed);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeFollowCommand);
+        
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+    public async Task<JsonObject> RemoveNode(string nodeName)
+    {
+        string uuid = await GetNodeId(nodeName);
+        await Console.Out.WriteLineAsync("Ground plane id: " + uuid);
+
+        object removeNodeCommand = Formatting.RemoveNode(uuid);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, removeNodeCommand);
+        Console.WriteLine(tunnelMessage);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
+
 }
