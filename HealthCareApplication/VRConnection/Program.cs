@@ -3,12 +3,12 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json.Nodes;
 using VRConnection.Communication;
+using VRConnection.Graphics;
 
 namespace VRConnection
 {
     public class Program
     {
-        //Op hoop en zegen
         public static void ExecuteBatFile(string networkEnginePath)
         {
             Process proc = null;
@@ -35,6 +35,23 @@ namespace VRConnection
 
                 var size = new int[] { 256, 256 };
                 var heightMap = new float[65536];
+                
+                PosVector[] posVectors = new PosVector[]
+                {
+                    new PosVector(new int[]{-22,0,40 }, new int[]{5,0,5}),
+                    new PosVector(new int[]{0,0,62}, new int[]{5,0,5}),
+                    new PosVector(new int[]{42,0, 63}, new int[]{5,0,-5}),
+                    new PosVector(new int[]{65,0,42 }, new int[]{5,0,-5}),
+                    new PosVector(new int[]{75,0,10 }, new int[]{5,0,-5}),
+                    new PosVector(new int[]{63,0,-30 }, new int[]{-5,0,5}),
+                    new PosVector(new int[]{20,0,-40 }, new int[]{-5,0,-5}),
+                    new PosVector(new int[]{-10,0,-30 }, new int[]{-5,0,5}),
+                    new PosVector(new int[]{-25,0,-5 }, new int[]{-5,0,5})
+                };
+                
+                // Opgave 3f Voeg route toe
+                JsonObject route = await session.AddRoute(posVectors);
+                Console.WriteLine(route);
 
                 // Opgave 3a Voeg plat terrein toe
                 JsonObject terrain = await session.AddTerrain(size, heightMap);
