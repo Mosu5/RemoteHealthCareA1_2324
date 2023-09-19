@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Text.Json.Nodes;
 using VRConnection.Communication;
 using VRConnection.Graphics;
 
@@ -52,15 +53,14 @@ public class Program
             var terrainLayer = await session.AddTerrainLayer();
             Console.WriteLine(terrainLayer);
 
-                JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
-                Console.WriteLine(setSkyboxObj);
+            JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
+            Console.WriteLine(setSkyboxObj);
 
-                session.Close();
-            }
-            catch (CommunicationException ex)
-            {
-                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
-            }
+            session.Close();
+        }
+        catch (CommunicationException ex)
+        {
+            await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
         }
     }
 }
