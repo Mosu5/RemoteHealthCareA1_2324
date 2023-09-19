@@ -49,14 +49,7 @@ namespace VRConnection
                     new PosVector(new int[]{-25,0,-5 }, new int[]{-5,0,5})
                 };
                 
-                // Opgave 3f Voeg route toe
-                JsonObject route = await session.AddRoute(posVectors);
-                Console.WriteLine(route);
                 
-                // Opgave 3f Voeg route toe
-                //JsonObject road = await session.AddRoad();
-                //Console.WriteLine(road);
-
                 // Opgave 3a Voeg plat terrein toe
                 JsonObject terrain = await session.AddTerrain(size, heightMap);
                 Console.WriteLine(terrain);
@@ -69,6 +62,14 @@ namespace VRConnection
 
                 JsonObject terrainLayer = await session.AddTerrainLayer();
                 Console.WriteLine(terrainLayer);
+                
+                // Opgave 3f Voeg route toe
+                JsonObject route = await session.AddRoute(posVectors);
+                Console.WriteLine(route);
+                
+                // Opgave 3f Voeg route toe
+                JsonObject road = await session.AddRoad();
+                Console.WriteLine(road);
 
                 session.Close();
             }

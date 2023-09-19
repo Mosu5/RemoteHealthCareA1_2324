@@ -238,7 +238,7 @@ namespace VRConnection.Communication
                     diffuse,
                     normal,
                     specular,
-                    heightoffset = 0.01
+                    heightoffset = 0.1
                 }
             };
         }

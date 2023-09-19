@@ -196,10 +196,18 @@ namespace VRConnection
         /// <summary>
         /// Add road to VR scene
         /// Road follows route
+        /// The diffuse, normal and specular are textures used for the road
         /// </summary>
-        public async Task<JsonObject> AddRoad(string route, string diffuse, string normal, string specular)
+        public async Task<JsonObject> AddRoad()
         {
-            object roadAddCommand = Formatting.RoadAdd(route, diffuse, normal, specular);
+            // command data
+            string routeId = await GetNodeId("route");
+            string normal = @"data\NetworkEngine\textures\terrain\ground_cracked_n.jpg";
+            string diffuse = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
+            string specular = @"data\NetworkEngine\textures\terrain\ground_mud2_s.jpg";
+            
+            // create command and send to VR
+            object roadAddCommand = Formatting.RoadAdd(routeId, diffuse, normal, specular);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, roadAddCommand);
 
             await VrCommunication.SendAsJson(tunnelMessage);
