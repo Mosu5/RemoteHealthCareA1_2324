@@ -23,7 +23,7 @@ public class Program
             var size = new[] { 256, 256 };
             // var heightMap = new float[256 * 256];
             var heightMap = PerlinNoiseGenerator.GenerateHeightMap(20); // TODO save heightMap as prop
-            
+
             // Send the terrain to the server and receive the response
             var terrain = await session.AddTerrain(size, heightMap);
             Console.WriteLine(terrain);
@@ -60,14 +60,6 @@ public class Program
             );
             Console.WriteLine(tree);
 
-            PosVector[] posVectors = new PosVector[]
-                {
-                    new PosVector(new int[]{0,0,0}, new int[]{5,0,-5}),
-                    new PosVector(new int[]{50,0,0}, new int[]{5,0,5}),
-                    new PosVector(new int[]{50,0,50}, new int[]{-5,0,5}),
-                    new PosVector(new int[]{0,0,50}, new int[]{-5,0,-5})
-                };
-
             // Opgave 3f Voeg route toe
             JsonObject route = await session.AddRoute(posVectors);
             Console.WriteLine(route);
@@ -89,38 +81,17 @@ public class Program
 
             var terrainNode = await session.AddTerrainNode();
             Console.WriteLine(terrainNode);
-            
+
             var terrainLayer = await session.AddTerrainLayer();
             Console.WriteLine(terrainLayer);
             JsonObject removeGroundPane = await session.RemoveNode("GroundPlane");
             Console.WriteLine(removeGroundPane);
             session.Close();
-        }
-        catch (CommunicationException ex)
-        {
-            await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
-        }
 
             // Opgave 3e Verander de code van 3a zodat het terrein hoogteverschillen krijgt
 
-            var scene = await session.GetScene();
-            Console.WriteLine(scene);
-
-            var terrainNode = await session.AddTerrainNode();
-            Console.WriteLine(terrainNode);
-
-            var terrainLayer = await session.AddTerrainLayer();
-            Console.WriteLine(terrainLayer);
-
             JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
             Console.WriteLine(setSkyboxObj);
-
-            JsonObject removeGroundPane = await session.RemoveNode("GroundPlane");
-            Console.WriteLine(removeGroundPane);
-
-            // Opgave 3f Voeg route toe
-            JsonObject route = await session.AddRoute(posVectors);
-            Console.WriteLine(route);
 
             // Opgave 3f Voeg route toe
             JsonObject road = await session.AddRoad();

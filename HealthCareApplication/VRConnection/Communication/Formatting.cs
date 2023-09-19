@@ -248,56 +248,37 @@ public class Formatting
         };
     }
 
-        public static object RemoveNode(string id)
+    public static object RemoveNode(string id)
+    {
+        return new
         {
-            return new
+            id = "scene/node/delete",
+            data = new
             {
-                id = "scene/node/delete",
-                data = new
-                {
-                    id
-                }
-            };
-        }
+                id
+            }
+        };
+    }
 
-        /// <summary>
-        /// Sets the time of the sky. If the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public static object SetSkyboxTime(double time)
+    /// <summary>
+    /// Sets the time of the sky. If the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static object SetSkyboxTime(double time)
+    {
+        return new
         {
-            return new
+            id = "scene/skybox/settime",
+            data = new
             {
-                id = "scene/skybox/settime",
-                data = new
-                {
-                    time
-                }
+                time
+            }
 
-            };
-            
-        }
+        };
 
-        public static object RouteFollow(string route, string node, double speed)
-        {
-            return new
-            {
-                id = "route/follow",
-                data = new
-                {
-                    route,
-                    node,
-                    speed,
-                    offset = 0.0,
-                    rotate = "XZ",
-                    smoothing = 1.0,
-                    followHeight = false,
-                    rotateOffset = new int[0, 0, 0],
-                    positionOffset = new int[0, 0, 0]
-                }
-            };
-        }
+    }
+
     public static object RouteFollow(string routeID, string nodeID, double speed)
     {
         return new
@@ -405,18 +386,6 @@ public class Formatting
             data = new
             {
                 positions = positions.Select(p => new[] { p.X, p.Z }).ToArray()
-            }
-        };
-    }
-
-    public static object RemoveNode(string id)
-    {
-        return new
-        {
-            id = "scene/node/delete",
-            data = new
-            {
-                id
             }
         };
     }
