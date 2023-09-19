@@ -36,8 +36,8 @@ namespace VRConnection
                 var heightMap = new float[65536];
 
                 // Opgave 3a Voeg plat terrein toe
-                JsonObject terrain = await session.AddTerrain(size, heightMap);
-                Console.WriteLine(terrain);
+                //JsonObject terrain = await session.AddTerrain(size, heightMap);
+                //Console.WriteLine(terrain);
 
                 JsonObject scene = await session.GetScene();
                 Console.WriteLine(scene);
@@ -50,6 +50,9 @@ namespace VRConnection
 
                 JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
                 Console.WriteLine(setSkyboxObj);
+
+                //JsonObject removeGroundPane = await session.RemoveNode(@"data\NetworkEngine\models\trees\fantasy\tree7.obj");
+                //Console.WriteLine(removeGroundPane);
 
                 session.Close();
             }

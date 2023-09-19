@@ -243,6 +243,18 @@ namespace VRConnection.Communication
             };
         }
 
+        public static object RemoveNode(int uid)
+        {
+            return new
+            {
+                id = "scene/node/delete",
+                date = new
+                {
+                    uid
+                }
+            };
+        }
+
         /// <summary>
         /// Sets the time of the sky. If the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
         /// </summary>

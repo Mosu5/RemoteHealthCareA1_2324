@@ -52,6 +52,17 @@ namespace VRConnection
             return await VrCommunication.ReceiveJsonObject();
         }
 
+
+        public async Task<JsonObject> RemoveNode(int uid)
+        {
+            object removeNodeCommand = Formatting.RemoveNode(uid);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, removeNodeCommand);
+            Console.WriteLine(tunnelMessage);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();   
+        }
+
         /// <summary>
         /// Close the connection with the VR server
         /// </summary>
