@@ -248,6 +248,18 @@ public class Formatting
         };
     }
 
+        public static object RemoveNode(string id)
+        {
+            return new
+            {
+                id = "scene/node/delete",
+                data = new
+                {
+                    id
+                }
+            };
+        }
+
         /// <summary>
         /// Sets the time of the sky. If the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
         /// </summary>

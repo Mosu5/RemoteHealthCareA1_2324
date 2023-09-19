@@ -56,11 +56,17 @@ public class Program
             JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
             Console.WriteLine(setSkyboxObj);
 
-            session.Close();
-        }
-        catch (CommunicationException ex)
-        {
-            await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
+                JsonObject removeGroundPane = await session.RemoveNode("GroundPlane");
+                Console.WriteLine(removeGroundPane);
+
+               
+
+                session.Close();
+            }
+            catch (CommunicationException ex)
+            {
+                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
+            }
         }
     }
 }
