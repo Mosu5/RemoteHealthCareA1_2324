@@ -93,7 +93,7 @@ public class Program
             JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
             Console.WriteLine(setSkyboxObj);
 
-            // Opgave 3f Voeg route toe
+            // Opgave 3g Voeg road toe
             JsonObject road = await session.AddRoad(routeID);
             Console.WriteLine(road);
 
