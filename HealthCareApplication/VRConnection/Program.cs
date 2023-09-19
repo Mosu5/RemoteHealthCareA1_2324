@@ -52,6 +52,10 @@ namespace VRConnection
                 // Opgave 3f Voeg route toe
                 JsonObject route = await session.AddRoute(posVectors);
                 Console.WriteLine(route);
+                
+                // Opgave 3f Voeg route toe
+                //JsonObject road = await session.AddRoad();
+                //Console.WriteLine(road);
 
                 // Opgave 3a Voeg plat terrein toe
                 JsonObject terrain = await session.AddTerrain(size, heightMap);

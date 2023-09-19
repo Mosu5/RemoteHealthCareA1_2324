@@ -180,10 +180,27 @@ namespace VRConnection
             return uuid;
         }
 
+        /// <summary>
+        /// Add route to VR scene
+        /// Nodes are added in the order they are given
+        /// </summary>
         public async Task<JsonObject> AddRoute(PosVector[] nodes)
         {
             object routeAddCommand = Formatting.RouteAdd(nodes);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeAddCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+        
+        /// <summary>
+        /// Add road to VR scene
+        /// Road follows route
+        /// </summary>
+        public async Task<JsonObject> AddRoad(string route, string diffuse, string normal, string specular)
+        {
+            object roadAddCommand = Formatting.RoadAdd(route, diffuse, normal, specular);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, roadAddCommand);
 
             await VrCommunication.SendAsJson(tunnelMessage);
             return await VrCommunication.ReceiveJsonObject();
