@@ -1,38 +1,41 @@
-﻿using System.Diagnostics;
-using System.Net.Sockets;
-using System.Text;
-using System.Text.Json.Nodes;
+using System.Numerics;
 using VRConnection.Communication;
 using VRConnection.Graphics;
 
-namespace VRConnection
+namespace VRConnection;
+
+public class Program
 {
-    public class Program
+    private static async Task Main(string[] args)
     {
-        public static void ExecuteBatFile(string networkEnginePath)
+        VrSession session = new();
+
+        try
         {
-            Process proc = null;
+            await session.Initialize("145.48.6.10", 6666);
 
-            string _batDir = string.Format(networkEnginePath);
-            proc = new Process();
-            proc.StartInfo.WorkingDirectory = _batDir;
-            proc.StartInfo.FileName = Path.Combine(networkEnginePath, "sim.bat");
-            proc.StartInfo.CreateNoWindow = false;
-            proc.Start();
-            proc.WaitForExit();
-            var exitCode = proc.ExitCode;
-            proc.Close();
-            Console.WriteLine("Bat file executed...");
-        }
+            // reset scene to default
+            var reset = await session.ResetScene();
+            Console.WriteLine(reset);
 
-        static async Task Main(string[] args)
-        {
-            VrSession session = new();
+            // Opgave 3a/3e Voeg plat/ terrein toe
+            var size = new[] { 256, 256 };
+            // var heightMap = new float[256 * 256];
+            var heightMap = PerlinNoiseGenerator.GenerateHeightMap(20); // TODO save heightMap as prop
 
-            try
-            {
-                await session.Initialize("145.48.6.10", 6666);
+            // Send the terrain to the server and receive the response
+            var terrain = await session.AddTerrain(size, heightMap);
+            Console.WriteLine(terrain);
 
+            // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
+            Vector3 position = new(0, 0, 0);
+            var tree = await session.AddModel(
+                "tree",
+                position,
+                1,
+                @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
+            );
+            Console.WriteLine(tree);
                 var size = new int[] { 256, 256 };
                 var heightMap = new float[65536];
                 
@@ -52,25 +55,26 @@ namespace VRConnection
                 //JsonObject road = await session.AddRoad();
                 //Console.WriteLine(road);
 
-                // Opgave 3a Voeg plat terrein toe
-                JsonObject terrain = await session.AddTerrain(size, heightMap);
-                Console.WriteLine(terrain);
+            var trees = await session.PlaceTrees(10);
+            foreach (var t in trees) Console.WriteLine(t);
 
-                JsonObject scene = await session.GetScene();
-                Console.WriteLine(scene);
 
-                JsonObject terrainNode = await session.AddTerrainNode();
-                Console.WriteLine(terrainNode);
+            // Opgave 3e Verander de code van 3a zodat het terrein hoogteverschillen krijgt
 
-                JsonObject terrainLayer = await session.AddTerrainLayer();
-                Console.WriteLine(terrainLayer);
+            var scene = await session.GetScene();
+            Console.WriteLine(scene);
 
-                session.Close();
-            }
-            catch (CommunicationException ex)
-            {
-                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
-            }
+            var terrainNode = await session.AddTerrainNode();
+            Console.WriteLine(terrainNode);
+
+            var terrainLayer = await session.AddTerrainLayer();
+            Console.WriteLine(terrainLayer);
+
+            session.Close();
+        }
+        catch (CommunicationException ex)
+        {
+            await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
         }
     }
 }
