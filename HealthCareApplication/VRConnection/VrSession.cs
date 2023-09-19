@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Threading.Tasks;
 using VRConnection.Communication;
+using VRConnection.Graphics;
 
 namespace VRConnection
 {
@@ -178,5 +179,15 @@ namespace VRConnection
             }
             return uuid;
         }
+
+        public async Task<JsonObject> AddRoute(PosVector[] nodes)
+        {
+            object routeAddCommand = Formatting.RouteAdd(nodes);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeAddCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+        
     }
 }
