@@ -300,10 +300,9 @@ public class VrSession
     /// Road follows route
     /// The diffuse, normal and specular are textures used for the road
     /// </summary>
-    public async Task<JsonObject> AddRoad()
+    public async Task<JsonObject> AddRoad(string routeId)
     {
         // command data
-        string routeId = await GetNodeId("route");
         string normal = @"data\NetworkEngine\textures\terrain\ground_cracked_n.jpg";
         string diffuse = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
         string specular = @"data\NetworkEngine\textures\terrain\ground_mud2_s.jpg";

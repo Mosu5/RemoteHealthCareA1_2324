@@ -86,7 +86,7 @@ public class Program
             Console.WriteLine(terrainLayer);
             JsonObject removeGroundPane = await session.RemoveNode("GroundPlane");
             Console.WriteLine(removeGroundPane);
-            session.Close();
+   
 
             // Opgave 3e Verander de code van 3a zodat het terrein hoogteverschillen krijgt
 
@@ -94,10 +94,10 @@ public class Program
             Console.WriteLine(setSkyboxObj);
 
             // Opgave 3f Voeg route toe
-            JsonObject road = await session.AddRoad();
+            JsonObject road = await session.AddRoad(routeID);
             Console.WriteLine(road);
 
-            session.Close();
+            // session.Close();
         }
         catch (CommunicationException ex)
         {
