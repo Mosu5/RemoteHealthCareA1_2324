@@ -9,7 +9,16 @@ namespace VRConnection.Communication;
 /// </summary>
 public class Formatting
 {
-    public static object TunnelAdd(string sessionId)
+    #region Connectivity
+    public static object SessionListGet()
+    {
+        return new
+        {
+            id = "session/list"
+        };
+    }
+
+    public static object TunnelCreate(string sessionId)
     {
         return new
         {
@@ -34,17 +43,9 @@ public class Formatting
             }
         };
     }
+    #endregion
 
-
-    public static object SessionListGet()
-    {
-        return new
-        {
-            id = "session/list"
-        };
-    }
-
-
+    #region Scene
     public static object SceneGet()
     {
         return new
@@ -72,10 +73,47 @@ public class Formatting
             }
         };
     }
+    #endregion
 
-
-    public static object TerrainAdd(int[] size, float[] heights)
+    #region Nodes
+    public static object RemoveNode(string id)
     {
+        return new
+        {
+            id = "scene/node/delete",
+            data = new
+            {
+                id
+            }
+        };
+    }
+    #endregion
+
+    #region Skybox
+    /// <summary>
+    /// Sets the time of the sky if the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static object SetSkyboxTime(double time)
+    {
+        return new
+        {
+            id = "scene/skybox/settime",
+            data = new
+            {
+                time
+            }
+
+        };
+
+    }
+    #endregion
+
+    #region Terrain
+    public static object TerrainAdd(int length, int width, float[] heights)
+    {
+        int[] size = new int[] { length, width };
         return new
         {
             id = "scene/terrain/add",
@@ -87,32 +125,83 @@ public class Formatting
         };
     }
 
-
     public static object TerrainDelete()
     {
         return new
         {
             id = "scene/terrain/delete",
-            data = new
-            {
-            }
+            data = new { }
         };
     }
 
-
-    public static object SkyBoxSetTime(double time)
+    public static object TerrainAddNode(Vector3 position, Vector3 rotation)
     {
         return new
         {
-            id = "scene/skybox/settime",
+            id = "scene/node/add",
             data = new
             {
-                time
+                name = "terrain",
+                components = new
+                {
+                    transform = new
+                    {
+                        position = new int[] { (int)position.X, (int)position.Y, (int)position.Z },
+                        scale = 1,
+                        rotation = new int[] { (int)rotation.X, (int)rotation.Y, (int)rotation.Z }
+                    },
+                    terrain = new
+                    {
+                        smoothnormals = true
+                    }
+                }
             }
         };
     }
 
+    public static object TerrainAddLayer(string nodeId, string diffuseFilePath, string normalFilePath)
+    {
+        return new
+        {
+            id = "scene/node/addlayer",
+            data = new
+            {
+                id = nodeId,
+                diffuse = diffuseFilePath,
+                normal = normalFilePath,
+                minHeight = -100,
+                maxHeight = 100,
+                fadeDist = 1
+            }
+        };
+    }
 
+    public static object GetHeight(Vector3 position)
+    {
+        return new
+        {
+            id = "scene/terrain/getheight",
+            data = new
+            {
+                position = new[] { position.X, position.Z }
+            }
+        };
+    }
+
+    public static object GetHeights(Vector3[] positions)
+    {
+        return new
+        {
+            id = "scene/terrain/getheights",
+            data = new
+            {
+                positions = positions.Select(p => new[] { p.X, p.Z }).ToArray()
+            }
+        };
+    }
+    #endregion
+
+    #region Objects
     public static object Add3DObject(string name, Vector3 pos, double scale, string fileName)
     {
         return new
@@ -165,61 +254,9 @@ public class Formatting
             }
         };
     }
+    #endregion
 
-    public static object TerrainAddNode()
-    {
-        return new
-        {
-            id = "scene/node/add",
-            data = new
-            {
-                name = "terrain",
-                components = new
-                {
-                    transform = new
-                    {
-                        position = new[] { -128, 0, -128 },
-                        scale = 1,
-                        rotation = new[] { 0, 0, 0 }
-                    },
-                    terrain = new
-                    {
-                        smoothnormals = true
-                    }
-                }
-            }
-        };
-    }
-
-    public static object TerrainAddLayer(string nodeId, string diffuseFilePath, string normalFilePath)
-    {
-        return new
-        {
-            id = "scene/node/addlayer",
-            data = new
-            {
-                id = nodeId,
-                diffuse = diffuseFilePath,
-                normal = normalFilePath,
-                minHeight = -100,
-                maxHeight = 100,
-                fadeDist = 1
-            }
-        };
-    }
-
-    public static object TerrainHeightUpdate(int[] heights)
-    {
-        return new
-        {
-            id = "scene/update/update",
-            data = new
-            {
-                heights
-            }
-        };
-    }
-
+    #region Routes
     public static object RouteAdd(PosVector[] nodes)
     {
         return new
@@ -230,53 +267,6 @@ public class Formatting
                 nodes
             }
         };
-    }
-
-    public static object RoadAdd(string route, string diffuse, string normal, string specular)
-    {
-        return new
-        {
-            id = "scene/road/add",
-            data = new
-            {
-                route,
-                diffuse,
-                normal,
-                specular,
-                heightoffset = 0.01
-            }
-        };
-    }
-
-    public static object RemoveNode(string id)
-    {
-        return new
-        {
-            id = "scene/node/delete",
-            data = new
-            {
-                id
-            }
-        };
-    }
-
-    /// <summary>
-    /// Sets the time of the sky. If the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
-    /// </summary>
-    /// <param name="time"></param>
-    /// <returns></returns>
-    public static object SetSkyboxTime(double time)
-    {
-        return new
-        {
-            id = "scene/skybox/settime",
-            data = new
-            {
-                time
-            }
-
-        };
-
     }
 
     public static object RouteFollow(string routeID, string nodeID, double speed)
@@ -311,7 +301,27 @@ public class Formatting
             }
         };
     }
+    #endregion
 
+    #region Roads
+    public static object RoadAdd(string route, string diffuse, string normal, string specular)
+    {
+        return new
+        {
+            id = "scene/road/add",
+            data = new
+            {
+                route,
+                diffuse,
+                normal,
+                specular,
+                heightoffset = 0.01
+            }
+        };
+    }
+    #endregion
+
+    #region Validation
     public static string ValidateAndGetSessionId(JsonObject serverResponse)
     {
         if (serverResponse == null ||
@@ -365,28 +375,5 @@ public class Formatting
             data.ContainsKey("data") &&
             data["id"] is JsonValue;
     }
-
-    public static object GetHeight(Vector3 position)
-    {
-        return new
-        {
-            id = "scene/terrain/getheight",
-            data = new
-            {
-                position = new[] { position.X, position.Z }
-            }
-        };
-    }
-
-    public static object GetHeights(Vector3[] positions)
-    {
-        return new
-        {
-            id = "scene/terrain/getheights",
-            data = new
-            {
-                positions = positions.Select(p => new[] { p.X, p.Z }).ToArray()
-            }
-        };
-    }
+    #endregion
 }
