@@ -48,6 +48,9 @@ namespace VRConnection
                 JsonObject terrainLayer = await session.AddTerrainLayer();
                 Console.WriteLine(terrainLayer);
 
+                JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
+                Console.WriteLine(setSkyboxObj);
+
                 session.Close();
             }
             catch (CommunicationException ex)

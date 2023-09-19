@@ -243,6 +243,25 @@ namespace VRConnection.Communication
             };
         }
 
+        /// <summary>
+        /// Sets the time of the sky. If the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static object SetSkyboxTime(double time)
+        {
+            return new
+            {
+                id = "scene/skybox/settime",
+                data = new
+                {
+                    time
+                }
+
+            };
+            
+        }
+
         public static object RouteFollow(string route, string node, double speed)
         {
             return new
