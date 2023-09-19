@@ -118,16 +118,18 @@ namespace BikeConnection.Receiver
         /// </summary>
         private BLESubscriptionValueChangedEventArgs RandomHrmArgs()
         {
-            // Create message
-            byte heartRate = (byte)new Random().Next(256);
-            byte[] rrIntervals = new byte[new Random().Next(1, 10)];
-            new Random().NextBytes(rrIntervals);
-            byte[] messageBegin = new byte[] { 0x16, heartRate };
-            byte[] message = new byte[messageBegin.Length + rrIntervals.Length];
+            //// Create message
+            //byte heartRate = (byte)new Random().Next(256);
+            //byte[] rrIntervals = new byte[new Random().Next(1, 10)];
+            //new Random().NextBytes(rrIntervals);
+            //byte[] messageBegin = new byte[] { 0x16, heartRate };
+            //byte[] message = new byte[messageBegin.Length + rrIntervals.Length];
 
-            // Combine messageBegin and rrIntervals to one single byte array
-            Buffer.BlockCopy(messageBegin, 0, message, 0, messageBegin.Length);
-            Buffer.BlockCopy(rrIntervals, 0, message, messageBegin.Length, rrIntervals.Length);
+            //// Combine messageBegin and rrIntervals to one single byte array
+            //Buffer.BlockCopy(messageBegin, 0, message, 0, messageBegin.Length);
+            //Buffer.BlockCopy(rrIntervals, 0, message, messageBegin.Length, rrIntervals.Length);
+
+            byte[] message = _emulatedTrainer.GenerateHeartRateData();
 
             return new BLESubscriptionValueChangedEventArgs
             {

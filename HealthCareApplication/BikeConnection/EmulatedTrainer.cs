@@ -98,6 +98,26 @@ namespace BikeConnection
             return data;
         }
 
+        public byte[] GenerateHeartRateData()
+        {
+            double speed = CalculateSpeed(currentTerrain, gear);// Calculate speed based on terrain and gear
+
+            this.smoothedSpeed += (speed - this.smoothedSpeed) * smoothingFactor;// Apply smoothing
+
+            // Create message
+            byte heartRate = (byte)(60 + Math.Round(speed * 15));
+            byte[] rrIntervals = new byte[new Random().Next(1, 10)];
+            new Random().NextBytes(rrIntervals);
+            byte[] messageBegin = new byte[] { 0x16, heartRate };
+            byte[] message = new byte[messageBegin.Length + rrIntervals.Length];
+
+            // Combine messageBegin and rrIntervals to one single byte array
+            Buffer.BlockCopy(messageBegin, 0, message, 0, messageBegin.Length);
+            Buffer.BlockCopy(rrIntervals, 0, message, messageBegin.Length, rrIntervals.Length);
+
+            return message;
+        }
+
         //Generator of the speed data
         public byte[] GenerateSpeedData()
         {
@@ -153,9 +173,8 @@ namespace BikeConnection
         }
     }
 
-    //Different terrain type
-    enum TerrainType
+    public enum TerrainType
     {
-        Flat, Downhill, Uphill
+        Flat, Uphill, Downhill
     }
 }
