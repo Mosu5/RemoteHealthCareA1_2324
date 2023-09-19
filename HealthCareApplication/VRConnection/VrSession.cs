@@ -81,7 +81,7 @@ public class VrSession
         await VrCommunication.SendAsJson(tunnelMessage);
         var heightJson = await VrCommunication.ReceiveJsonObject();
 
-        var height = heightJson["data"]["data"]["data"]["height"].GetValue<float>();
+        var height = heightJson["data"]["data"]["data"]["height"].GetValue<float>(); //TODO error handling in case terrain is not added
         return height;
     }
 
@@ -216,17 +216,32 @@ public class VrSession
     /// <returns>uuid as string</returns>
     public async Task<string> GetNodeId(string name)
     {
-        var sceneFindNodeCommand = Formatting.SceneNodeFind(name);
-        var tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneFindNodeCommand);
+        object sceneFindNodeCommand = Formatting.SceneNodeFind(name);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneFindNodeCommand);
 
         await VrCommunication.SendAsJson(tunnelMessage);
-        var response = await VrCommunication.ReceiveJsonObject();
-        var nodes = response?["data"]?["data"]?["data"]?.AsArray();
+        JsonObject response = await VrCommunication.ReceiveJsonObject();
+        Console.WriteLine(response);
 
-        if (nodes == null)
-            throw new CommunicationException("Could not retrieve the nodes JsonArray from message.");
+        var responseData = response?["data"]?["data"]?["data"];
 
-        return GetNode(nodes);
+
+
+        // Response can be an array or a single object, this needs to be handled differently
+        if (responseData is JsonArray)
+        {
+            if (responseData == null)
+                throw new CommunicationException("Could not retrieve the nodes JsonArray from message.");
+
+            return GetNode(responseData.AsArray());
+        }
+        else
+        {
+
+            // Response is just a single object, so retrieve value as string
+            return response?["data"]?["id"].GetValue<string>();
+        }
+
     }
 
     /// <summary>
@@ -243,7 +258,8 @@ public class VrSession
             uuid = node?["uuid"]?.ToString() ?? string.Empty;
         }
 
-        return uuid;
+        return uuid; 
+    }
 
         /// <summary>
         /// Add route to VR scene
@@ -270,6 +286,27 @@ public class VrSession
             await VrCommunication.SendAsJson(tunnelMessage);
             return await VrCommunication.ReceiveJsonObject();
         }
+
+        public async Task<JsonObject> FollowRoute(string route, string node, double speed)
+        {
+            object routeFollowCommand = Formatting.RouteFollow(route, node, speed);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeFollowCommand);
         
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
+    public async Task<JsonObject> RemoveNode(string nodeName)
+    {
+        string uuid = await GetNodeId(nodeName);
+        await Console.Out.WriteLineAsync("Ground plane id: " + uuid);
+
+        object removeNodeCommand = Formatting.RemoveNode(uuid);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, removeNodeCommand);
+        Console.WriteLine(tunnelMessage);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
     }
+
 }

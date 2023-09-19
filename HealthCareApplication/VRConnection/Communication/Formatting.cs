@@ -248,22 +248,22 @@ public class Formatting
         };
     }
 
-    public static object RouteFollow(string route, string node, double speed)
+    public static object RouteFollow(string routeID, string nodeID, double speed)
     {
         return new
         {
             id = "route/follow",
             data = new
             {
-                route,
-                node,
+                route = routeID,
+                node = nodeID,
                 speed,
                 offset = 0.0,
                 rotate = "XZ",
                 smoothing = 1.0,
-                followHeight = false,
-                rotateOffset = new int[0, 0, 0],
-                positionOffset = new int[0, 0, 0]
+                followHeight = true,
+                rotateOffset = new[] { 0, 0, 0 },
+                positionOffset = new[] { 0, 0, 0 }
             }
         };
     }
@@ -355,6 +355,18 @@ public class Formatting
             data = new
             {
                 positions = positions.Select(p => new[] { p.X, p.Z }).ToArray()
+            }
+        };
+    }
+
+    public static object RemoveNode(string id)
+    {
+        return new
+        {
+            id = "scene/node/delete",
+            data = new
+            {
+                id
             }
         };
     }

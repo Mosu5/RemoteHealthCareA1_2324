@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Text.Json.Nodes;
 using VRConnection.Communication;
 using VRConnection.Graphics;
 
@@ -22,7 +23,7 @@ public class Program
             var size = new[] { 256, 256 };
             // var heightMap = new float[256 * 256];
             var heightMap = PerlinNoiseGenerator.GenerateHeightMap(20); // TODO save heightMap as prop
-
+            
             // Send the terrain to the server and receive the response
             var terrain = await session.AddTerrain(size, heightMap);
             Console.WriteLine(terrain);
@@ -36,24 +37,33 @@ public class Program
                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
             );
             Console.WriteLine(tree);
-                var size = new int[] { 256, 256 };
-                var heightMap = new float[65536];
-                
-                PosVector[] posVectors = new PosVector[]
+
+            Vector3 position1 = new(0, 0, 0);
+            var tree1 = await session.AddModel(
+                "tree",
+                position,
+                1,
+                @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
+            );
+            Console.WriteLine(tree);
+
+            PosVector[] posVectors = new PosVector[]
                 {
                     new PosVector(new int[]{0,0,0}, new int[]{5,0,-5}),
                     new PosVector(new int[]{50,0,0}, new int[]{5,0,5}),
                     new PosVector(new int[]{50,0,50}, new int[]{-5,0,5}),
                     new PosVector(new int[]{0,0,50}, new int[]{-5,0,-5})
                 };
-                
-                // Opgave 3f Voeg route toe
-                JsonObject route = await session.AddRoute(posVectors);
-                Console.WriteLine(route);
-                
-                // Opgave 3f Voeg route toe
-                //JsonObject road = await session.AddRoad();
-                //Console.WriteLine(road);
+
+            // Opgave 3f Voeg route toe
+            JsonObject route = await session.AddRoute(posVectors);
+            Console.WriteLine(route);
+
+            // Opgave 3h Laat een 3D opbject de route volgen
+            String treeID = await session.GetNodeId("tree");
+            String routeID = route["data"]["data"]["data"]["uuid"].GetValue<String>();
+            JsonObject bike = await session.FollowRoute(routeID, treeID, 20.0);
+            Console.WriteLine(bike);
 
             var trees = await session.PlaceTrees(10);
             foreach (var t in trees) Console.WriteLine(t);
@@ -66,10 +76,11 @@ public class Program
 
             var terrainNode = await session.AddTerrainNode();
             Console.WriteLine(terrainNode);
-
+            
             var terrainLayer = await session.AddTerrainLayer();
             Console.WriteLine(terrainLayer);
-
+            JsonObject removeGroundPane = await session.RemoveNode("GroundPlane");
+            Console.WriteLine(removeGroundPane);
             session.Close();
         }
         catch (CommunicationException ex)
