@@ -38,15 +38,10 @@ namespace VRConnection
                 
                 PosVector[] posVectors = new PosVector[]
                 {
-                    new PosVector(new int[]{-22,0,40 }, new int[]{5,0,5}),
-                    new PosVector(new int[]{0,0,62}, new int[]{5,0,5}),
-                    new PosVector(new int[]{42,0, 63}, new int[]{5,0,-5}),
-                    new PosVector(new int[]{65,0,42 }, new int[]{5,0,-5}),
-                    new PosVector(new int[]{75,0,10 }, new int[]{5,0,-5}),
-                    new PosVector(new int[]{63,0,-30 }, new int[]{-5,0,5}),
-                    new PosVector(new int[]{20,0,-40 }, new int[]{-5,0,-5}),
-                    new PosVector(new int[]{-10,0,-30 }, new int[]{-5,0,5}),
-                    new PosVector(new int[]{-25,0,-5 }, new int[]{-5,0,5})
+                    new PosVector(new int[]{0,0,0}, new int[]{5,0,-5}),
+                    new PosVector(new int[]{50,0,0}, new int[]{5,0,5}),
+                    new PosVector(new int[]{50,0,50}, new int[]{-5,0,5}),
+                    new PosVector(new int[]{0,0,50}, new int[]{-5,0,-5})
                 };
                 
                 // Opgave 3f Voeg route toe
