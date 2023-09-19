@@ -53,9 +53,12 @@ namespace VRConnection
         }
 
 
-        public async Task<JsonObject> RemoveNode(int uid)
+        public async Task<JsonObject> RemoveNode(string nodeName)
         {
-            object removeNodeCommand = Formatting.RemoveNode(uid);
+            string uuid = await GetNodeId(nodeName);
+            await Console.Out.WriteLineAsync("Ground plane id: " + uuid);
+
+            object removeNodeCommand = Formatting.RemoveNode(uuid);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, removeNodeCommand);
             Console.WriteLine(tunnelMessage);
 
@@ -176,12 +179,27 @@ namespace VRConnection
 
             await VrCommunication.SendAsJson(tunnelMessage);
             JsonObject response = await VrCommunication.ReceiveJsonObject();
-            var nodes = response?["data"]?["data"]?["data"]?.AsArray();
+            Console.WriteLine(response);
 
-            if (nodes == null)
-                throw new CommunicationException("Could not retrieve the nodes JsonArray from message.");
+            var responseData = response?["data"]?["data"]?["data"];
 
-            return GetNode(nodes);
+
+
+            // Response can be an array or a single object, this needs to be handled differently
+            if (responseData is JsonArray)
+            {
+                if (responseData == null)
+                    throw new CommunicationException("Could not retrieve the nodes JsonArray from message.");
+
+                return GetNode(responseData.AsArray());
+            }
+            else
+            {
+
+                // Response is just a single object, so retrieve value as string
+                return response?["data"]?["id"].GetValue<string>();
+            }
+            
         }
 
         /// <summary>

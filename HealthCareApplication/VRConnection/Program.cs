@@ -51,8 +51,10 @@ namespace VRConnection
                 JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
                 Console.WriteLine(setSkyboxObj);
 
-                //JsonObject removeGroundPane = await session.RemoveNode(@"data\NetworkEngine\models\trees\fantasy\tree7.obj");
-                //Console.WriteLine(removeGroundPane);
+                JsonObject removeGroundPane = await session.RemoveNode("GroundPlane");
+                Console.WriteLine(removeGroundPane);
+
+               
 
                 session.Close();
             }

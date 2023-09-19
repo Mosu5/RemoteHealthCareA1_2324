@@ -243,14 +243,14 @@ namespace VRConnection.Communication
             };
         }
 
-        public static object RemoveNode(int uid)
+        public static object RemoveNode(string id)
         {
             return new
             {
                 id = "scene/node/delete",
-                date = new
+                data = new
                 {
-                    uid
+                    id
                 }
             };
         }
