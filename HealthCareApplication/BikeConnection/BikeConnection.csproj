@@ -43,7 +43,12 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Program.cs"/>
+        <Compile Include="Client.cs" />
+        <Compile Include="Program.cs" />
+        <Compile Include="Receiver\BLEReceiver.cs" />
+        <Compile Include="Receiver\EmulatedReceiver.cs" />
+        <Compile Include="Receiver\IReceiver.cs" />
+        <Compile Include="EmulatedTrainer.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>
     <ItemGroup>
