@@ -8,4 +8,8 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>Utilities</Import_RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\DataTransfer.cs" />
+  </ItemGroup>
 </Project>
