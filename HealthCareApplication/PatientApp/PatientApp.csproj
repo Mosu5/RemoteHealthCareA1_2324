@@ -41,6 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ISessionCommand.cs" />
+    <Compile Include="Commands\Login.cs" />
+    <Compile Include="Commands\SendStats.cs" />
+    <Compile Include="Commands\SessionPause.cs" />
+    <Compile Include="Commands\SessionResume.cs" />
+    <Compile Include="Commands\SessionStart.cs" />
+    <Compile Include="Commands\SessionStop.cs" />
+    <Compile Include="Commands\Summary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
