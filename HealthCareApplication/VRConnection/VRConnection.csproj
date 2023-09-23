@@ -11,4 +11,6 @@
       <PackageReference Include="DotnetNoise" Version="1.0.0" />
     </ItemGroup>
 
+    <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
+
 </Project>
