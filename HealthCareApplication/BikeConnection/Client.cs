@@ -13,7 +13,7 @@ namespace BikeConnection
 
     public class Client
     {
-        private StreamWriter streamWriter;
+        private StreamWriter streamWriter = new StreamWriter(@"C:\temp\mytest.json");
         
         /// <summary>
         /// Connects to either the regular BLE devices or uses a built-in emulator to generate random bytes.
@@ -26,8 +26,6 @@ namespace BikeConnection
 
         public Client()
         {
-            streamWriter = new StreamWriter(@"C:\temp\mytest.json");
-
             IReceiver receiver = new BLEReceiver();
             receiver.ReceivedSpeed += OnReceiveSpeed;
             receiver.ReceivedDistance += OnReceiveDistance;
@@ -37,6 +35,11 @@ namespace BikeConnection
             receiver.ConnectToTrainer();
             receiver.ConnectToHrm();
         }
+        
+        /// <summary>
+        /// These methods are called when the receiver receives data from the BLE bike or emulator. This data is then converted to json
+        /// data and stored in the file specified in the streamWriter.
+        /// </summary>
 
         private void OnReceiveSpeed(object sender, double speed)
         {
