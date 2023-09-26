@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 using System.Text.Json.Nodes;
 using VRConnection.Graphics;
 
@@ -301,8 +302,34 @@ public class Formatting
             }
         };
     }
+    
+    
+    public static object PanelAdd(string name, Transform transform, int sizeX, int sizeY, int resolutionX, int resolutionY, Color color, bool castShadow)
+    {
+        return new
+        {
+            id = "scene/node/add",
+            data = new
+            {
+                name,
+                component = new
+                {
+                    transform,
+                    panel = new
+                    {
+                        size = new int[sizeX, sizeY],
+                        resolution = new int[resolutionX, resolutionY],
+                        background = new int[color.R, color.G, color.B, color.A],
+                        castShadow
+                    }
+                }
+            }
+        };
+    }
+
     #endregion
 
+    
     #region Roads
     public static object RoadAdd(string route, string diffuse, string normal, string specular)
     {

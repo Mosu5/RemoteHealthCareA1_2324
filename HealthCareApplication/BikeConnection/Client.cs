@@ -13,7 +13,7 @@ namespace BikeConnection
 
     public class Client
     {
-        private StreamWriter streamWriter = new StreamWriter(@"C:\temp\mytest.json");
+        private StreamWriter streamWriter = new StreamWriter(@"C:\temp\mytest1.json");
         
         /// <summary>
         /// Connects to either the regular BLE devices or uses a built-in emulator to generate random bytes.
