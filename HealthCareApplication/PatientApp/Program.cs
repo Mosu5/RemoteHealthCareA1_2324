@@ -84,7 +84,12 @@ namespace PatientApp
                         string password = Console.ReadLine();
                         payload = new { username, password };
 
-                        ApplyCommand(new Login(), payload);
+                        Login login = new Login();
+                        // Login login = new Login(username, password);
+                        login.Username = username;
+                        login.Password = password;
+                        
+                        ApplyCommand(login, null);
                         break;
                     case "stats/send":
                         // Receive speed, distance and heart rate
