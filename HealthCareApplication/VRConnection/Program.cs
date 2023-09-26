@@ -52,6 +52,15 @@ public class Program
             );
             Console.WriteLine(tree);
 
+            //bike
+            JsonObject bike = await session.AddModelOnTerrain(
+                "bike",
+                position,
+                1,
+                @"data\NetworkEngine\models\bike\bike.fbx"
+            );
+            Console.WriteLine(tree);
+
             JsonObject[] trees = await session.RandomlyPlaceTrees(10);
             foreach (var t in trees) Console.WriteLine(t);
 
@@ -73,10 +82,10 @@ public class Program
             Console.WriteLine(route);
 
             // Opgave 3h Laat een 3D opbject de route volgen met een gegeven snelheid
-            string treeID = await session.GetNodeId("tree");
+            string bikeID = await session.GetNodeId("bike");
             string routeID = session.GetRouteId(route);
             double speed = 20.0;
-            JsonObject bike = await session.FollowRoute(routeID, treeID, speed);
+            //hier moet de fiets de route gaan volgen
             Console.WriteLine(bike);
 
             // Opgave 3f Voeg route toe
