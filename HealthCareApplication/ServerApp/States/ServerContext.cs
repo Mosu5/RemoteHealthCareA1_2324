@@ -12,5 +12,20 @@ namespace ServerApp.States
     internal class ServerContext
     {
 
+        private IState currentState {  get; set; }
+        private IState nextState { get; set;}
+        public ServerContext() 
+        {
+            currentState = new SessionStarting();
+        }
+
+        public void SetNextState(IState newState)
+        {
+            nextState = newState;
+            //byte[] bytes = "kokok".
+        }
+
+        
+
     }
 }
