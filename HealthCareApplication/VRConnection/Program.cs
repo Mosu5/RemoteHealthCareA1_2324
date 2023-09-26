@@ -92,6 +92,9 @@ public class Program
             JsonObject road = await session.AddRoad(routeID);
             Console.WriteLine(road);
 
+            JsonObject getScene = await session.GetScene();
+            Console.WriteLine(getScene);
+
             // Not strictly necessary, but looks clean
             session.Close();
         }

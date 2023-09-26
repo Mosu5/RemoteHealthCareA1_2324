@@ -314,6 +314,17 @@ public class VrSession
 
         return jsonResponses; // return array of json responses
     }
+
+    //public async Task<JsonObject> CameraOnBike()
+    //{
+        //zoek "Camera" en vervang parent van "Camera" met id van fiets, doormiddel van scene/node/update
+        //getcameraid
+        //getfietsid
+        //updatecameranode, parent is fietsID
+
+
+        //GetNodeId("Head")
+    //}
     #endregion
 
     #region Routes
