@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Numerics;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
@@ -372,5 +373,15 @@ public class VrSession
         await VrCommunication.SendAsJson(tunnelMessage);
         return await VrCommunication.ReceiveJsonObject();
     }
+    
+    public async Task<JsonObject> AddPanel(string name, Transform transform, int sizeX, int sizeY, int resolutionX, int resolutionY, Color color, bool castShadow)
+    {
+        object panelAddCommand = Formatting.PanelAdd(name, transform, sizeX, sizeY, resolutionX, resolutionY, color, castShadow);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, panelAddCommand);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
+    
     #endregion
 }

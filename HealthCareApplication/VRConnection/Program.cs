@@ -81,6 +81,10 @@ public class Program
             // Opgave 3f Voeg route toe
             JsonObject road = await session.AddRoad(routeID);
             Console.WriteLine(road);
+            
+            // Voeg Panel toe
+            //JsonObject panel = await session.AddPanel();
+            //Console.WriteLine(panel);
 
             // Not strictly necessary, but looks clean
             session.Close();
