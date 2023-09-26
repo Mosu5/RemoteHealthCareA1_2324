@@ -56,7 +56,7 @@ public class Program
             JsonObject bike = await session.AddModelOnTerrain(
                 "bike",
                 position,
-                1,
+                2,
                 @"data\NetworkEngine\models\bike\bike.fbx"
             );
             Console.WriteLine(tree);
