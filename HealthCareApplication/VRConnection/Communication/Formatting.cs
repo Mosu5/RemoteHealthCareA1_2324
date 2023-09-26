@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Nodes;
 using VRConnection.Graphics;
+using System.Drawing;
 
 namespace VRConnection.Communication;
 
@@ -304,25 +305,18 @@ public class Formatting
     }
     
     
-    public static object PanelAdd(string name, Transform transform, int sizeX, int sizeY, int resolutionX, int resolutionY, Color color, bool castShadow)
+    public static object PanelAdd(string text, int positionX, int positionY, int sizeX, int sizeY, Color color, string font)
     {
         return new
         {
-            id = "scene/node/add",
+            id = "scene/panel/drawtext",
             data = new
             {
-                name,
-                component = new
-                {
-                    transform,
-                    panel = new
-                    {
-                        size = new int[sizeX, sizeY],
-                        resolution = new int[resolutionX, resolutionY],
-                        background = new int[color.R, color.G, color.B, color.A],
-                        castShadow
-                    }
-                }
+              text,
+              size = new int[sizeX, sizeY],
+              position = new int[positionX, positionY],
+              color = new int[color.A, color.R, color.G, color.B],
+              font
             }
         };
     }
