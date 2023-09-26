@@ -30,7 +30,7 @@ public class Program
             Console.WriteLine(removeGroundPane);
 
             // Opgave 3c Verander de tijd van de skybox
-            JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
+            JsonObject setSkyboxObj = await session.SetSkyTime(12.0);
             Console.WriteLine(setSkyboxObj);
 
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
@@ -72,10 +72,11 @@ public class Program
             JsonObject route = await session.AddRoute(posVectors);
             Console.WriteLine(route);
 
-            // Opgave 3h Laat een 3D opbject de route volgen
+            // Opgave 3h Laat een 3D opbject de route volgen met een gegeven snelheid
             string treeID = await session.GetNodeId("tree");
             string routeID = session.GetRouteId(route);
-            JsonObject bike = await session.FollowRoute(routeID, treeID, 20.0);
+            double speed = 20.0;
+            JsonObject bike = await session.FollowRoute(routeID, treeID, speed);
             Console.WriteLine(bike);
 
             // Opgave 3f Voeg route toe
