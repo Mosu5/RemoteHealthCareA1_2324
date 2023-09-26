@@ -4,6 +4,8 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using PatientApp.BikeConnection;
+using PatientApp.BikeConnection.Receiver;
 using PatientApp.Commands;
 using Utilities.Communication;
 
@@ -12,6 +14,7 @@ namespace PatientApp
     internal class Program
     {
         private static ISessionCommand _command = new Login();
+        private static Client client = new Client();
 
         static async Task Main(string[] args)
         {
@@ -28,6 +31,8 @@ namespace PatientApp
 
         private static async Task Run()
         {
+            client.OnReceiveData += OnReceiveData;
+
             // Run a thread that listens for console input
             Thread t = new Thread(ReceiveConsoleInput);
             t.Start();
@@ -52,7 +57,7 @@ namespace PatientApp
                         _command = new Login();
                         break;
                     case "session/start":
-                        _command = new SessionStart();
+                        _command = new SessionStart(client.OnReceiveData, OnReceiveData);
                         break;
                     case "stats/send":
                         _command = new SendStats();
@@ -122,6 +127,11 @@ namespace PatientApp
                 // Please tell me there's a better way to cast an object to JsonObject
                 _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)));
             }
+        }
+
+        private static void OnReceiveData(object sender, Statistic stat)
+        {
+            // new SendStat(...);
         }
     }
 }

@@ -1,18 +1,19 @@
-﻿using System;
+﻿using PatientApp.BikeConnection.Receiver;
+using System;
 using System.Text.Json.Nodes;
 
 namespace PatientApp.Commands
 {
     internal class SessionResume : ISessionCommand
     {
-        //private readonly IReceiver receiver;
-        //private readonly EventHandler<object> _onReceiveData;
+        private readonly IReceiver receiver;
+        private readonly EventHandler<object> _onReceiveData;
 
-        //public SessionStart(IReceiver receiver, EventHandler<object> onReceiveData)
-        //{
-        //    this.receiver = receiver;
-        //    _onReceiveData = onReceiveData;
-        //}
+        public SessionResume(IReceiver receiver, EventHandler<object> onReceiveData)
+        {
+            this.receiver = receiver;
+            _onReceiveData = onReceiveData;
+        }
 
         public bool Execute(JsonObject data)
         {

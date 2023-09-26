@@ -5,6 +5,10 @@ namespace PatientApp.BikeConnection
 {
     public class Client
     {
+        private Statistic currentStat = new Statistic();
+        public EventHandler<Statistic> OnReceiveData;
+        public readonly IReceiver Receiver;
+
         /// <summary>
         /// Connects to either the regular BLE devices or uses a built-in emulator to generate random bytes.
         /// If the EmulatedReceiver class is instantiated, upon calling it's Connect() method, it will create
@@ -15,36 +19,69 @@ namespace PatientApp.BikeConnection
         /// </summary>
         public Client()
         {
-            IReceiver receiver = new BLEReceiver();
+            Receiver = new BLEReceiver();
 
             // Subscribe to the receiver's events.
-            receiver.ReceivedSpeed += OnReceiveSpeed;
-            receiver.ReceivedDistance += OnReceiveDistance;
-            receiver.ReceivedHeartRate += OnReceiveHeartRate;
-            receiver.ReceivedRrIntervals += OnReceiveRrIntervals;
+            Receiver.ReceivedSpeed += OnReceiveSpeed;
+            Receiver.ReceivedDistance += OnReceiveDistance;
+            Receiver.ReceivedHeartRate += OnReceiveHeartRate;
+            Receiver.ReceivedRrIntervals += OnReceiveRrIntervals;
 
-            receiver.ConnectToTrainer();
-            receiver.ConnectToHrm();
+            Receiver.ConnectToTrainer();
+            Receiver.ConnectToHrm();
         }
 
         private void OnReceiveSpeed(object sender, double speed)
         {
             Console.WriteLine("Speed: {0} m/s", speed);
+
+            if (currentStat.Speed == -1)
+            {
+                currentStat.Speed = speed;
+                CheckStatComplete();
+            }
         }
 
         private void OnReceiveDistance(object sender, int distance)
         {
             Console.WriteLine("Distance: {0} meters", distance);
+
+            if (currentStat.Distance == -1)
+            {
+                currentStat.Distance = distance;
+                CheckStatComplete();
+            }
         }
 
         private void OnReceiveHeartRate(object sender, int heartRate)
         {
             Console.WriteLine("Heart rate: {0} bpm", heartRate);
+
+            if (currentStat.HeartRate == -1)
+            {
+                currentStat.HeartRate = heartRate;
+                CheckStatComplete();
+            }
         }
 
         private void OnReceiveRrIntervals(object sender, int[] rrIntervals)
         {
             Console.WriteLine("R-R intervals: {0}", String.Join(", ", rrIntervals));
+
+            if (currentStat.RrIntervals == new int[0])
+            {
+                currentStat.RrIntervals = rrIntervals;
+                CheckStatComplete();
+            }
+        }
+
+        private void CheckStatComplete()
+        {
+            if (currentStat.IsComplete())
+            {
+                OnReceiveData?.Invoke(this, currentStat);
+                currentStat = new Statistic();
+            }
         }
     }
 }
