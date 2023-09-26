@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Utilities.Communication
 {
@@ -59,8 +60,10 @@ namespace Utilities.Communication
                 throw new CommunicationException(
                     "There is no active communication between the application and the VR server.");
 
+
             // Turn payload object into a JSON string
             string jsonString = JsonSerializer.Serialize(payload);
+
 
             // Encode JSON string as a byte array
             byte[] payloadAsBytes = _encoding.GetBytes(jsonString);

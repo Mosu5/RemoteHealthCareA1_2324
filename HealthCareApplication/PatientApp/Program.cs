@@ -115,7 +115,7 @@ namespace PatientApp
             {
                 _command = command;
                 // Please tell me there's a better way to cast an object to JsonObject
-                JsonObject jsonPayload = payload as JsonObject;
+                //JsonObject jsonPayload = payload as JsonObject;
                 //_command.Execute(jsonPayload);
 
                 _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)));
