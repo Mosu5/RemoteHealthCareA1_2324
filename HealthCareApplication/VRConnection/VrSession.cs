@@ -315,16 +315,14 @@ public class VrSession
         return jsonResponses; // return array of json responses
     }
 
-    //public async Task<JsonObject> CameraOnBike()
-    //{
-        //zoek "Camera" en vervang parent van "Camera" met id van fiets, doormiddel van scene/node/update
-        //getcameraid
-        //getfietsid
-        //updatecameranode, parent is fietsID
+    public async Task<JsonObject> HeadOnBike(string headID, string bikeID)
+    {
+        object headOnBike = Formatting.SceneNodeUpdate(headID, bikeID);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, headOnBike);
 
-
-        //GetNodeId("Head")
-    //}
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
     #endregion
 
     #region Routes
@@ -348,6 +346,15 @@ public class VrSession
             throw new CommunicationException("Could not find route from route response.");
 
         return routeId;
+    }
+
+    public string GetHeadId(JsonObject headResponse)
+    {
+        string? headId = headResponse?["data"]?["data"]?["data"]?["children"[4]]?["uuid"]?.GetValue<String>();
+        if (headId == null)
+            throw new CommunicationException("Could not find route from route response.");
+
+        return headId;
     }
 
     /// <summary>

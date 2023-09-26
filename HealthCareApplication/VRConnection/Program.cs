@@ -95,6 +95,10 @@ public class Program
             JsonObject getScene = await session.GetScene();
             Console.WriteLine(getScene);
 
+            // Head op de fiets
+            string headID = await session.GetHeadId();
+            JsonObject headOnBike = await session.HeadOnBike(headID, bikeID);
+
             // Not strictly necessary, but looks clean
             session.Close();
         }

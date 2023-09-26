@@ -73,6 +73,26 @@ public class Formatting
             }
         };
     }
+
+    public static object SceneNodeUpdate(string id, string parent)
+    {
+        return new
+        {
+            id,
+            parent,
+            transform = new
+            {
+                position = new int[0, 0, 0],
+                scale = 1.0,
+                rotation = new int[0, 0, 0],
+            },
+            animation = new
+            {
+                name = "walk",
+                speed = 1.0,
+            }
+        };
+    }
     #endregion
 
     #region Nodes
