@@ -140,7 +140,7 @@ namespace PatientApp.BikeConnection
         //Resets distance when reaching 255
         public void ResetDistance()
         {
-            if (distance == 256)
+            if (distance == 255)
             {
                 distance = 0;
             }
