@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
@@ -11,7 +12,10 @@ namespace PatientApp.Commands
     {
         public bool Execute(JsonObject data)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(data.ToString());
+            DataTransfer.SendJson(data);
+            return true;
+            //throw new NotImplementedException();
         }
     }
 }
