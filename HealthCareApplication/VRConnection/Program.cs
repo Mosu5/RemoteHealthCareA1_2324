@@ -85,7 +85,7 @@ public class Program
             string bikeID = await session.GetNodeId("bike");
             string routeID = session.GetRouteId(route);
             double speed = 20.0;
-            //hier moet de fiets de route gaan volgen
+            JsonObject bikeFollowingRoute = await session.FollowRoute(routeID, bikeID, speed);
             Console.WriteLine(bike);
 
             // Opgave 3f Voeg route toe
