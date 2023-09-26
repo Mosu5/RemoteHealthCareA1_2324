@@ -374,10 +374,10 @@ public class VrSession
         return await VrCommunication.ReceiveJsonObject();
     }
     
-    public async Task<JsonObject> AddPanel(string text, int positionX, int positionY, int sizeX, int sizeY, Color color, string font)
+    public async Task<JsonObject> AddText(string text, int positionX, int positionY, int sizeX, int sizeY, Color color, string font)
     {
-        object panelAddCommand = Formatting.PanelAdd(text, positionX, positionY, sizeX, sizeY, color, font);
-        object tunnelMessage = Formatting.TunnelSend(_tunnelId, panelAddCommand);
+        object textAddCommand = Formatting.textAdd(text, positionX, positionY, sizeX, sizeY, color, font);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, textAddCommand);
 
         await VrCommunication.SendAsJson(tunnelMessage);
         return await VrCommunication.ReceiveJsonObject();

@@ -83,8 +83,8 @@ public class Program
             Console.WriteLine(road);
             
             // Voeg Panel toe
-            //JsonObject panel = await session.AddPanel();
-            //Console.WriteLine(panel);
+            //JsonObject text = await session.AddText();
+            //Console.WriteLine(text);
 
             // Not strictly necessary, but looks clean
             session.Close();

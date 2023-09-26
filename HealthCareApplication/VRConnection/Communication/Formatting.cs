@@ -305,7 +305,7 @@ public class Formatting
     }
     
     
-    public static object PanelAdd(string text, int positionX, int positionY, int sizeX, int sizeY, Color color, string font)
+    public static object textAdd(string text, int positionX, int positionY, int sizeX, int sizeY, Color color, string font)
     {
         return new
         {
