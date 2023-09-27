@@ -379,10 +379,10 @@ public class VrSession
         String name = "panel1";
         //Color color = Color.FromArgb(1, 0, 0, 1);
         //Transform transform = new Transform(1, new double[] { 0, 0, 0}, new double[] { 0, 0, 0 });
-        Vector3 position = new Vector3(0, 0, 0);
+        Vector3 position = new Vector3(1, 0, -3);
         Vector3 rotation = new Vector3(0, 0, 0);
-        int sizeX = 10;
-        int sizeY = 10;
+        double sizeX = 2;
+        double sizeY = 3;
         int resolutionX = 512;
         int resolutionY = 512;
         bool castShadow = true;

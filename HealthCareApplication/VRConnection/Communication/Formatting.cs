@@ -304,7 +304,7 @@ public class Formatting
         };
     }
     
-    public static object PanelAdd(string name, string parentID, Vector3 position, Vector3 rotation, int sizeX, int sizeY, int resolutionX, int resolutionY, bool castShadow)
+    public static object PanelAdd(string name, string parentID, Vector3 position, Vector3 rotation, double sizeX, double sizeY, int resolutionX, int resolutionY, bool castShadow)
     {
         return new
         {
@@ -313,7 +313,7 @@ public class Formatting
             {
                 name,
                 parent = parentID,
-                component = new
+                components = new
                 {
                     transform = new
                     {
@@ -323,9 +323,9 @@ public class Formatting
                     },
                     panel = new
                     {
-                        size = new int[] { sizeX, sizeY },
+                        size = new double[] { sizeX, sizeY },
                         resolution = new int[] { resolutionX, resolutionY },
-                        background = new int[] {255, 0, 0, 255},
+                        background = new int[] {1, 1, 1, 1},
                         castShadow = true
                     }
                 }
