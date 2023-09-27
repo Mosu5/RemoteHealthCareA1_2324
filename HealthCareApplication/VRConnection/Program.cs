@@ -92,6 +92,10 @@ public class Program
             JsonObject clear = await session.ClearPanel();
             Console.WriteLine(clear);
             
+             // Set clear color Panel
+            JsonObject setcolor = await session.setColorPanel();
+            Console.WriteLine(setcolor);
+            
              //Voeg text aan Panel toe
             JsonObject text = await session.AddText();
             Console.WriteLine(text);

@@ -342,9 +342,9 @@ public class Formatting
             { 
                 id = panelID,
               text,
-              position = new int[] {0, 0},
-              size = 32.0 ,
-              color = new int[] {1, 1, 1, 1},
+              position = new int[] {50, 75},
+              size = 16.0 ,
+              color = new int[] {0, 0, 0, 1},
               font = "segoeui"
             }
         };
@@ -371,6 +371,19 @@ public class Formatting
             data = new
             {
                 id
+            }
+        };
+    }
+    
+    public static object PanelSetColor(string id)
+    {
+        return new
+        {
+            id = "scene/panel/setclearcolor",
+            data = new
+            {
+                id,
+                color = new int[] {0, 0, 0, 1}
             }
         };
     }
