@@ -304,19 +304,73 @@ public class Formatting
         };
     }
     
+    public static object PanelAdd(string name, string parentID, Vector3 position, Vector3 rotation, int sizeX, int sizeY, int resolutionX, int resolutionY, bool castShadow)
+    {
+        return new
+        {
+            id = "scene/node/add",
+            data = new
+            {
+                name,
+                parent = parentID,
+                component = new
+                {
+                    transform = new
+                    {
+                        position = new [] { position.X, position.Y, position.Z },
+                        scale = 1,
+                        rotation = new [] { rotation.X, rotation.Y, rotation.Z }
+                    },
+                    panel = new
+                    {
+                        size = new int[] { sizeX, sizeY },
+                        resolution = new int[] { resolutionX, resolutionY },
+                        background = new int[] {255, 0, 0, 255},
+                        castShadow = true
+                    }
+                }
+            }
+        };
+    }
     
-    public static object textAdd(string text, int positionX, int positionY, int sizeX, int sizeY, Color color, string font)
+    public static object TextAdd(string panelID, string text)
     {
         return new
         {
             id = "scene/panel/drawtext",
             data = new
-            {
+            { 
+                id = panelID,
               text,
-              size = new int[sizeX, sizeY],
-              position = new int[positionX, positionY],
-              color = new int[color.A, color.R, color.G, color.B],
-              font
+              position = new int[] {0, 0},
+              size = 32.0 ,
+              color = new int[] {1, 1, 1, 1},
+              font = "segoeui"
+            }
+        };
+    }
+    
+    
+    public static object PanelClear(string id)
+    {
+        return new
+        {
+            id = "scene/panel/clear",
+            data = new
+            {
+                id
+            }
+        };
+    }
+
+    public static object PanelSwap(string id)
+    {
+        return new
+        {
+            id = "scene/panel/swap",
+            data = new
+            {
+                id
             }
         };
     }
