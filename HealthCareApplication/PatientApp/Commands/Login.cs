@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -17,6 +17,10 @@ namespace PatientApp.Commands
         // Otherwise check for errors in response
         public bool Execute(JsonObject data)
         {
+            Console.WriteLine(data.ToString());
+            DataTransfer.SendJson(data);
+            return true;
+            //throw new NotImplementedException();
             if (data == null || data["data"] == null) // no response data, so we try logging in
             {
                 Task loginTask = SendLoginInfo();

@@ -41,9 +41,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Commands\ForwardStats.cs" />
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\Login.cs" />
+    <Compile Include="Commands\SaveStats.cs" />
+    <Compile Include="Commands\SessionPause.cs" />
+    <Compile Include="Commands\SessionResume.cs" />
+    <Compile Include="Commands\SessionStart.cs" />
+    <Compile Include="Commands\SessionStop.cs" />
+    <Compile Include="Commands\Summary.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="States\IState.cs" />
+    <Compile Include="States\ServerContext.cs" />
+    <Compile Include="States\SessionActive.cs" />
+    <Compile Include="States\SessionPaused.cs" />
+    <Compile Include="States\SessionStarting.cs" />
+    <Compile Include="States\SessionStopped.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

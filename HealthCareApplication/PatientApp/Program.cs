@@ -20,7 +20,7 @@ namespace PatientApp
         {
             try
             {
-                //if (await DataTransfer.ConnectToServer("127.0.0.1", 6969))
+                if (await DataTransfer.ConnectToServer("127.0.0.1", 8888))
                     await Run();
             }
             catch (CommunicationException ex)
@@ -125,6 +125,9 @@ namespace PatientApp
             {
                 _command = command;
                 // Please tell me there's a better way to cast an object to JsonObject
+                //JsonObject jsonPayload = payload as JsonObject;
+                //_command.Execute(jsonPayload);
+
                 _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)));
             }
         }
