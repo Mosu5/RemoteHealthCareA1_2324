@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ServerApp.States
 {
-    internal class SessionPaused : IState
+    internal class SessionActiveState : IState
     {
         public void Handle()
         {

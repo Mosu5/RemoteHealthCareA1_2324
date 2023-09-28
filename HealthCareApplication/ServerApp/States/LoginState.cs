@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace ServerApp.States
 {
-    internal class SessionStarting : IState
+    /// <summary>
+    /// State in when a client has connected with the server. 
+    /// </summary>
+    internal class LoginState : IState
     {
         public void Handle()
         {

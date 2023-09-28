@@ -37,6 +37,7 @@ namespace PatientApp
             Thread t = new Thread(ReceiveConsoleInput);
             t.Start();
 
+            // TODO: add message handler class for handling messages
             // Declare a variable inside while condition which listens for inbound JSON messages.
             // Loop blocks until a new message is received.
             while (await DataTransfer.ReceiveJson() is var message)

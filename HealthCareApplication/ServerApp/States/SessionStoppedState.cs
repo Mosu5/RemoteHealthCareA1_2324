@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace ServerApp.Commands
+namespace ServerApp.States
 {
-    internal class ForwardStats : ICommand
+    internal class SessionStoppedState : IState
     {
-        public void Execute(JsonObject data)
+        public void Handle()
         {
             throw new NotImplementedException();
         }
