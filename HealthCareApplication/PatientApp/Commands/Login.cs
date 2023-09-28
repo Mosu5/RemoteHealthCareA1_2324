@@ -15,10 +15,12 @@ namespace PatientApp.Commands
     {
         // Attempt login when data is null 
         // Otherwise check for errors in response
-        public bool Execute(JsonObject data)
+
+        public bool Execute(JsonObject data, ClientConn conn)
         {
             Console.WriteLine(data.ToString());
-            DataTransfer.SendJson(data);
+            
+            conn.SendJson(data);
             return true;
             //throw new NotImplementedException();
             if (data == null || data["data"] == null) // no response data, so we try logging in

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Text.Json.Nodes;
+using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
-    internal class SessionStop : ISessionCommand
+    public class SessionStop : ISessionCommand
     {
-        public bool Execute(JsonObject data)
+        public bool Execute(JsonObject data, ClientConn conn)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,7 @@
 ﻿using PatientApp.BikeConnection.Receiver;
 using System;
 using System.Text.Json.Nodes;
+using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
@@ -15,7 +16,7 @@ namespace PatientApp.Commands
             _onReceiveData = onReceiveData;
         }
 
-        public bool Execute(JsonObject data)
+        public bool Execute(JsonObject data, ClientConn conn)
         {
             //// Subscribe to all bike and HRM events.
             //receiver.ReceivedSpeed -= _onReceiveData;

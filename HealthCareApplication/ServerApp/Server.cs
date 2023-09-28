@@ -63,8 +63,11 @@ namespace ServerApp
                 ////JsonObject jsonResponse = JsonSerializer.Deserialize<JsonObject>(responseString);
                 ////Console.WriteLine(jsonResponse.ToString());
 
+
                 JsonObject data = await serverConn.ReceiveJson();
-                Console.WriteLine(data);
+                await Console.Out.WriteLineAsync(data.ToString());
+
+                Console.WriteLine("Server running");
 
                 //JsonObject data = DataTransfer.ReceiveJson().Result+
                 //await Console.Out.WriteLineAsync(data.ToString());

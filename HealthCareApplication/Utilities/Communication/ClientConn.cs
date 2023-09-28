@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Utilities.Communication
 {
-    internal class ClientCom
+    public class ClientConn
     {
         private readonly Encoding _encoding = Encoding.ASCII;
 
@@ -22,7 +22,7 @@ namespace Utilities.Communication
 
         /// <param name="ipAddress">The IP-address of the remote server</param>
         /// <param name="port">The port of the remote server</param>
-        public ClientCom(string ipAddress, int port)
+        public ClientConn(string ipAddress, int port)
         {
             _ipAddress = ipAddress;
             _port = port;

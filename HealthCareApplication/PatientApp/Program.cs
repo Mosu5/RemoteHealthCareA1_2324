@@ -16,12 +16,14 @@ namespace PatientApp
         private static ISessionCommand _command = new Login();
         private static Client client = new Client();
 
+        static ClientConn clientConn = new ClientConn("127.0.0.1", 8888);
+
         static async Task Main(string[] args)
         {
             try
             {
-                //if (await DataTransfer.ConnectToServer("127.0.0.1", 8888))
-                //    await Run();
+                if (await clientConn.ConnectToServer())
+                    await Run();
             }
             catch (CommunicationException ex)
             {
@@ -40,7 +42,7 @@ namespace PatientApp
             // TODO: add message handler class for handling messages
             // Declare a variable inside while condition which listens for inbound JSON messages.
             // Loop blocks until a new message is received.
-            while (await .ReceiveJson() is var message)
+            while (await clientConn.ReceiveJson() is var message)
             {
                 // Check if the message has a command field and that field has the type of object
                 if (!message.ContainsKey("command") || !(message["command"] is JsonObject)) continue;
@@ -66,7 +68,7 @@ namespace PatientApp
                     default:
                         throw new CommunicationException("Unknown command received: " + commandField);
                 }
-                _command?.Execute(dataField);
+                _command?.Execute(dataField, clientConn);
             }
         }
 
@@ -129,7 +131,7 @@ namespace PatientApp
                 //JsonObject jsonPayload = payload as JsonObject;
                 //_command.Execute(jsonPayload);
 
-                _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)));
+                _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)), clientConn);
             }
         }
 
