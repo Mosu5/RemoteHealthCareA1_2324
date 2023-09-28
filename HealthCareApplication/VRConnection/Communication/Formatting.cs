@@ -1,6 +1,8 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 using System.Text.Json.Nodes;
 using VRConnection.Graphics;
+using System.Drawing;
 
 namespace VRConnection.Communication;
 
@@ -301,8 +303,94 @@ public class Formatting
             }
         };
     }
+    
+    public static object PanelAdd(string name, string parentID, Vector3 position, Vector3 rotation, double sizeX, double sizeY, int resolutionX, int resolutionY, bool castShadow)
+    {
+        return new
+        {
+            id = "scene/node/add",
+            data = new
+            {
+                name,
+                parent = parentID,
+                components = new
+                {
+                    transform = new
+                    {
+                        position = new [] { position.X, position.Y, position.Z },
+                        scale = 1,
+                        rotation = new [] { rotation.X, rotation.Y, rotation.Z }
+                    },
+                    panel = new
+                    {
+                        size = new double[] { sizeX, sizeY },
+                        resolution = new int[] { resolutionX, resolutionY },
+                        background = new int[] {1, 1, 1, 1},
+                        castShadow = true
+                    }
+                }
+            }
+        };
+    }
+    
+    public static object TextAdd(string panelID, string text)
+    {
+        return new
+        {
+            id = "scene/panel/drawtext",
+            data = new
+            { 
+                id = panelID,
+              text,
+              position = new int[] {50, 75},
+              size = 16.0 ,
+              color = new int[] {0, 0, 0, 1},
+              font = "segoeui"
+            }
+        };
+    }
+    
+    
+    public static object PanelClear(string id)
+    {
+        return new
+        {
+            id = "scene/panel/clear",
+            data = new
+            {
+                id
+            }
+        };
+    }
+
+    public static object PanelSwap(string id)
+    {
+        return new
+        {
+            id = "scene/panel/swap",
+            data = new
+            {
+                id
+            }
+        };
+    }
+    
+    public static object PanelSetColor(string id)
+    {
+        return new
+        {
+            id = "scene/panel/setclearcolor",
+            data = new
+            {
+                id,
+                color = new int[] {0, 0, 0, 1}
+            }
+        };
+    }
+
     #endregion
 
+    
     #region Roads
     public static object RoadAdd(string route, string diffuse, string normal, string specular)
     {

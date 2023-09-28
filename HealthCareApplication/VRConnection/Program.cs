@@ -22,38 +22,40 @@ public class Program
             var size = new int[] { 256, 256 };
             float[] heightMap = PerlinNoiseGenerator.GenerateHeightMap(20); // TODO save heightMap as prop
 
-            string terrainResponse = await session.AddHillTerrain(length, width, new Vector3(-128, 0, -128), Vector3.Zero);
-            Console.WriteLine(terrainResponse);
+           // string terrainResponse = await session.AddHillTerrain(length, width, new Vector3(-128, 0, -128), Vector3.Zero);
+            //Console.WriteLine(terrainResponse);
 
             // Opgave 3b Verwijder de groundplane
             JsonObject removeGroundPane = await session.RemoveNode("GroundPlane");
             Console.WriteLine(removeGroundPane);
 
             // Opgave 3c Verander de tijd van de skybox
-            JsonObject setSkyboxObj = await session.SetSkyTime(23.5);
+            JsonObject setSkyboxObj = await session.SetSkyTime(12.5);
             Console.WriteLine(setSkyboxObj);
 
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
-            Vector3 position = new(0, 0, 0);
-            JsonObject tree = await session.AddModelOnTerrain(
-                "tree",
-                position,
-                1,
-                @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
-            );
-            Console.WriteLine(tree);
+            
+         // Vector3 position = new(0, 0, 0);
+         // JsonObject tree = await session.AddModelOnTerrain(
+         //      "tree",
+         //      position,
+         //      1,
+         //      @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
+         //  );
+         //  Console.WriteLine(tree);
+            
 
-            Vector3 position1 = new(0, 0, 0);
-            JsonObject tree1 = await session.AddModelOnTerrain(
-                "tree",
-                position,
-                1,
-                @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
-            );
-            Console.WriteLine(tree);
+          //  Vector3 position1 = new(0, 0, 0);
+          //  JsonObject tree1 = await session.AddModelOnTerrain(
+          //      "tree",
+          //      position,
+          //      1,
+          //      @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
+          //  );
+          //  Console.WriteLine(tree);
 
-            JsonObject[] trees = await session.RandomlyPlaceTrees(10);
-            foreach (var t in trees) Console.WriteLine(t);
+          //  JsonObject[] trees = await session.RandomlyPlaceTrees(10);
+          //  foreach (var t in trees) Console.WriteLine(t);
 
             // Opgave 3f Voeg route toe
             PosVector[] posVectors = new PosVector[]
@@ -83,6 +85,26 @@ public class Program
             // Opgave 3f Voeg route toe
             JsonObject road = await session.AddRoad(routeID);
             Console.WriteLine(road);
+            
+            // Voegt een Panel toe
+            JsonObject panel = await session.AddPanel();
+            Console.WriteLine(panel);
+            
+            // Cleart Panel
+            JsonObject clear = await session.ClearPanel();
+            Console.WriteLine(clear);
+            
+             // Set clear color Panel
+            JsonObject setcolor = await session.setColorPanel();
+            Console.WriteLine(setcolor);
+            
+             //Voeg text aan Panel toe
+            JsonObject text = await session.AddText();
+            Console.WriteLine(text);
+            
+            // Swapt Panel
+            JsonObject swap = await session.SwapPanel();
+            Console.WriteLine(swap);
 
             // Not strictly necessary, but looks clean
             session.Close();
