@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8A040D3B-BD57-4003-9C6E-ACD47E3903AB}</ProjectGuid>
+    <ProjectGuid>{AC0094F7-68F6-47DD-84E1-D45A52889FE3}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BikeConnection</RootNamespace>
-    <AssemblyName>BikeConnection</AssemblyName>
+    <RootNamespace>ServerApp</RootNamespace>
+    <AssemblyName>ServerApp</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,12 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BLELibrary">
-      <HintPath>Libraries\BLELibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -47,20 +41,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Receiver\BLEReceiver.cs" />
-    <Compile Include="Receiver\EmulatedReceiver.cs" />
-    <Compile Include="Receiver\IReceiver.cs" />
-    <Compile Include="EmulatedTrainer.cs" />
+    <Compile Include="Commands\SendStats.cs" />
+    <Compile Include="Commands\ISessionCommand.cs" />
+    <Compile Include="Commands\ApproveLogin.cs" />
+    <Compile Include="Commands\SaveStats.cs" />
+    <Compile Include="Commands\SessionPause.cs" />
+    <Compile Include="Commands\SessionResume.cs" />
+    <Compile Include="Commands\SessionStart.cs" />
+    <Compile Include="Commands\SessionStop.cs" />
+    <Compile Include="Commands\Summary.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerContext.cs" />
+    <Compile Include="States\IState.cs" />
+    <Compile Include="States\SessionActiveState.cs" />
+    <Compile Include="States\SessionPausedState.cs" />
+    <Compile Include="States\LoginState.cs" />
+    <Compile Include="States\SessionStoppedState.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Libraries\BLELibrary.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
+  <ItemGroup />
+  <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
