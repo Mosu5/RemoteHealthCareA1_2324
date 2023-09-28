@@ -66,7 +66,7 @@ namespace ServerApp
 
                 JsonObject data = await serverConn.ReceiveJson();
                 await Console.Out.WriteLineAsync(data.ToString());
-
+                
                 Console.WriteLine("Server running");
 
                 //JsonObject data = DataTransfer.ReceiveJson().Result+
