@@ -1,10 +1,21 @@
+using System.Drawing;
 using System.Numerics;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using VRConnection.Communication;
 using VRConnection.Graphics;
+using System;
+using System.IO;
+using System.Text.Json;
+using Newtonsoft.Json.Linq;
 
 namespace VRConnection;
+
+public class Data
+{
+    public string DataType { get; set; }
+    public object Value { get; set; }
+}
 
 public class VrSession
 {
@@ -372,5 +383,106 @@ public class VrSession
         await VrCommunication.SendAsJson(tunnelMessage);
         return await VrCommunication.ReceiveJsonObject();
     }
+    
+    public async Task<JsonObject> AddPanel()
+    {
+        String name = "panel1";
+        //Color color = Color.FromArgb(1, 0, 0, 1);
+        //Transform transform = new Transform(1, new double[] { 0, 0, 0}, new double[] { 0, 0, 0 });
+        Vector3 position = new Vector3(1, 0, -3);
+        Vector3 rotation = new Vector3(0, 0, 0);
+        double sizeX = 3;
+        double sizeY = 3;
+        int resolutionX = 512;
+        int resolutionY = 512;
+        bool castShadow = true;
+        string parentID = await GetNodeId("Head");
+
+        object panelAddCommand = Formatting.PanelAdd(name, parentID, position, rotation, sizeX, sizeY, resolutionX, resolutionY, castShadow);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, panelAddCommand);
+        
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
+    
+    public async Task<JsonObject> AddText()
+    {
+        string panelID = await GetNodeId("panel1");
+        string text = "";
+        string line;
+        string textsuper = "";
+        using (StreamReader fileReader = File.OpenText(@"C:\temp\mytest1.json"))
+        {
+                line = fileReader.ReadLine();
+            
+                // Parse each line as a JSON object
+                JObject jsonObject = JObject.Parse(line);
+
+                // Access properties in the JSON object
+                string dataType = jsonObject["DataType"].ToString();
+                JToken valueToken = jsonObject["Value"];
+
+                if (valueToken.Type == JTokenType.Float)
+                {
+                    double value = (double)valueToken;
+                    text = $"DataType: {dataType}, Value: {value}";
+                    Console.WriteLine(text);
+                }
+                else if (valueToken.Type == JTokenType.Array)
+                {
+                    int[] valueArray = valueToken.ToObject<int[]>();
+                    text = $"DataType: {dataType}, Value (Array): [{string.Join(", ", valueArray)}]";
+                    Console.WriteLine(text);
+                }
+                
+        }
+        
+      object textAddCommand = Formatting.TextAdd(panelID, text);
+      object tunnelMessage = Formatting.TunnelSend(_tunnelId, textAddCommand);
+      await VrCommunication.SendAsJson(tunnelMessage);
+      return await VrCommunication.ReceiveJsonObject();
+      
+      //  string panelID = await GetNodeId("panel1");
+      //  
+      //  object textAddCommand = Formatting.TextAdd(panelID, text);
+      //  object tunnelMessage = Formatting.TunnelSend(_tunnelId, textAddCommand);
+//
+      //  await VrCommunication.SendAsJson(tunnelMessage);
+      //  return await VrCommunication.ReceiveJsonObject();
+    }
+    
+    public async Task<JsonObject> ClearPanel()
+    {
+        string panelID = await GetNodeId("panel1");
+        
+        object panelClearCommand = Formatting.PanelClear(panelID);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, panelClearCommand);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
+    
+    public async Task<JsonObject> SwapPanel()
+    {
+        string panelID = await GetNodeId("panel1");
+        
+        object panelSwapCommand = Formatting.PanelSwap(panelID);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, panelSwapCommand);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
+    
+    public async Task<JsonObject> setColorPanel()
+    {
+        string panelID = await GetNodeId("panel1");
+        
+        object panelSetColorCommand = Formatting.PanelSetColor(panelID);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, panelSetColorCommand);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
+    
     #endregion
 }
