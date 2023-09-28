@@ -58,6 +58,7 @@
     <Compile Include="States\SessionPaused.cs" />
     <Compile Include="States\SessionStarting.cs" />
     <Compile Include="States\SessionStopped.cs" />
+    <Compile Include="ServerConn.cs"/>
   </ItemGroup>
   <ItemGroup />
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
