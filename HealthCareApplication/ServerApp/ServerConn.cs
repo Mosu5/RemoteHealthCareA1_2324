@@ -8,43 +8,26 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
-namespace Utilities.Communication
+namespace ServerApp
 {
-    internal class DataTransfer
+    internal class ServerConn
     {
         private static readonly Encoding _encoding = Encoding.ASCII;
 
-        private static TcpClient _tcpClient;
-        private static NetworkStream _stream;
+        private TcpClient _tcpClient;
+        private NetworkStream _stream;
 
-        private static bool _isConnected;
-
-        /// <summary>
-        ///     Attempts to asynchronously connect to the VR server and establishes a NetworkStream that listens
-        ///     to incoming messages.
-        /// </summary>
-        /// <returns>Wether the connection attempt was successful.</returns>
-        public static async Task<bool> ConnectToServer(string ipAddress, int port)
-        {
-            if (_isConnected) return false;
-
-            _tcpClient = new TcpClient();
-
-            await _tcpClient.ConnectAsync(ipAddress, port);
-
-            if (_tcpClient.Connected) _stream = _tcpClient.GetStream();
-            _isConnected = _tcpClient.Connected;
-
-            return _isConnected;
+        public ServerConn(TcpClient tcpClient)
+        { 
+            this._tcpClient = tcpClient;
+            this._stream = tcpClient.GetStream();
         }
 
         /// <summary>
         ///     Closes the TcpClient and NetworkStream.
         /// </summary>
-        public static void CloseConnection()
+        public void CloseConnection()
         {
-            if (!_isConnected) return;
-            _isConnected = false;
             _tcpClient?.Close();
             _stream?.Close();
         }
@@ -54,16 +37,11 @@ namespace Utilities.Communication
         /// </summary>
         /// <param name="payload">An object whose structure will be converted to JSON and sent to the VR server.</param>
         /// <exception cref="CommunicationException">When something goes wrong while sending data to the VR server.</exception>
-        public static async Task SendJson(object payload)
+        public async Task SendJson(object payload)
         {
-            if (!_isConnected)
-                throw new CommunicationException(
-                    "There is no active communication between the application and the VR server.");
-
 
             // Turn payload object into a JSON string
             string jsonString = JsonSerializer.Serialize(payload);
-
 
             // Encode JSON string as a byte array
             byte[] payloadAsBytes = _encoding.GetBytes(jsonString);
@@ -82,11 +60,8 @@ namespace Utilities.Communication
         /// </summary>
         /// <returns>The message which the server sent, as a JsonObject.</returns>
         /// <exception cref="CommunicationException">When something goes wrong while receiving data from the VR server.</exception>
-        public static async Task<JsonObject> ReceiveJson()
+        public async Task<JsonObject> ReceiveJson()
         {
-            if (!_isConnected)
-                throw new CommunicationException(
-                    "There is no active communication between the application and the VR server.");
 
             byte[] lengthArray = new byte[4];
 
@@ -110,9 +85,6 @@ namespace Utilities.Communication
             // Deserialize message
             var messageAsString = _encoding.GetString(payloadBuffer, 0, totalBytesRead);
             JsonObject deserializedMessage = JsonSerializer.Deserialize<JsonObject>(messageAsString)?.AsObject();
-
-            if (deserializedMessage == null)
-                throw new CommunicationException("Something went wrong while receiving a message from the VR server.");
 
             return deserializedMessage;
         }

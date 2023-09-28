@@ -17,8 +17,8 @@ namespace PatientApp
         {
             try
             {
-                if (await DataTransfer.ConnectToServer("127.0.0.1", 8888))
-                    await Run();
+                //if (await DataTransfer.ConnectToServer("127.0.0.1", 8888))
+                //    await Run();
             }
             catch (CommunicationException ex)
             {

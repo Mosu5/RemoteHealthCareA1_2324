@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using Utilities.Communication;
 
 namespace ServerApp
 {
@@ -33,36 +34,40 @@ namespace ServerApp
                 TcpListener server = new TcpListener(localAddr, port);
                 server.Start();
                 // Accept incoming clients and make new thread
-                Socket handler = server.AcceptSocket();
+                TcpClient tcpClient = server.AcceptTcpClient();
 
-                Thread clientThread = new Thread(HandleClient);
-                clientThread.Start(handler);
+                Thread clientThread = new Thread(HandleClientAsync);
+                clientThread.Start(tcpClient);
             }
             catch (Exception e){
                 Console.WriteLine(e.StackTrace);
             }
         }
 
-        public static void HandleClient(object socket)
+        public static async void HandleClientAsync(object connectingClient)
         {
-            Socket clientSocket = socket as Socket;
-            NetworkStream networkStream = new NetworkStream(clientSocket);
-            
-            while (clientSocket.Connected)
+            TcpClient client = connectingClient as TcpClient;
+            ServerConn serverConn = new ServerConn(client);
+
+            while (client.Connected)
             {
-                byte[] buffer = new byte[1024];
-                
-                networkStream.Read(buffer, 0, buffer.Length);
-                string responseString = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                string correctStr = responseString.Substring(4).Trim(' ');
-                Console.WriteLine(correctStr);
-                Console.WriteLine((JsonObject)JsonObject.Parse(correctStr));
+                //byte[] buffer = new byte[1024];
 
-                Console.WriteLine(JsonSerializer.Deserialize<JsonObject>(correctStr)?.AsObject());
-                //JsonObject jsonResponse = JsonSerializer.Deserialize<JsonObject>(responseString);
-                //Console.WriteLine(jsonResponse.ToString());
+                //networkStream.Read(buffer, 0, buffer.Length);
+                //string responseString = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                ////string correctStr = responseString.Substring(4).Trim(' ');
+                //Console.WriteLine(responseString);
+                ////Console.WriteLine((JsonObject)JsonObject.Parse(correctStr));
 
+                ////Console.WriteLine(JsonSerializer.Deserialize<JsonObject>(correctStr)?.AsObject());
+                ////JsonObject jsonResponse = JsonSerializer.Deserialize<JsonObject>(responseString);
+                ////Console.WriteLine(jsonResponse.ToString());
 
+                JsonObject data = await serverConn.ReceiveJson();
+                Console.WriteLine(data);
+
+                //JsonObject data = DataTransfer.ReceiveJson().Result+
+                //await Console.Out.WriteLineAsync(data.ToString());
 
             }
         }

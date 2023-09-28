@@ -78,6 +78,8 @@ public class Program
             JsonObject bike = await session.FollowRoute(routeID, treeID, 20.0);
             Console.WriteLine(bike);
 
+      
+
             // Opgave 3f Voeg route toe
             JsonObject road = await session.AddRoad(routeID);
             Console.WriteLine(road);
