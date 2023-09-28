@@ -105,9 +105,14 @@ public class Program
             using (StreamReader streamReader = new StreamReader(@"C:\temp\mytest1.json"))
             {
                 string line;
+                int times = 0;
                 string text2 = "";
                 while ((line = streamReader.ReadLine()) != null)
                 {
+                    // Cleart Panel
+                    JsonObject clear2 = await session.ClearPanel();
+                    Console.WriteLine(clear2);
+                    
                     // Deserialize the JSON data from the current line
                     var jsonDocument = JsonDocument.Parse(line);
                     var root = jsonDocument.RootElement;
@@ -122,6 +127,8 @@ public class Program
                     JsonObject text = await session.AddText(text2);
                     Console.WriteLine(text);
 
+                    Console.WriteLine(text2);
+                    
                     // Swapt Panel
                     JsonObject swap = await session.SwapPanel();
                     Console.WriteLine(swap);
