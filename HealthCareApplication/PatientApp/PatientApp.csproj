@@ -60,6 +60,7 @@
     <Compile Include="Commands\Summary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utill\"/>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libraries\BLELibrary.dll" />

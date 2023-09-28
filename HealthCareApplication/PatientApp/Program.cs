@@ -40,7 +40,7 @@ namespace PatientApp
             // TODO: add message handler class for handling messages
             // Declare a variable inside while condition which listens for inbound JSON messages.
             // Loop blocks until a new message is received.
-            while (await DataTransfer.ReceiveJson() is var message)
+            while (await .ReceiveJson() is var message)
             {
                 // Check if the message has a command field and that field has the type of object
                 if (!message.ContainsKey("command") || !(message["command"] is JsonObject)) continue;
