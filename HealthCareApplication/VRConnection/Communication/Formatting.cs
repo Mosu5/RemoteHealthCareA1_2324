@@ -387,6 +387,19 @@ public class Formatting
             }
         };
     }
+    
+  // public static object PanelGetLines(string id)
+  // {
+  //     return new
+  //     {
+  //         id = "scene/panel/drawlines",
+  //         data = new
+  //         {
+  //             id,
+  //             width= 1.0,
+  //         }
+  //     };
+  // }
 
     #endregion
 

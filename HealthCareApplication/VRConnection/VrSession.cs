@@ -405,37 +405,9 @@ public class VrSession
         return await VrCommunication.ReceiveJsonObject();
     }
     
-    public async Task<JsonObject> AddText()
+    public async Task<JsonObject> AddText(string text)
     {
         string panelID = await GetNodeId("panel1");
-        string text = "";
-        string line;
-        string textsuper = "";
-        using (StreamReader fileReader = File.OpenText(@"C:\temp\mytest1.json"))
-        {
-                line = fileReader.ReadLine();
-            
-                // Parse each line as a JSON object
-                JObject jsonObject = JObject.Parse(line);
-
-                // Access properties in the JSON object
-                string dataType = jsonObject["DataType"].ToString();
-                JToken valueToken = jsonObject["Value"];
-
-                if (valueToken.Type == JTokenType.Float)
-                {
-                    double value = (double)valueToken;
-                    text = $"DataType: {dataType}, Value: {value}";
-                    Console.WriteLine(text);
-                }
-                else if (valueToken.Type == JTokenType.Array)
-                {
-                    int[] valueArray = valueToken.ToObject<int[]>();
-                    text = $"DataType: {dataType}, Value (Array): [{string.Join(", ", valueArray)}]";
-                    Console.WriteLine(text);
-                }
-                
-        }
         
       object textAddCommand = Formatting.TextAdd(panelID, text);
       object tunnelMessage = Formatting.TunnelSend(_tunnelId, textAddCommand);
