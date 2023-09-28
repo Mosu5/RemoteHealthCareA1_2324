@@ -16,7 +16,7 @@ namespace ServerApp.States
         private IState nextState { get; set;}
         public ServerContext() 
         {
-            currentState = new SessionStarting();
+            currentState = new LoginState();
         }
 
         public void SetNextState(IState newState)

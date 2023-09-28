@@ -41,9 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\ForwardStats.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\Login.cs" />
+    <Compile Include="Commands\SendStats.cs" />
+    <Compile Include="Commands\ISessionCommand.cs" />
+    <Compile Include="Commands\ApproveLogin.cs" />
     <Compile Include="Commands\SaveStats.cs" />
     <Compile Include="Commands\SessionPause.cs" />
     <Compile Include="Commands\SessionResume.cs" />
@@ -52,12 +52,12 @@
     <Compile Include="Commands\Summary.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerContext.cs" />
     <Compile Include="States\IState.cs" />
-    <Compile Include="States\ServerContext.cs" />
-    <Compile Include="States\SessionActive.cs" />
-    <Compile Include="States\SessionPaused.cs" />
-    <Compile Include="States\SessionStarting.cs" />
-    <Compile Include="States\SessionStopped.cs" />
+    <Compile Include="States\SessionActiveState.cs" />
+    <Compile Include="States\SessionPausedState.cs" />
+    <Compile Include="States\LoginState.cs" />
+    <Compile Include="States\SessionStoppedState.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />

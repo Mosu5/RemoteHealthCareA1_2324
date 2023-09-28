@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServerApp.Commands
 {
-    internal class SessionStop : ICommand
+    internal class SessionStop : ISessionCommand
     {
         public void Execute(JsonObject data)
         {

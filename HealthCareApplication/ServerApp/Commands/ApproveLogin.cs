@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServerApp.Commands
 {
-    internal class Login : ICommand
+    internal class ApproveLogin : ISessionCommand
     {
         public void Execute(JsonObject data)
         {
@@ -15,3 +15,4 @@ namespace ServerApp.Commands
         }
     }
 }
+

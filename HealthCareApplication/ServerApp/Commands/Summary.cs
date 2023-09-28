@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServerApp.Commands
 {
-    internal class Summary : ICommand
+    internal class Summary : ISessionCommand
     {
         public void Execute(JsonObject data)
         {

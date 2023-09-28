@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServerApp.Commands
 {
-    internal interface ICommand
+    internal interface ISessionCommand
     {
         /// <summary>
         /// Execution method to be filled with command logic for server.
