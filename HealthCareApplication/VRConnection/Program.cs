@@ -92,12 +92,14 @@ public class Program
             JsonObject road = await session.AddRoad(routeID);
             Console.WriteLine(road);
 
+            // Head op de fiets
+            string headID = await session.GetNodeId("Camera");
+            JsonObject headOnBike = await session.HeadOnBike(headID, bikeID);
+            Console.WriteLine(headOnBike);
+
+
             JsonObject getScene = await session.GetScene();
             Console.WriteLine(getScene);
-
-            // Head op de fiets
-            string headID = await session.GetHeadId();
-            JsonObject headOnBike = await session.HeadOnBike(headID, bikeID);
 
             // Not strictly necessary, but looks clean
             session.Close();
