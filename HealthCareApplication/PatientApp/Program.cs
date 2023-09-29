@@ -42,31 +42,7 @@ namespace PatientApp
             // Loop blocks until a new message is received.
             while (await DataTransfer.ReceiveJson() is var message)
             {
-                // Check if the message has a command field and that field has the type of object
-                if (!message.ContainsKey("command") || !(message["command"] is JsonObject)) continue;
-
-                // Check if the message has a data field
-                if (!message.ContainsKey("data")) continue;
-
-                string commandField = message["command"].ToString();
-                JsonObject dataField = message["data"].AsObject();
-
-                // Set and execute command based on commandField
-                switch (commandField)
-                {
-                    case "login":
-                        _command = new Login();
-                        break;
-                    case "session/start":
-                        _command = new SessionStart(client.OnReceiveData, OnReceiveData);
-                        break;
-                    case "stats/send":
-                        _command = new SendStats();
-                        break;
-                    default:
-                        throw new CommunicationException("Unknown command received: " + commandField);
-                }
-                _command?.Execute(dataField);
+                
             }
         }
 
