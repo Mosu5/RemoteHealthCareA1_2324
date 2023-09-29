@@ -1,4 +1,4 @@
-﻿using ServerApp.States;
+using ServerApp.States;
 using System;
 using System.Net;
 using System.Net.Sockets;
