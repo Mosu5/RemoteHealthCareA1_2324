@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Text.Json.Serialization;
+using System.Net;
+using Utilities.Communication;
 
 namespace ServerApp
 {
@@ -14,13 +14,26 @@ namespace ServerApp
     {
         private static readonly Encoding _encoding = Encoding.ASCII;
 
-        private TcpClient _tcpClient;
-        private NetworkStream _stream;
+        private TcpListener _tcpListener;
 
-        public ServerConn(TcpClient tcpClient)
+        private readonly IPAddress _ipAddress;
+        private readonly int _port;
+
+        public ServerConn(string ipAddress, int port)
         { 
-            this._tcpClient = tcpClient;
-            this._stream = tcpClient.GetStream();
+            this._ipAddress = IPAddress.Parse(ipAddress);
+            this._port = port;
+        }
+
+        public void StartListener()
+        {
+            _tcpListener = new TcpListener(_ipAddress, _port);
+            _tcpListener.Start();
+        }
+
+        public TcpClient AcceptClient()
+        {
+            return _tcpListener.AcceptTcpClient();
         }
 
         /// <summary>
@@ -28,8 +41,7 @@ namespace ServerApp
         /// </summary>
         public void CloseConnection()
         {
-            _tcpClient?.Close();
-            _stream?.Close();
+            _tcpListener?.Stop();
         }
 
         /// <summary>
@@ -37,14 +49,10 @@ namespace ServerApp
         /// </summary>
         /// <param name="payload">An object whose structure will be converted to JSON and sent to the VR server.</param>
         /// <exception cref="CommunicationException">When something goes wrong while sending data to the VR server.</exception>
-        public async Task SendJson(object payload)
+        public async Task SendJson(TcpClient client, JsonObject payload)
         {
-
-            // Turn payload object into a JSON string
-            string jsonString = JsonSerializer.Serialize(payload);
-
             // Encode JSON string as a byte array
-            byte[] payloadAsBytes = _encoding.GetBytes(jsonString);
+            byte[] payloadAsBytes = _encoding.GetBytes(payload.ToString());
 
             // Encode length of the payload as bytes
             byte[] lengthData = BitConverter.GetBytes((uint)payloadAsBytes.Length);
@@ -52,7 +60,7 @@ namespace ServerApp
             // Concatenate payload to length data for the final message
             byte[] message = lengthData.Concat(payloadAsBytes).ToArray();
 
-            await _stream.WriteAsync(message, 0, message.Length);
+            await client.GetStream().WriteAsync(message, 0, message.Length);
         }
 
         /// <summary>
@@ -60,13 +68,13 @@ namespace ServerApp
         /// </summary>
         /// <returns>The message which the server sent, as a JsonObject.</returns>
         /// <exception cref="CommunicationException">When something goes wrong while receiving data from the VR server.</exception>
-        public async Task<JsonObject> ReceiveJson()
+        public async Task<JsonObject> ReceiveJson(TcpClient client)
         {
-
+            NetworkStream clientStream = client.GetStream();
             byte[] lengthArray = new byte[4];
 
             // Read the first four bytes and put it in lengthArray
-            await _stream.ReadAsync(lengthArray, 0, lengthArray.Length);
+            await clientStream.ReadAsync(lengthArray, 0, lengthArray.Length);
 
             // Convert length to uint
             uint length = BitConverter.ToUInt32(lengthArray, 0);
@@ -78,7 +86,7 @@ namespace ServerApp
             while (totalBytesRead < length)
             {
                 // Read the bytes that have just been received
-                int bytesRead = await _stream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
+                int bytesRead = await clientStream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
                 totalBytesRead += bytesRead;
             }
 

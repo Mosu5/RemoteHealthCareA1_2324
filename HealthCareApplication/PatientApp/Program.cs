@@ -14,7 +14,7 @@ namespace PatientApp
     internal class Program
     {
         private static ISessionCommand _command = new Login();
-        private static Client client = new Client();
+        //private static Client client = new Client();
 
         static ClientConn clientConn = new ClientConn("127.0.0.1", 8888);
 
@@ -24,6 +24,11 @@ namespace PatientApp
             {
                 if (await clientConn.ConnectToServer())
                     await Run();
+                else
+                {
+                    await Console.Out.WriteLineAsync("Could not connect to server");
+                    Console.ReadLine();
+                }
             }
             catch (CommunicationException ex)
             {
@@ -33,11 +38,22 @@ namespace PatientApp
 
         private static async Task Run()
         {
-            client.OnReceiveData += OnReceiveData;
+            //client.OnReceiveData += OnReceiveData;
 
             // Run a thread that listens for console input
             Thread t = new Thread(ReceiveConsoleInput);
             t.Start();
+            //JsonObject o = new JsonObject
+            //{
+            //    { "command", "login" },
+            //    {"data", new JsonObject
+            //    {
+            //        { "username", "john" },
+            //        { "password", "1234" }
+            //    }
+            //    }
+            //};
+            //await clientConn.SendJson(o);
 
             // TODO: add message handler class for handling messages
             // Declare a variable inside while condition which listens for inbound JSON messages.
@@ -60,7 +76,7 @@ namespace PatientApp
                         _command = new Login();
                         break;
                     case "session/start":
-                        _command = new SessionStart(client.OnReceiveData, OnReceiveData);
+                        //_command = new SessionStart(client.OnReceiveData, OnReceiveData);
                         break;
                     case "stats/send":
                         _command = new SendStats();

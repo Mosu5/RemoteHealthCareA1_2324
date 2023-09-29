@@ -14,64 +14,28 @@ namespace ServerApp
 {
     internal class Server
     {
+        private static ServerConn serverConn = new ServerConn("127.0.0.1", 8888);
 
-
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
+            serverConn.StartListener();
 
-            StartServer();
-        }
-        
-
-        public static void StartServer()
-        {
-            try
+            while (serverConn.AcceptClient() is var client)
             {
-
-                // Start server socket
-                int port = 8888;
-                IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-                TcpListener server = new TcpListener(localAddr, port);
-                server.Start();
-                // Accept incoming clients and make new thread
-                TcpClient tcpClient = server.AcceptTcpClient();
-
+                await Console.Out.WriteLineAsync("A client has connected");
                 Thread clientThread = new Thread(HandleClientAsync);
-                clientThread.Start(tcpClient);
-            }
-            catch (Exception e){
-                Console.WriteLine(e.StackTrace);
+                clientThread.Start(client);
             }
         }
 
         public static async void HandleClientAsync(object connectingClient)
         {
             TcpClient client = connectingClient as TcpClient;
-            ServerConn serverConn = new ServerConn(client);
 
             while (client.Connected)
             {
-                //byte[] buffer = new byte[1024];
-
-                //networkStream.Read(buffer, 0, buffer.Length);
-                //string responseString = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                ////string correctStr = responseString.Substring(4).Trim(' ');
-                //Console.WriteLine(responseString);
-                ////Console.WriteLine((JsonObject)JsonObject.Parse(correctStr));
-
-                ////Console.WriteLine(JsonSerializer.Deserialize<JsonObject>(correctStr)?.AsObject());
-                ////JsonObject jsonResponse = JsonSerializer.Deserialize<JsonObject>(responseString);
-                ////Console.WriteLine(jsonResponse.ToString());
-
-
-                JsonObject data = await serverConn.ReceiveJson();
-                await Console.Out.WriteLineAsync(data.ToString());
-
-                Console.WriteLine("Server running");
-
-                //JsonObject data = DataTransfer.ReceiveJson().Result+
-                //await Console.Out.WriteLineAsync(data.ToString());
-
+                JsonObject data = await serverConn.ReceiveJson(client);
+                await Console.Out.WriteLineAsync("received " + data.ToString());
             }
         }
     }
