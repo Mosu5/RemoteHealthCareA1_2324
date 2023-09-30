@@ -1,9 +1,10 @@
 ﻿using System.Text.Json.Nodes;
+using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
-    internal interface ISessionCommand
+    public interface ISessionCommand
     {
-        bool Execute(JsonObject data);
+        bool Execute(JsonObject data, ClientConn conn);
     }
 }

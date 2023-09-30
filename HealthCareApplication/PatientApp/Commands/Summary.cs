@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Text;
 using System.Text.Json.Nodes;
+using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
-    internal class Summary : ISessionCommand
+    public class Summary : ISessionCommand
     {
         /// <summary>
         /// Currently prints out a summary of all statistics that were received by the server.
         /// </summary>
-        public bool Execute(JsonObject data)
+        public bool Execute(JsonObject data, ClientConn conn)
         {
             JsonArray dataArray = data.AsArray();
             StringBuilder sb = new StringBuilder($"==== SUMMARY OF STATISTICS ====\n\tAmount:\t{dataArray.Count} statistics\n");
@@ -32,6 +33,7 @@ namespace PatientApp.Commands
 
             return true;
         }
+
 
         /// <summary>
         /// Wether the given statistics object contains the correct keys

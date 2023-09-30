@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace ServerApp.States
@@ -11,6 +12,6 @@ namespace ServerApp.States
     /// </summary>
     internal interface IState
     {
-        void Handle();
+        void Handle(JsonObject packet);
     }
 }

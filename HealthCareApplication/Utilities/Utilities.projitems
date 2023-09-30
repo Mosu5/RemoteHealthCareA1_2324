@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Communication\DataTransfer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Communication\ClientCom.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communication\ClientConn.cs" />
   </ItemGroup>
 </Project>

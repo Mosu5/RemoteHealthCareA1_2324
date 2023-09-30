@@ -1,4 +1,4 @@
-﻿using ServerApp.States;
+using ServerApp.States;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -8,62 +8,34 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using Utilities.Communication;
 
 namespace ServerApp
 {
     internal class Server
     {
+        private static ServerConn serverConn = new ServerConn("127.0.0.1", 8888);
 
-
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
+            serverConn.StartListener();
 
-            StartServer();
-        }
-        
-
-        public static void StartServer()
-        {
-            try
+            while (serverConn.AcceptClient() is var client)
             {
-
-                // Start server socket
-                int port = 8888;
-                IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-                TcpListener server = new TcpListener(localAddr, port);
-                server.Start();
-                // Accept incoming clients and make new thread
-                Socket handler = server.AcceptSocket();
-
-                Thread clientThread = new Thread(HandleClient);
-                clientThread.Start(handler);
-            }
-            catch (Exception e){
-                Console.WriteLine(e.StackTrace);
+                await Console.Out.WriteLineAsync("A client has connected");
+                Thread clientThread = new Thread(HandleClientAsync);
+                clientThread.Start(client);
             }
         }
 
-        public static void HandleClient(object socket)
+        public static async void HandleClientAsync(object connectingClient)
         {
-            Socket clientSocket = socket as Socket;
-            NetworkStream networkStream = new NetworkStream(clientSocket);
-            
-            while (clientSocket.Connected)
+            TcpClient client = connectingClient as TcpClient;
+
+            while (client.Connected)
             {
-                byte[] buffer = new byte[1024];
-                
-                networkStream.Read(buffer, 0, buffer.Length);
-                string responseString = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                string correctStr = responseString.Substring(4).Trim(' ');
-                Console.WriteLine(correctStr);
-                Console.WriteLine((JsonObject)JsonObject.Parse(correctStr));
-
-                Console.WriteLine(JsonSerializer.Deserialize<JsonObject>(correctStr)?.AsObject());
-                //JsonObject jsonResponse = JsonSerializer.Deserialize<JsonObject>(responseString);
-                //Console.WriteLine(jsonResponse.ToString());
-
-
-
+                JsonObject data = await serverConn.ReceiveJson(client);
+                await Console.Out.WriteLineAsync("received " + data.ToString());
             }
         }
     }

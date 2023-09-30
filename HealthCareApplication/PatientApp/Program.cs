@@ -14,14 +14,21 @@ namespace PatientApp
     internal class Program
     {
         private static ISessionCommand _command = new Login();
-        private static Client client = new Client();
+        //private static Client client = new Client();
+
+        static ClientConn clientConn = new ClientConn("127.0.0.1", 8888);
 
         static async Task Main(string[] args)
         {
             try
             {
-                if (await DataTransfer.ConnectToServer("127.0.0.1", 8888))
+                if (await clientConn.ConnectToServer())
                     await Run();
+                else
+                {
+                    await Console.Out.WriteLineAsync("Could not connect to server");
+                    Console.ReadLine();
+                }
             }
             catch (CommunicationException ex)
             {
@@ -31,18 +38,53 @@ namespace PatientApp
 
         private static async Task Run()
         {
-            client.OnReceiveData += OnReceiveData;
+            //client.OnReceiveData += OnReceiveData;
 
             // Run a thread that listens for console input
             Thread t = new Thread(ReceiveConsoleInput);
             t.Start();
+            //JsonObject o = new JsonObject
+            //{
+            //    { "command", "login" },
+            //    {"data", new JsonObject
+            //    {
+            //        { "username", "john" },
+            //        { "password", "1234" }
+            //    }
+            //    }
+            //};
+            //await clientConn.SendJson(o);
 
             // TODO: add message handler class for handling messages
             // Declare a variable inside while condition which listens for inbound JSON messages.
             // Loop blocks until a new message is received.
-            while (await DataTransfer.ReceiveJson() is var message)
+            while (await clientConn.ReceiveJson() is var message)
             {
-                
+                // Check if the message has a command field and that field has the type of object
+                if (!message.ContainsKey("command") || !(message["command"] is JsonObject)) continue;
+
+                // Check if the message has a data field
+                if (!message.ContainsKey("data")) continue;
+
+                string commandField = message["command"].ToString();
+                JsonObject dataField = message["data"].AsObject();
+
+                // Set and execute command based on commandField
+                switch (commandField)
+                {
+                    case "login":
+                        _command = new Login();
+                        break;
+                    case "session/start":
+                        //_command = new SessionStart(client.OnReceiveData, OnReceiveData);
+                        break;
+                    case "stats/send":
+                        _command = new SendStats();
+                        break;
+                    default:
+                        throw new CommunicationException("Unknown command received: " + commandField);
+                }
+                _command?.Execute(dataField, clientConn);
             }
         }
 
@@ -105,7 +147,7 @@ namespace PatientApp
                 //JsonObject jsonPayload = payload as JsonObject;
                 //_command.Execute(jsonPayload);
 
-                _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)));
+                _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)), clientConn);
             }
         }
 
