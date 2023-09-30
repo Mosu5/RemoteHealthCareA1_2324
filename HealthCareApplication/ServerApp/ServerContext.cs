@@ -22,7 +22,7 @@ namespace ServerApp.States
         public ServerContext(NetworkStream stream) 
         {
             this.stream = stream;
-            currentState = new LoginState();
+            currentState = new LoginState(this);
         }
 
         public void SetNextState(IState newState)
@@ -48,7 +48,7 @@ namespace ServerApp.States
                     switch (commando)
                     {
                         case "login":
-                            this.nextState = new LoginState();
+                            this.nextState = new LoginState(this);
                             break;
                         case "session stop":
                             this.nextState = new SessionStoppedState();
@@ -57,7 +57,7 @@ namespace ServerApp.States
                             this.nextState = new SessionPausedState();
                             break;
                         case "session start":
-                            this.nextState = new SessionActiveState();
+                            this.nextState = new SessionActiveState(this);
                             break;
                     }
                         

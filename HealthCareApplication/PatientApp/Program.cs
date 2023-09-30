@@ -43,17 +43,17 @@ namespace PatientApp
             // Run a thread that listens for console input
             Thread t = new Thread(ReceiveConsoleInput);
             t.Start();
-            //JsonObject o = new JsonObject
-            //{
-            //    { "command", "login" },
-            //    {"data", new JsonObject
-            //    {
-            //        { "username", "john" },
-            //        { "password", "1234" }
-            //    }
-            //    }
-            //};
-            //await clientConn.SendJson(o);
+            JsonObject o = new JsonObject
+            {
+                { "command", "login" },
+                {"data", new JsonObject
+                {
+                    { "username", "john" },
+                    { "password", "1234" }
+                }
+                }
+            };
+            await clientConn.SendJson(o);
 
             // TODO: add message handler class for handling messages
             // Declare a variable inside while condition which listens for inbound JSON messages.
