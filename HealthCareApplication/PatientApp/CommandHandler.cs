@@ -27,8 +27,8 @@ namespace PatientApp
             {
                // { "login", new LoginResponse() }, // TODO: clean Login() and create LoginResponse()
                 { "session/start", new SessionStart(onReceiveDataDevMgr, OnReceiveData) }, // pass out necessary event handlers
-                { "session/stop", new SessionStop(onReceiveDataDevMgr, OnReceiveData) }
-                 { "login", new LoginResponse() }, // TODO: clean Login() and create LoginResponse()
+                { "session/stop", new SessionStop(onReceiveDataDevMgr, OnReceiveData) },
+                { "login", new LoginResponse() }, // TODO: clean Login() and create LoginResponse()
             };
         }
 

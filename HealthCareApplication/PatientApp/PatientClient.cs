@@ -82,8 +82,8 @@ namespace PatientApp
 
                         Login login = new Login();
                         // Login login = new Login(username, password);
-                        login.Username = username;
-                        login.Password = password;
+                       // login.Username = username;
+                       // login.Password = password;
 
                         ApplyCommand(login, null);
                         break;
