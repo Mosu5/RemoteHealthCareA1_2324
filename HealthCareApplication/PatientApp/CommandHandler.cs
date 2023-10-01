@@ -7,6 +7,10 @@ using Utilities.Communication;
 
 namespace PatientApp
 {
+    /// <summary>
+    /// Initialize commands in constructor
+    /// Handle commands based on incoming messages from server
+    /// </summary>
     public class CommandHandler
     {
         private Dictionary<String, ISessionCommand> _commands;
