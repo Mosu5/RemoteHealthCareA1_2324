@@ -1,9 +1,6 @@
-﻿using PatientApp.BikeConnection;
+﻿using PatientApp.DeviceConnection;
 using PatientApp.Commands;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -14,18 +11,16 @@ namespace PatientApp
 {
     public class PatientClient
     {
-        private Client _client = new Client();
-        private ClientConn _clientConn = new ClientConn("127.0.0.1", 8888);
+        private readonly DeviceManager _deviceManager = new DeviceManager();
+        private readonly ClientConn _clientConn = new ClientConn("127.0.0.1", 8888);
 
-        private CommandHandler _commandHandler;
+        private readonly CommandHandler _commandHandler;
 
         private ISessionCommand _command = new Login();
 
-
-
         public PatientClient()
         {
-            _commandHandler = new CommandHandler(_clientConn, _client.OnReceiveData);
+            _commandHandler = new CommandHandler(_clientConn, _deviceManager.OnReceiveData);
         }
 
         static async Task Main(string[] args)
@@ -54,34 +49,13 @@ namespace PatientApp
         {
             Thread t = new Thread(ReceiveConsoleInput);
             t.Start();
-            JsonObject o = new JsonObject
-            {
-                { "command", "login" },
-                {"data", new JsonObject
-                {
-                    { "username", "hi" },
-                    { "password", "1234" }
-                }
-                }
-            };
-            await _clientConn.SendJson(o); // test for sending to server
-
 
             // TODO: test message handler
 
             while (await _clientConn.ReceiveJson() is var message) // listening for message
             {
-                try
-                {
-                    await Console.Out.WriteLineAsync($"{message}");
-
-                    _commandHandler.Handle(message);
-
-                }
-                catch (CommunicationException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+                await Console.Out.WriteLineAsync($"Received: {message}");
+                _commandHandler.Handle(message);
             }
         }
 

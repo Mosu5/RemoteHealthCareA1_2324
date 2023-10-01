@@ -32,18 +32,32 @@ namespace ServerApp
         {
             TcpClient client = connectingClient as TcpClient;
 
-            while (client.Connected)
+            await serverConn.SendJson(client, new JsonObject
             {
-                JsonObject data = await serverConn.ReceiveJson(client);
-                await Console.Out.WriteLineAsync("received " + data.ToString());
-                JsonObject sessionStart = new JsonObject
-                {
-                    { "command", "session/start" },
-                    {"data", new JsonObject() }
-                };
+                { "command", "session/start" },
+                {"data", new JsonObject()}
+            });
 
-                await serverConn.SendJson(client, sessionStart);
-            }
+            Thread.Sleep(5000);
+
+            await serverConn.SendJson(client, new JsonObject
+            {
+                { "command", "session/stop" },
+                {"data", new JsonObject()}
+            });
+
+            //while (client.Connected)
+            //{
+            //    JsonObject data = await serverConn.ReceiveJson(client);
+            //    await Console.Out.WriteLineAsync("received " + data.ToString());
+            //    JsonObject sessionStart = new JsonObject
+            //    {
+            //        { "command", "session/start" },
+            //        {"data", new JsonObject() }
+            //    };
+
+            //    await serverConn.SendJson(client, sessionStart);
+            //}
         }
     }
 

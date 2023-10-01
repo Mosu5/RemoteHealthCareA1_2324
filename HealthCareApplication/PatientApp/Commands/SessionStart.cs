@@ -1,5 +1,5 @@
-﻿using PatientApp.BikeConnection;
-using PatientApp.BikeConnection.Receiver;
+﻿using PatientApp.DeviceConnection;
+using PatientApp.DeviceConnection.Receiver;
 using System;
 using System.Text.Json.Nodes;
 using Utilities.Communication;
@@ -8,20 +8,19 @@ namespace PatientApp.Commands
 {
     internal class SessionStart : ISessionCommand
     {
-        private EventHandler<Statistic> _onReceiveDataClient;
+        private EventHandler<Statistic> _onReceiveDataDevMgr;
         private readonly EventHandler<Statistic> _onReceiveData;
 
-        public SessionStart(EventHandler<Statistic> onReceiveDataClient, EventHandler<Statistic> onReceiveData)
+        public SessionStart(EventHandler<Statistic> onReceiveDataDevMgr, EventHandler<Statistic> onReceiveData)
         {
-            _onReceiveDataClient = onReceiveDataClient;
+            _onReceiveDataDevMgr = onReceiveDataDevMgr;
             _onReceiveData = onReceiveData;
         }
 
         public bool Execute(JsonObject data, ClientConn conn)
         {
-            // This doesn't work yet, investigate this
-            _onReceiveDataClient += _onReceiveData;
-            Console.WriteLine("Session started");
+            _onReceiveDataDevMgr += _onReceiveData;
+            Console.WriteLine("======= Session started");
             return true;
         }
     }

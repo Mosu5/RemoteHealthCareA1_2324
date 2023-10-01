@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace PatientApp.BikeConnection.Receiver
+namespace PatientApp.DeviceConnection.Receiver
 {
     public interface IReceiver
     {

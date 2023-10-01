@@ -54,12 +54,12 @@
     <Reference Include="System.Text.Json, Version=7.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BikeConnection\Client.cs" />
-    <Compile Include="BikeConnection\EmulatedTrainer.cs" />
-    <Compile Include="BikeConnection\Receiver\BLEReceiver.cs" />
-    <Compile Include="BikeConnection\Receiver\EmulatedReceiver.cs" />
-    <Compile Include="BikeConnection\Receiver\IReceiver.cs" />
-    <Compile Include="BikeConnection\Statistic.cs" />
+    <Compile Include="DeviceConnection\DeviceManager.cs" />
+    <Compile Include="DeviceConnection\EmulatedTrainer.cs" />
+    <Compile Include="DeviceConnection\Receiver\BLEReceiver.cs" />
+    <Compile Include="DeviceConnection\Receiver\EmulatedReceiver.cs" />
+    <Compile Include="DeviceConnection\Receiver\IReceiver.cs" />
+    <Compile Include="DeviceConnection\Statistic.cs" />
     <Compile Include="Commands\ClientFormatting.cs" />
     <Compile Include="Commands\ISessionCommand.cs" />
     <Compile Include="Commands\Login.cs" />
