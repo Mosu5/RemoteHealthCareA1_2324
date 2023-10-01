@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace PatientApp.BikeConnection
+namespace PatientApp.DeviceConnection
 {
     internal class EmulatedTrainer
     {

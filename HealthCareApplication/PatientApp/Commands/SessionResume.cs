@@ -1,4 +1,4 @@
-﻿using PatientApp.BikeConnection.Receiver;
+﻿using PatientApp.DeviceConnection.Receiver;
 using System;
 using System.Text.Json.Nodes;
 using Utilities.Communication;

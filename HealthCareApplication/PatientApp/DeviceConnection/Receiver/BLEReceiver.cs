@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
 
-namespace PatientApp.BikeConnection.Receiver
+namespace PatientApp.DeviceConnection.Receiver
 {
     public class BLEReceiver : IReceiver
     {

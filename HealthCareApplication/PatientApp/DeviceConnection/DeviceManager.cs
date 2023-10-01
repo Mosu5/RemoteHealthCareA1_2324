@@ -1,9 +1,9 @@
 ﻿using System;
-using PatientApp.BikeConnection.Receiver;
+using PatientApp.DeviceConnection.Receiver;
 
-namespace PatientApp.BikeConnection
+namespace PatientApp.DeviceConnection
 {
-    public class Client
+    public class DeviceManager
     {
         private Statistic currentStat = new Statistic();
         public EventHandler<Statistic> OnReceiveData;
@@ -17,7 +17,7 @@ namespace PatientApp.BikeConnection
         /// to any of the devices, it will automatically switch to the emulated environment. Both classes implement
         /// the IReceiver interface, as to ensure abstraction.
         /// </summary>
-        public Client()
+        public DeviceManager()
         {
             Receiver = new BLEReceiver();
 
