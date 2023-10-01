@@ -32,13 +32,14 @@ namespace ServerApp
         {
             TcpClient client = connectingClient as TcpClient;
 
-            ServerContext serverContext = new ServerContext(client.GetStream());
+            ServerContext serverContext = new ServerContext(serverConn);
             while (client.Connected)
             {
                 Console.Out.WriteLineAsync("Looking for data: ");
                 JsonObject data = await serverConn.ReceiveJson(client);
                 await Console.Out.WriteLineAsync("received " + data.ToString());
                 serverContext.Update(data);
+                await serverConn.SendJson(client, serverContext.ResponseToClient);
                 
             }
         }

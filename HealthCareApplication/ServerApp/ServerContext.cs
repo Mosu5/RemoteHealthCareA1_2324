@@ -16,12 +16,14 @@ namespace ServerApp.States
     internal class ServerContext
     {
 
+      
         private IState currentState {  get; set; }
         private IState nextState { get; set;}
-        private NetworkStream stream { get; set; }
-        public ServerContext(NetworkStream stream) 
+        private ServerConn _serverConn { get; set; }
+        public JsonObject ResponseToClient { get; set; }
+        public ServerContext(ServerConn serverConn) 
         {
-            this.stream = stream;
+            this._serverConn = serverConn;
             currentState = new LoginState(this);
         }
 
@@ -62,6 +64,7 @@ namespace ServerApp.States
             ApplyNewState();
             currentState.Handle(receivedData);
         }
+
         
         //public void Run()
         //{

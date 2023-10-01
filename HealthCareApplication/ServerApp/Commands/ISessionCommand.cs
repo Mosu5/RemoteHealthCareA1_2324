@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServerApp.States;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,5 @@ namespace ServerApp.Commands
         /// </summary>
         /// <param name="data"></param>
         void Execute(JsonObject data);
-
     }
 }

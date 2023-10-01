@@ -1,4 +1,5 @@
 ﻿using Microsoft.SqlServer.Server;
+using ServerApp.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace ServerApp.States
     {
         //TODO current username and password are for testing
         private string _username = "bob";
-        private string _password= "bob123";
+        private string _password= "bob";
 
         private ServerContext context;
         public LoginState(ServerContext context)
@@ -36,8 +37,16 @@ namespace ServerApp.States
                 {
                     if (username == _username && password == _password)
                     {
+                        // Update response to the client so the server can retrieve response and send to client
+                        context.ResponseToClient = ApproveLogin();
                         context.SetNextState(new SessionActiveState(context));
                     }
+                    else
+                    {
+                        context.ResponseToClient = RefuseLogin();
+                    }
+
+
                 }
                 else
                 {
@@ -49,6 +58,32 @@ namespace ServerApp.States
             {
                 throw new FormatException("Json packet format corrupted!");
             }
+        }
+
+        private JsonObject RefuseLogin()
+        {
+            return new JsonObject
+            {
+                {"command", "login" },
+                {"data", new JsonObject
+                    {
+                        {"status", "error"}
+                    }
+                }
+            };
+        }
+
+        private JsonObject ApproveLogin()
+        {
+            return new JsonObject
+            {
+                {"command", "login" },
+                {"data", new JsonObject
+                    {
+                        {"status", "ok"}
+                    }
+                }
+            };
         }
     }
 }
