@@ -31,7 +31,7 @@ namespace PatientApp
         public void Handle(JsonObject message)
         {
             // Check if the message has a command field and that field has the type of object
-            if (!message.ContainsKey("command") || !(message["command"] is JsonObject)) return;
+            if (!message.ContainsKey("command")) return;
 
             // Check if the message has a data field
             if (!message.ContainsKey("data")) return;
