@@ -17,14 +17,13 @@ namespace PatientApp
             _conn = conn;
 
             // todo add all commands to dictionary
-            // add client to constructor, create client in main\
+            // add client to constructor, create client in main
 
 
             _commands = new Dictionary<string, ISessionCommand>()
             {
-               // { "login", new LoginResponse() }, // TODO: clean Login() and create LoginResponse()
+                 { "login", new LoginResponse() }, // TODO: clean Login() and create LoginResponse()
                  { "session/start", new SessionStart(onReceiveDataClient, OnReceiveData) }, // pass out necessary event handlers
-              
             };
         }
 

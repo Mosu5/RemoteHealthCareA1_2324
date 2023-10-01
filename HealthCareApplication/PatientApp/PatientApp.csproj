@@ -63,6 +63,7 @@
     <Compile Include="Commands\ClientFormatting.cs" />
     <Compile Include="Commands\ISessionCommand.cs" />
     <Compile Include="Commands\Login.cs" />
+    <Compile Include="Commands\LoginResponse.cs" />
     <Compile Include="Commands\SendStats.cs" />
     <Compile Include="Commands\SessionPause.cs" />
     <Compile Include="Commands\SessionResume.cs" />
