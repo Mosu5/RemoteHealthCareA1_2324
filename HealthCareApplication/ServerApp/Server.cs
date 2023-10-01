@@ -22,7 +22,7 @@ namespace ServerApp
 
             while (serverConn.AcceptClient() is var client)
             {
-                await Console.Out.WriteLineAsync("A client has connected");
+                Console.Out.WriteLineAsync("A client has connected");
                 Thread clientThread = new Thread(HandleClientAsync);
                 clientThread.Start(client);
             }
@@ -31,11 +31,15 @@ namespace ServerApp
         public static async void HandleClientAsync(object connectingClient)
         {
             TcpClient client = connectingClient as TcpClient;
-
+            Console.Out.WriteLineAsync("We have a client!");
+            ServerContext serverContext = new ServerContext(client.GetStream());
             while (client.Connected)
             {
+                Console.Out.WriteLineAsync("Looking for data: ");
                 JsonObject data = await serverConn.ReceiveJson(client);
                 await Console.Out.WriteLineAsync("received " + data.ToString());
+                serverContext.Update(data);
+                
             }
         }
     }

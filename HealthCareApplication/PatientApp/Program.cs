@@ -113,7 +113,7 @@ namespace PatientApp
                         login.Username = username;
                         login.Password = password;
                         
-                        ApplyCommand(login, null);
+                        ApplyCommand(login, payload);
                         break;
                     case "stats/send":
                         // Receive speed, distance and heart rate

@@ -18,10 +18,10 @@ namespace PatientApp.Commands
 
         public bool Execute(JsonObject data, ClientConn conn)
         {
+
             Console.WriteLine(data.ToString());
-            
             conn.SendJson(data);
-            return true;
+
             //throw new NotImplementedException();
             if (data == null || data["data"] == null) // no response data, so we try logging in
             {
@@ -42,6 +42,7 @@ namespace PatientApp.Commands
             // };
 
             string status = data["data"]?["status"]?.GetValue<string>();
+            Console.WriteLine(status);
 
             if (status == "error")
             {
@@ -62,7 +63,7 @@ namespace PatientApp.Commands
                 throw new CommunicationException("Login data is not filled.");
             }
 
-            ;
+            
 
             // create object
             object payload = new

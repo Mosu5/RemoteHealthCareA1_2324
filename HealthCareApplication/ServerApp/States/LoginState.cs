@@ -28,6 +28,7 @@ namespace ServerApp.States
             if (packet.ContainsKey("data"))
             {
                 JsonObject data = packet["data"] as JsonObject;
+                Console.WriteLine("Login recieved data: " + data);
 
                 string username= (string)data["username"];
                 string password = (string)data["password"];
