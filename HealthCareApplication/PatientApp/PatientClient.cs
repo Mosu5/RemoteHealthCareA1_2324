@@ -84,8 +84,21 @@ namespace PatientApp
                         // Login login = new Login(username, password);
                         login.Username = username;
                         login.Password = password;
-                        
-                        ApplyCommand(login, payload);
+
+                        //ApplyCommand(login, payload);
+
+                        JsonObject loginData = new JsonObject {
+                          { "command", "login" },
+                          { "data", new JsonObject {
+                              {"username", username},
+                              {"password", password}
+                          }
+                        }
+                        };
+                        // TO DO: Implement the following wrapper structure to make JSON formatting easier:
+                        // CommandWrapper.Login(username, pass);
+
+                        _clientConn.SendJson(loginData);
                         break;
                     case "stats/send":
                         // Receive speed, distance and heart rate

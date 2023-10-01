@@ -31,7 +31,7 @@ namespace ServerApp
         public static async void HandleClientAsync(object connectingClient)
         {
             TcpClient client = connectingClient as TcpClient;
-            Console.Out.WriteLineAsync("We have a client!");
+
             ServerContext serverContext = new ServerContext(client.GetStream());
             while (client.Connected)
             {

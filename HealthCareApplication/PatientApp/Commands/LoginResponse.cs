@@ -30,4 +30,12 @@ namespace PatientApp.Commands
             return true;
         }
     }
+
+    // jsonObj = new JsonObject {
+    //  { "command", "login" },
+    //  { "data", new JsonObject {
+    //      {"status", "ok"}
+    //  }  
+    //}
+    
 }
