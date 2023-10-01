@@ -1,29 +1,43 @@
-﻿using System;
+﻿using PatientApp.BikeConnection;
+using PatientApp.Commands;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using PatientApp.BikeConnection;
-using PatientApp.BikeConnection.Receiver;
-using PatientApp.Commands;
 using Utilities.Communication;
 
 namespace PatientApp
 {
-    internal class Program
+    public class PatientClient
     {
-        private static ISessionCommand _command = new Login();
-        //private static Client client = new Client();
+        private Client _client = new Client();
+        private ClientConn _clientConn = new ClientConn("127.0.0.1", 8888);
 
-        static ClientConn clientConn = new ClientConn("127.0.0.1", 8888);
+        private CommandHandler _commandHandler;
+
+        private ISessionCommand _command = new Login();
+
+
+
+        public PatientClient()
+        {
+            _commandHandler = new CommandHandler(_clientConn, _client.OnReceiveData);
+        }
 
         static async Task Main(string[] args)
         {
             try
             {
-                if (await clientConn.ConnectToServer())
-                    await Run();
+                PatientClient patientClient = new PatientClient();
+
+                if (await patientClient._clientConn.ConnectToServer())
+                {
+                    await patientClient.Run();
+                }
                 else
                 {
                     await Console.Out.WriteLineAsync("Could not connect to server");
@@ -36,11 +50,8 @@ namespace PatientApp
             }
         }
 
-        private static async Task Run()
+        public async Task Run()
         {
-            //client.OnReceiveData += OnReceiveData;
-
-            // Run a thread that listens for console input
             Thread t = new Thread(ReceiveConsoleInput);
             t.Start();
             JsonObject o = new JsonObject
@@ -48,50 +59,37 @@ namespace PatientApp
                 { "command", "login" },
                 {"data", new JsonObject
                 {
-                    { "username", "john" },
+                    { "username", "hi" },
                     { "password", "1234" }
                 }
                 }
             };
-            await clientConn.SendJson(o);
+            await _clientConn.SendJson(o); // test for sending to server
 
-            // TODO: add message handler class for handling messages
-            // Declare a variable inside while condition which listens for inbound JSON messages.
-            // Loop blocks until a new message is received.
-            while (await clientConn.ReceiveJson() is var message)
+
+            // TODO: test message handler
+
+            while (await _clientConn.ReceiveJson() is var message) // listening for message
             {
-                // Check if the message has a command field and that field has the type of object
-                if (!message.ContainsKey("command") || !(message["command"] is JsonObject)) continue;
-
-                // Check if the message has a data field
-                if (!message.ContainsKey("data")) continue;
-
-                string commandField = message["command"].ToString();
-                JsonObject dataField = message["data"].AsObject();
-
-                // Set and execute command based on commandField
-                switch (commandField)
+                try
                 {
-                    case "login":
-                        _command = new Login();
-                        break;
-                    case "session/start":
-                        //_command = new SessionStart(client.OnReceiveData, OnReceiveData);
-                        break;
-                    case "stats/send":
-                        _command = new SendStats();
-                        break;
-                    default:
-                        throw new CommunicationException("Unknown command received: " + commandField);
+                    await Console.Out.WriteLineAsync($"{message}");
+
+                    _commandHandler.Handle(message);
+
                 }
-                _command?.Execute(dataField, clientConn);
+                catch (CommunicationException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
+
 
         /// <summary>
         /// Receives string commands from the console input and applies the command if valid.
         /// </summary>
-        private static void ReceiveConsoleInput()
+        private void ReceiveConsoleInput()
         {
             while (true)
             {
@@ -112,7 +110,7 @@ namespace PatientApp
                         // Login login = new Login(username, password);
                         login.Username = username;
                         login.Password = password;
-                        
+
                         ApplyCommand(login, null);
                         break;
                     case "stats/send":
@@ -134,10 +132,11 @@ namespace PatientApp
             }
         }
 
+
         /// <summary>
-        /// Accesses the _command variable in a thread-safe manner and executes the given command.
+        /// Receives string commands from the console input and applies the command if valid.
         /// </summary>
-        private static void ApplyCommand(ISessionCommand command, object payload)
+        private void ApplyCommand(ISessionCommand command, object payload)
         {
             // Lock the _command variable, so no other thread can access it while the program is inside this lock block.
             lock (_command)
@@ -147,13 +146,13 @@ namespace PatientApp
                 //JsonObject jsonPayload = payload as JsonObject;
                 //_command.Execute(jsonPayload);
 
-                _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)), clientConn);
+                _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)), _clientConn);
             }
         }
 
-        private static void OnReceiveData(object sender, Statistic stat)
+        public void OnReceiveData(object sender, Statistic stat)
         {
-            // new SendStat(...);
+
         }
     }
 }

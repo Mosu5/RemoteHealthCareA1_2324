@@ -21,6 +21,7 @@ namespace PatientApp.Commands
         {
             // This doesn't work yet, investigate this
             _onReceiveDataClient += _onReceiveData;
+            Console.WriteLine("Session started");
             return true;
         }
     }

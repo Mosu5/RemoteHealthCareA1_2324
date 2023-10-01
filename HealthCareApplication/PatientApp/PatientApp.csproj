@@ -69,8 +69,8 @@
     <Compile Include="Commands\SessionStart.cs" />
     <Compile Include="Commands\SessionStop.cs" />
     <Compile Include="Commands\Summary.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="MessageHandler.cs" />
+    <Compile Include="PatientClient.cs" />
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
