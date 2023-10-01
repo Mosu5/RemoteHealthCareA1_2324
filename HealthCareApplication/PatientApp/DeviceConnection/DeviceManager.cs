@@ -1,5 +1,6 @@
 ﻿using System;
 using PatientApp.DeviceConnection.Receiver;
+using Utilities.Logging;
 
 namespace PatientApp.DeviceConnection
 {
@@ -33,7 +34,7 @@ namespace PatientApp.DeviceConnection
 
         private void OnReceiveSpeed(object sender, double speed)
         {
-            Console.WriteLine("Speed: {0} m/s", speed);
+            Logger.Log($"Speed: {speed} m/s", LogType.DeviceInfo);
 
             if (currentStat.Speed == -1)
             {
@@ -44,7 +45,7 @@ namespace PatientApp.DeviceConnection
 
         private void OnReceiveDistance(object sender, int distance)
         {
-            Console.WriteLine("Distance: {0} meters", distance);
+            Logger.Log($"Distance: {distance} meters", LogType.DeviceInfo);
 
             if (currentStat.Distance == -1)
             {
@@ -55,7 +56,7 @@ namespace PatientApp.DeviceConnection
 
         private void OnReceiveHeartRate(object sender, int heartRate)
         {
-            Console.WriteLine("Heart rate: {0} bpm", heartRate);
+            Logger.Log($"Heart rate: {heartRate} bpm", LogType.DeviceInfo);
 
             if (currentStat.HeartRate == -1)
             {
@@ -66,7 +67,7 @@ namespace PatientApp.DeviceConnection
 
         private void OnReceiveRrIntervals(object sender, int[] rrIntervals)
         {
-            Console.WriteLine("R-R intervals: {0}", String.Join(", ", rrIntervals));
+            Logger.Log($"R-R intervals: {string.Join(", ", rrIntervals)}", LogType.DeviceInfo);
 
             if (currentStat.RrIntervals == new int[0])
             {

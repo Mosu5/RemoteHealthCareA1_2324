@@ -18,8 +18,8 @@ namespace Utilities.Communication
         private readonly string _ipAddress;
         private readonly int _port;
 
-        /// <param name="ipAddress">The IP-address of the remote server</param>
-        /// <param name="port">The port of the remote server</param>
+        /// <param name="ipAddress">The IP-address of the server</param>
+        /// <param name="port">The port of the server</param>
         public ClientConn(string ipAddress, int port)
         {
             _ipAddress = ipAddress;
@@ -27,7 +27,7 @@ namespace Utilities.Communication
         }
 
         /// <summary>
-        ///     Attempts to asynchronously connect to the VR server and establishes a NetworkStream that listens
+        ///     Attempts to asynchronously connect to the server and establishes a NetworkStream that listens
         ///     to incoming messages.
         /// </summary>
         /// <returns>Wether the connection attempt was successful.</returns>
@@ -55,15 +55,15 @@ namespace Utilities.Communication
         }
 
         /// <summary>
-        ///     Sends a JSON message to the VR server asynchronously.
+        ///     Sends a JSON message to the server asynchronously.
         /// </summary>
-        /// <param name="payload">An object whose structure will be converted to JSON and sent to the VR server.</param>
-        /// <exception cref="CommunicationException">When something goes wrong while sending data to the VR server.</exception>
+        /// <param name="payload">An object whose structure will be converted to JSON and sent to the server.</param>
+        /// <exception cref="CommunicationException">When something goes wrong while sending data to the server.</exception>
         public async Task SendJson(JsonObject payload)
         {
             if (!_tcpClient.Connected)
                 throw new CommunicationException(
-                    "There is no active communication between the client application and the VR server.");
+                    "There is no active communication between the client application and the server.");
 
             // Encode JSON string as a byte array
             byte[] payloadAsBytes = _encoding.GetBytes(payload.ToString());
@@ -80,15 +80,15 @@ namespace Utilities.Communication
         }
 
         /// <summary>
-        ///     Receives a JSON message from the VR server asynchronously
+        ///     Receives a JSON message from the server asynchronously
         /// </summary>
         /// <returns>The message which the server sent, as a JsonObject.</returns>
-        /// <exception cref="CommunicationException">When something goes wrong while receiving data from the VR server.</exception>
+        /// <exception cref="CommunicationException">When something goes wrong while receiving data from the server.</exception>
         public async Task<JsonObject> ReceiveJson()
         {
             if (!_tcpClient.Connected)
                 throw new CommunicationException(
-                    "There is no active communication between the client application and the VR server.");
+                    "There is no active communication between the client application and the server.");
 
             byte[] lengthArray = new byte[4];
 
@@ -114,7 +114,7 @@ namespace Utilities.Communication
             JsonObject deserializedMessage = JsonSerializer.Deserialize<JsonObject>(messageAsString)?.AsObject();
 
             if (deserializedMessage == null)
-                throw new CommunicationException("Something went wrong while receiving a message from the VR server.");
+                throw new CommunicationException("Something went wrong while receiving a message from the server.");
 
             return deserializedMessage;
         }

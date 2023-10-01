@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using PatientApp.DeviceConnection;
 using PatientApp.Commands;
 using Utilities.Communication;
+using System.Threading.Tasks;
 
 namespace PatientApp
 {
@@ -13,46 +14,99 @@ namespace PatientApp
     /// </summary>
     public class CommandHandler
     {
-        private Dictionary<string, ISessionCommand> _commands;
-        private ClientConn _conn;
+        private readonly ClientConn _clientConn;
+        private readonly EventHandler<Statistic> _onReceiveDataDevMgr;
 
-        public CommandHandler(ClientConn conn, EventHandler<Statistic> onReceiveDataDevMgr)
+        public CommandHandler(ClientConn clientConn, EventHandler<Statistic> onReceiveDataDevMgr)
         {
-            _conn = conn;
-
-            // todo add all commands to dictionary
-            // add client to constructor, create client in main
-
-            _commands = new Dictionary<string, ISessionCommand>()
+            _clientConn = clientConn;
+            _onReceiveDataDevMgr = onReceiveDataDevMgr;
+        }
+        
+        /// <summary>
+        /// Listens for incoming messages from the server, formats the response and then
+        /// executes the matching command.
+        /// </summary>
+        /// <exception cref="CommunicationException">Anything that went wrong during communication</exception>
+        public async Task Listen()
+        {
+            while (await _clientConn.ReceiveJson() is var message) // listening for message
             {
-               // { "login", new LoginResponse() }, // TODO: clean Login() and create LoginResponse()
-                { "session/start", new SessionStart(onReceiveDataDevMgr, OnReceiveData) }, // pass out necessary event handlers
-                { "session/stop", new SessionStop(onReceiveDataDevMgr, OnReceiveData) },
-                { "login", new LoginResponse() }, // TODO: clean Login() and create LoginResponse()
-            };
+                await Console.Out.WriteLineAsync($"Received: {message}");
+
+                // Check if the message has a command field
+                if (!message.ContainsKey("command"))
+                    throw new CommunicationException("The message did not contain the JSON key 'command'");
+
+                // Check if the message has a data field
+                if (!message.ContainsKey("data"))
+                    throw new CommunicationException("The message did not contain the JSON key 'data'");
+
+                // Get command and data field
+                string command = message["command"].ToString();
+                JsonObject dataObject = message["data"].AsObject();
+
+                // Check if the command exists in the dictionary and execute it
+                ExecuteReceivedCommand(command, dataObject);
+            }
         }
 
-        public void Handle(JsonObject message)
-        {
-            // Check if the message has a command field and that field has the type of object
-            if (!message.ContainsKey("command")) return;
-
-            // Check if the message has a data field
-            if (!message.ContainsKey("data")) return;
-
-            string command = message["command"].ToString();
-            JsonObject data = message["data"].AsObject();
-            
-            // Check if the command exists in the dictionary and execute it
-            _commands[command].Execute(data, _conn);
-        }
-
+        /// <summary>
+        /// TODO
+        /// </summary>
         public void OnReceiveData(object sender, Statistic stat) 
         {
             // TODO this doesn't work, prolly cuz each command is referencing a different CommandHandler object. Maybe fix this with a static instance?
-            //TODO: fill Command with stat data and send to server with Execute
-            var SendStats = new SendStats();
-            Console.WriteLine("======= OnreceiveData called");
+            // TODO: send stat to server with SendStats command
+            Console.WriteLine("======= OnReceiveData called");
+        }
+
+        /// <summary>
+        /// Executes a command which the server sent to the patient.
+        /// </summary>
+        /// <exception cref="CommunicationException">When the server sent an invalid command</exception>
+        private void ExecuteReceivedCommand(string command, JsonObject dataObject)
+        {
+            try
+            {
+                var commands = new Dictionary<string, ISessionCommand>()
+                {
+                    { "login", new LoginResponse(dataObject) },
+                    { "stats/summary", new Summary(dataObject) },
+                    { "session/start", new SessionStart(_onReceiveDataDevMgr, OnReceiveData) },
+                    { "session/pause", new SessionPause(_onReceiveDataDevMgr, OnReceiveData) },
+                    { "session/resume", new SessionResume(_onReceiveDataDevMgr, OnReceiveData) },
+                    { "session/stop", new SessionStop(_onReceiveDataDevMgr, OnReceiveData) },
+                };
+
+                commands[command].Execute();
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new CommunicationException($"No command called {command} has been registered for listening to server messages.");
+            }
+        }
+
+        /// <summary>
+        /// Executes a command which the patient can trigger, for example logging in.
+        /// </summary>
+        /// <exception cref="CommunicationException">When the patient wants to send an invalid command</exception>
+        public void ExecuteCommandToSend(string command, JsonObject dataObject)
+        {
+            try
+            {
+                var commands = new Dictionary<string, ISessionCommand>()
+                {
+                    { "login", new Login(dataObject, _clientConn) },
+                    { "stats/send", new SendStats() },
+                };
+
+                commands[command].Execute();
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new CommunicationException($"No command called {command} has been registered for sending messages to the server.");
+            }
         }
     }
 }

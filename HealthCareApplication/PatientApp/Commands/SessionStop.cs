@@ -1,7 +1,5 @@
 ﻿using PatientApp.DeviceConnection;
 using System;
-using System.Text.Json.Nodes;
-using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
@@ -16,12 +14,13 @@ namespace PatientApp.Commands
             _onReceiveData = onReceiveData;
         }
 
-        public bool Execute(JsonObject data, ClientConn conn)
+        /// <summary>
+        /// Unsubscribes from data receive event
+        /// </summary>
+        public void Execute()
         {
-            // TODO This doesn't work yet, investigate this
             _onReceiveDataDevMgr -= _onReceiveData;
             Console.WriteLine("======= Session stopped");
-            return true;
         }
     }
 }

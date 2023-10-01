@@ -1,8 +1,5 @@
 ﻿using PatientApp.DeviceConnection;
-using PatientApp.DeviceConnection.Receiver;
 using System;
-using System.Text.Json.Nodes;
-using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
@@ -17,11 +14,13 @@ namespace PatientApp.Commands
             _onReceiveData = onReceiveData;
         }
 
-        public bool Execute(JsonObject data, ClientConn conn)
+        /// <summary>
+        /// Subscribes to data receive event
+        /// </summary>
+        public void Execute()
         {
             _onReceiveDataDevMgr += _onReceiveData;
             Console.WriteLine("======= Session started");
-            return true;
         }
     }
 }

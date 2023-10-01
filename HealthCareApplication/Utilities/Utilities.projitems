@@ -9,6 +9,8 @@
     <Import_RootNamespace>Utilities</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Logger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\LogType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\CommunicationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\ClientConn.cs" />
   </ItemGroup>

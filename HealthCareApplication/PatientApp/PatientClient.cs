@@ -1,7 +1,5 @@
 ﻿using PatientApp.DeviceConnection;
-using PatientApp.Commands;
 using System;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,54 +9,53 @@ namespace PatientApp
 {
     public class PatientClient
     {
-        private readonly DeviceManager _deviceManager = new DeviceManager();
-        private readonly ClientConn _clientConn = new ClientConn("127.0.0.1", 8888);
+        // Helper for sending and receiving network traffic
+        private readonly ClientConn _clientConn;
 
+        // Manages commands
         private readonly CommandHandler _commandHandler;
 
-        private ISessionCommand _command = new Login();
+        // Connection to the trainer and hrm
+        private readonly DeviceManager _deviceManager;
 
         public PatientClient()
         {
+            _clientConn = new ClientConn("127.0.0.1", 8888);
+            _deviceManager = new DeviceManager();
             _commandHandler = new CommandHandler(_clientConn, _deviceManager.OnReceiveData);
         }
 
         static async Task Main(string[] args)
         {
-            try
-            {
-                PatientClient patientClient = new PatientClient();
+            // Create a new instance of this class to access the non-static method Initialize().
+            await new PatientClient().Initialize();
+        }
 
-                if (await patientClient._clientConn.ConnectToServer())
+        public async Task Initialize()
+        {
+            if (await _clientConn.ConnectToServer())
+            {
+                // Catch any CommunicationExceptions that could be thrown here
+                try { await Run(); }
+                catch (CommunicationException ex)
                 {
-                    await patientClient.Run();
-                }
-                else
-                {
-                    await Console.Out.WriteLineAsync("Could not connect to server");
-                    Console.ReadLine();
+                    await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
                 }
             }
-            catch (CommunicationException ex)
+            else
             {
-                await Console.Out.WriteLineAsync($"CommunicationException: {ex.Message}\n{ex.StackTrace}");
+                await Console.Out.WriteLineAsync("Could not connect to server");
+                Console.ReadLine();
             }
         }
 
-        public async Task Run()
+        private async Task Run()
         {
             Thread t = new Thread(ReceiveConsoleInput);
             t.Start();
 
-            // TODO: test message handler
-
-            while (await _clientConn.ReceiveJson() is var message) // listening for message
-            {
-                await Console.Out.WriteLineAsync($"Received: {message}");
-                _commandHandler.Handle(message);
-            }
+            await _commandHandler.Listen();
         }
-
 
         /// <summary>
         /// Receives string commands from the console input and applies the command if valid.
@@ -67,7 +64,8 @@ namespace PatientApp
         {
             while (true)
             {
-                object payload;
+                JsonObject dataObject;
+
                 string input = Console.ReadLine();
 
                 switch (input)
@@ -78,55 +76,39 @@ namespace PatientApp
                         string username = Console.ReadLine();
                         Console.Write("Password: ");
                         string password = Console.ReadLine();
-                        payload = new { username, password };
+                        dataObject = new JsonObject()
+                        {
+                            { "username", username },
+                            { "password", password }
+                        };
 
-                        Login login = new Login();
-                        // Login login = new Login(username, password);
-                       // login.Username = username;
-                       // login.Password = password;
-
-                        ApplyCommand(login, null);
+                        _commandHandler.ExecuteCommandToSend("login", dataObject);
                         break;
                     case "stats/send":
                         // Receive speed, distance and heart rate
                         Console.Write("Speed: ");
                         int speed = Convert.ToInt32(Console.ReadLine());
+
                         Console.Write("Distance: ");
                         int distance = Convert.ToInt32(Console.ReadLine());
-                        Console.Write("Heart rate: ");
-                        int heartrate = Convert.ToInt32(Console.ReadLine());
-                        payload = new { speed, distance, heartrate };
 
-                        ApplyCommand(new SendStats(), payload);
+                        Console.Write("Heart rate: ");
+                        int heartRate = Convert.ToInt32(Console.ReadLine());
+
+                        dataObject = new JsonObject()
+                        {
+                            { "speed", speed },
+                            { "distance", distance },
+                            { "heartrate", heartRate }
+                        };
+
+                        _commandHandler.ExecuteCommandToSend("stats/send", dataObject);
                         break;
                     default:
-                        Console.WriteLine("Unknown command " + input);
+                        Console.WriteLine("Unknown command: " + input);
                         break;
                 }
             }
-        }
-
-
-        /// <summary>
-        /// Receives string commands from the console input and applies the command if valid.
-        /// </summary>
-        private void ApplyCommand(ISessionCommand command, object payload)
-        {
-            // Lock the _command variable, so no other thread can access it while the program is inside this lock block.
-            lock (_command)
-            {
-                _command = command;
-                // Please tell me there's a better way to cast an object to JsonObject
-                //JsonObject jsonPayload = payload as JsonObject;
-                //_command.Execute(jsonPayload);
-
-                _command.Execute(JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(payload)), _clientConn);
-            }
-        }
-
-        public void OnReceiveData(object sender, Statistic stat)
-        {
-
         }
     }
 }

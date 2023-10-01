@@ -1,29 +1,26 @@
-﻿using PatientApp.DeviceConnection.Receiver;
+﻿using PatientApp.DeviceConnection;
 using System;
-using System.Text.Json.Nodes;
-using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
     internal class SessionPause : ISessionCommand
     {
-        private readonly IReceiver receiver;
-        private readonly EventHandler<object> _onReceiveData;
+        private EventHandler<Statistic> _onReceiveDataDevMgr;
+        private readonly EventHandler<Statistic> _onReceiveData;
 
-        public SessionPause(IReceiver receiver, EventHandler<object> onReceiveData)
+        public SessionPause(EventHandler<Statistic> onReceiveDataDevMgr, EventHandler<Statistic> onReceiveData)
         {
-            this.receiver = receiver;
+            _onReceiveDataDevMgr = onReceiveDataDevMgr;
             _onReceiveData = onReceiveData;
         }
 
-        public bool Execute(JsonObject data, ClientConn conn)
+        /// <summary>
+        /// Unsubscribes from data receive event
+        /// </summary>
+        public void Execute()
         {
-            //// Subscribe to all bike and HRM events.
-            //receiver.ReceivedSpeed -= _onReceiveData;
-            //receiver.ReceivedDistance -= _onReceiveData;
-            //receiver.ReceivedHeartRate -= _onReceiveData;
-            //receiver.ReceivedRrIntervals -= _onReceiveData;
-            return true;
+            _onReceiveDataDevMgr -= _onReceiveData;
+            Console.WriteLine("======= Session paused");
         }
     }
 }
