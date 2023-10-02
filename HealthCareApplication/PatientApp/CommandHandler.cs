@@ -15,12 +15,10 @@ namespace PatientApp
     public class CommandHandler
     {
         private readonly ClientConn _clientConn;
-        private readonly EventHandler<Statistic> _onReceiveDataDevMgr;
 
-        public CommandHandler(ClientConn clientConn, EventHandler<Statistic> onReceiveDataDevMgr)
+        public CommandHandler(ClientConn clientConn)
         {
             _clientConn = clientConn;
-            _onReceiveDataDevMgr = onReceiveDataDevMgr;
         }
         
         /// <summary>
@@ -52,15 +50,11 @@ namespace PatientApp
         }
 
         /// <summary>
-        /// TODO
+        /// Handles the received trainer data and sends it to the server
         /// </summary>
         public void OnReceiveData(object sender, Statistic stat) 
         {
-            // tried fixing it using static OnRecieveData in DeviceManager.cs
             Console.WriteLine("======= OnReceiveData called");
-
-            // create command and send data to server 
-            // TODO maybe move to ExecuteCommandToSend? but dont know how
             SendStats sendStats = new SendStats(stat, _clientConn);
             sendStats.Execute();
         }
@@ -77,10 +71,10 @@ namespace PatientApp
                 {
                     { "login", new LoginResponse(dataObject) },
                     { "stats/summary", new Summary(dataObject) },
-                    { "session/start", new SessionStart(_onReceiveDataDevMgr, OnReceiveData) },
-                    { "session/pause", new SessionPause(_onReceiveDataDevMgr, OnReceiveData) },
-                    { "session/resume", new SessionResume(_onReceiveDataDevMgr, OnReceiveData) },
-                    { "session/stop", new SessionStop(_onReceiveDataDevMgr, OnReceiveData) },
+                    { "session/start", new SessionStart(OnReceiveData) },
+                    { "session/pause", new SessionPause(OnReceiveData) },
+                    { "session/resume", new SessionResume(OnReceiveData) },
+                    { "session/stop", new SessionStop(OnReceiveData) },
                 };
 
                 commands[command].Execute();

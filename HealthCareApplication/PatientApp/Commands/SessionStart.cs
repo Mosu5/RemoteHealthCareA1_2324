@@ -8,7 +8,7 @@ namespace PatientApp.Commands
         private EventHandler<Statistic> _onReceiveDataDevMgr;
         private readonly EventHandler<Statistic> _onReceiveData;
 
-        public SessionStart(EventHandler<Statistic> onReceiveDataDevMgr, EventHandler<Statistic> onReceiveData)
+        public SessionStart(EventHandler<Statistic> onReceiveData)
         {
             
             _onReceiveData = onReceiveData;
