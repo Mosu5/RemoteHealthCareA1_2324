@@ -6,8 +6,9 @@ namespace PatientApp.DeviceConnection
 {
     public class DeviceManager
     {
-        private Statistic currentStat = new Statistic();
-        public EventHandler<Statistic> OnReceiveData;
+        private static Statistic currentStat = new Statistic(); // changed to static
+        public static EventHandler<Statistic> OnReceiveData; // changed to static
+       
         public readonly IReceiver Receiver;
 
         /// <summary>
@@ -76,11 +77,14 @@ namespace PatientApp.DeviceConnection
             }
         }
 
-        private void CheckStatComplete()
+        /// <summary>
+        /// Check if stats have been filled with data and calls eventhandler to pass data 
+        /// </summary>
+        private static void CheckStatComplete() // changed to static
         {
             if (currentStat.IsComplete())
             {
-                OnReceiveData?.Invoke(this, currentStat);
+                OnReceiveData?.Invoke(typeof(DeviceManager), currentStat);
                 currentStat = new Statistic();
             }
         }

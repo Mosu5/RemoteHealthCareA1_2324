@@ -10,7 +10,7 @@ namespace PatientApp.Commands
 
         public SessionStop(EventHandler<Statistic> onReceiveDataDevMgr, EventHandler<Statistic> onReceiveData)
         {
-            _onReceiveDataDevMgr = onReceiveDataDevMgr;
+            _onReceiveDataDevMgr = DeviceManager.OnReceiveData;
             _onReceiveData = onReceiveData;
         }
 

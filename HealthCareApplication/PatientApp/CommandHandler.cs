@@ -59,6 +59,9 @@ namespace PatientApp
             // TODO this doesn't work, prolly cuz each command is referencing a different CommandHandler object. Maybe fix this with a static instance?
             // TODO: send stat to server with SendStats command
             Console.WriteLine("======= OnReceiveData called");
+
+            SendStats sendStats = new SendStats(stat, _clientConn);
+            sendStats.Execute();
         }
 
         /// <summary>
@@ -98,7 +101,7 @@ namespace PatientApp
                 var commands = new Dictionary<string, ISessionCommand>()
                 {
                     { "login", new Login(dataObject, _clientConn) },
-                    { "stats/send", new SendStats() },
+                    
                 };
 
                 commands[command].Execute();

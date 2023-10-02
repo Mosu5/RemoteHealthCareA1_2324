@@ -22,7 +22,7 @@ namespace PatientApp
         {
             _clientConn = new ClientConn("127.0.0.1", 8888);
             _deviceManager = new DeviceManager();
-            _commandHandler = new CommandHandler(_clientConn, _deviceManager.OnReceiveData);
+            _commandHandler = new CommandHandler(_clientConn, DeviceManager.OnReceiveData);
         }
 
         static async Task Main(string[] args)

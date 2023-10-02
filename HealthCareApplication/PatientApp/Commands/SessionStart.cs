@@ -10,7 +10,7 @@ namespace PatientApp.Commands
 
         public SessionStart(EventHandler<Statistic> onReceiveDataDevMgr, EventHandler<Statistic> onReceiveData)
         {
-            _onReceiveDataDevMgr = onReceiveDataDevMgr;
+            
             _onReceiveData = onReceiveData;
         }
 
@@ -19,7 +19,7 @@ namespace PatientApp.Commands
         /// </summary>
         public void Execute()
         {
-            _onReceiveDataDevMgr += _onReceiveData;
+            DeviceManager.OnReceiveData += _onReceiveData;
             Console.WriteLine("======= Session started");
         }
     }

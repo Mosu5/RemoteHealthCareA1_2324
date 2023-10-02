@@ -46,18 +46,18 @@ namespace ServerApp
                 {"data", new JsonObject()}
             });
 
-            //while (client.Connected)
-            //{
-            //    JsonObject data = await serverConn.ReceiveJson(client);
-            //    await Console.Out.WriteLineAsync("received " + data.ToString());
-            //    JsonObject sessionStart = new JsonObject
-            //    {
-            //        { "command", "session/start" },
-            //        {"data", new JsonObject() }
-            //    };
+           while (client.Connected)
+           {
+               JsonObject data = await serverConn.ReceiveJson(client);
+               await Console.Out.WriteLineAsync("received " + data.ToString());
+               JsonObject sessionStart = new JsonObject
+               {
+                   { "command", "session/start" },
+                   {"data", new JsonObject() }
+               };
 
-            //    await serverConn.SendJson(client, sessionStart);
-            //}
+               await serverConn.SendJson(client, sessionStart);
+           }
         }
     }
 
