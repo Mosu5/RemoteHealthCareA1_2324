@@ -56,10 +56,11 @@ namespace PatientApp
         /// </summary>
         public void OnReceiveData(object sender, Statistic stat) 
         {
-            // TODO this doesn't work, prolly cuz each command is referencing a different CommandHandler object. Maybe fix this with a static instance?
-            // TODO: send stat to server with SendStats command
+            // tried fixing it using static OnRecieveData in DeviceManager.cs
             Console.WriteLine("======= OnReceiveData called");
 
+            // create command and send data to server 
+            // TODO maybe move to ExecuteCommandToSend? but dont know how
             SendStats sendStats = new SendStats(stat, _clientConn);
             sendStats.Execute();
         }

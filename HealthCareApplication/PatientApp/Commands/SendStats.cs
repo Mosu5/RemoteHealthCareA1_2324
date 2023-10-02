@@ -15,6 +15,9 @@ namespace PatientApp.Commands
             _conn = clientConn;
         }
 
+        /// <summary>
+        /// Send the patients health statistics to the server
+        /// </summary>
         public void Execute()
         {
             var sendStatsMessage = PatientFormat.SendStatsMessage(_statistic.Speed, _statistic.Distance, _statistic.HeartRate);
