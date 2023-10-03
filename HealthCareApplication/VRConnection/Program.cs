@@ -125,41 +125,41 @@ public class Program
             Console.WriteLine(setcolor);
 
 
-            using (StreamReader streamReader = new StreamReader(@"mytest1.json"))
-            {
-                string line;
-                int times = 0;
-                string text2 = "";
-                while ((line = streamReader.ReadLine()) != null)
-                {
-                    // Cleart Panel
-                    JsonObject clear2 = await session.ClearPanel();
-                    Console.WriteLine(clear2);
-                    
-                    // Deserialize the JSON data from the current line
-                    var jsonDocument = JsonDocument.Parse(line);
-                    var root = jsonDocument.RootElement;
-
-                    // Access the properties "DataType" and "Value"
-                    if (root.TryGetProperty("DataType", out var dataType) && root.TryGetProperty("Value", out var value))
-                    {
-                        text2 = $"DataType: {dataType.GetString()}, Value: {value}";
-                    }
-                    
-                    //Voeg text aan Panel toe
-                    JsonObject text = await session.AddText(text2);
-                    Console.WriteLine(text);
-
-                    Console.WriteLine(text2);
-                    
-                    // Swapt Panel
-                    JsonObject swap = await session.SwapPanel();
-                    Console.WriteLine(swap);
-                }
-                
-            }
-            
-
+            //using (StreamReader streamReader = new StreamReader(@"mytest1.json"))
+            //{
+            //    string line;
+            //    int times = 0;
+            //    string text2 = "";
+            //    while ((line = streamReader.ReadLine()) != null)
+            //    {
+            //        // Cleart Panel
+            //        JsonObject clear2 = await session.ClearPanel();
+            //        Console.WriteLine(clear2);
+            //        
+            //        // Deserialize the JSON data from the current line
+            //        var jsonDocument = JsonDocument.Parse(line);
+            //        var root = jsonDocument.RootElement;
+            //
+            //        // Access the properties "DataType" and "Value"
+            //        if (root.TryGetProperty("DataType", out var dataType) && root.TryGetProperty("Value", out var value))
+            //        {
+            //            text2 = $"DataType: {dataType.GetString()}, Value: {value}";
+            //        }
+            //        
+            //        //Voeg text aan Panel toe
+            //        JsonObject text = await session.AddText(text2);
+            //        Console.WriteLine(text);
+            //
+            //        Console.WriteLine(text2);
+            //        
+            //        // Swapt Panel
+            //        JsonObject swap = await session.SwapPanel();
+            //        Console.WriteLine(swap);
+            //    }
+            //    
+            //}
+            //
+            //
             // Not strictly necessary, but looks clean
             session.Close();
         }

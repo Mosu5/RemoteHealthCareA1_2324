@@ -94,7 +94,7 @@ public class Formatting
             {
                 position = new int[] { 0, 0, 0 },
                 scale = 1.0,
-                rotation = new []{ 0, 0, 0 },
+                rotation = new []{ 0, 90, 0 },
             },
        
             }
