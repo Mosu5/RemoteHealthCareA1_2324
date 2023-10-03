@@ -470,7 +470,7 @@ public class Formatting
 
     
     #region Roads
-    public static object RoadAdd(string route, string diffuse, string normal, string specular)
+    public static object RoadAdd(string route, string road)
     {
         return new
         {
@@ -478,9 +478,7 @@ public class Formatting
             data = new
             {
                 route,
-                diffuse,
-                normal,
-                specular,
+                normal = road,
                 heightoffset = 0.01
             }
         };

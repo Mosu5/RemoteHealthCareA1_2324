@@ -323,7 +323,7 @@ public class VrSession
             var modelAddCommand = Formatting.Add3DObject(
                 $"tree{i}",
                 position,
-                1,
+                1.5,
                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
             );
 
@@ -407,12 +407,10 @@ public class VrSession
     public async Task<JsonObject> AddRoad(string routeId)
     {
         // command data
-        string normal = @"data\NetworkEngine\textures\terrain\ground_cracked_n.jpg";
-        string diffuse = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
-        string specular = @"data\NetworkEngine\textures\terrain\ground_mud2_s.jpg";
+        string normal = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
 
         // create command and send to VR
-        object roadAddCommand = Formatting.RoadAdd(routeId, diffuse, normal, specular);
+        object roadAddCommand = Formatting.RoadAdd(routeId, normal);
         object tunnelMessage = Formatting.TunnelSend(_tunnelId, roadAddCommand);
 
         await VrCommunication.SendAsJson(tunnelMessage);
