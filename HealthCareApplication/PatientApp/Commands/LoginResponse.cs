@@ -1,33 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
     internal class LoginResponse : ISessionCommand
     {
+        private readonly JsonObject _message;
+
+        public LoginResponse(JsonObject message)
+        {
+            _message = message;
+        }
+
         /// <summary>
         /// Confirms if login was successful
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="conn"></param>
-        /// <returns></returns>
-        /// <exception cref="CommunicationException"></exception>
-        public bool Execute(JsonObject data, ClientConn conn)
+        /// <exception cref="CommunicationException">If the response was not correctly formatted or credentials are incorrect.</exception>
+        public void Execute()
         {
-            string status = data["status"]?.GetValue<string>();
+            if (!_message.ContainsKey("status"))
+                throw new CommunicationException("The login message did not contain the JSON key 'status'");
 
-            if (status == "error")
-            {
+            if (!_message["status"].Equals("ok"))
                 throw new CommunicationException("Combination of username and password was incorrect");
-            }
 
-            Console.WriteLine("Login successful");
-            return true;
+            Console.WriteLine("===== Login successful");
         }
     }
 

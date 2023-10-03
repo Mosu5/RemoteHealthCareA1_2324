@@ -60,7 +60,7 @@
     <Compile Include="DeviceConnection\Receiver\EmulatedReceiver.cs" />
     <Compile Include="DeviceConnection\Receiver\IReceiver.cs" />
     <Compile Include="DeviceConnection\Statistic.cs" />
-    <Compile Include="Commands\ClientFormatting.cs" />
+    <Compile Include="Commands\PatientFormat.cs" />
     <Compile Include="Commands\ISessionCommand.cs" />
     <Compile Include="Commands\Login.cs" />
     <Compile Include="Commands\LoginResponse.cs" />

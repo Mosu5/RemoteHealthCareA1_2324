@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Nodes;
 
 namespace PatientApp.Commands
 {
-    internal class ClientFormatting
+    internal class PatientFormat
     {
-        private static JsonObject BaseMessage(string command, JsonObject data)
+        public static JsonObject BaseMessage(string command, JsonObject data)
         {
             return new JsonObject
             {
@@ -18,7 +13,7 @@ namespace PatientApp.Commands
             };
         }
 
-        public static JsonObject Login(string username, string password)
+        public static JsonObject LoginMessage(string username, string password)
         {
             return BaseMessage("login", new JsonObject
             {
@@ -27,7 +22,7 @@ namespace PatientApp.Commands
             });
         }
 
-        public static JsonObject SendStats(double speed, int distance, int heartRate)
+        public static JsonObject SendStatsMessage(double speed, int distance, int heartRate)
         {
             return BaseMessage("stats/send", new JsonObject
             {

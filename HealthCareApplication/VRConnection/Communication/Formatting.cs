@@ -75,6 +75,55 @@ public class Formatting
             }
         };
     }
+
+    /// <summary> 
+    /// Update node in VR scene (use to put the head on the bike)
+    /// </summary>
+    /// <param name="id"> Node ID </param>
+    /// <param name="parent"> Parent Node ID </param>
+    /// <returns> Object for Json </returns>
+    public static object SceneNodeUpdate(string id, string parent)
+    {
+        return new
+        {
+            id = "scene/node/update",
+            data = new 
+            { id,
+            parent,
+            transform = new
+            {
+                position = new int[] { 0, 0, 0 },
+                scale = 1.0,
+                rotation = new []{ 0, 0, 0 },
+            },
+       
+            }
+        };
+    }
+    /// <summary> 
+    /// Update node in VR scene (use to put the head on the bike)
+    /// </summary>
+    /// <param name="id"> Node ID </param>
+    /// <param name="rotation"> Rotation of object </param>
+    /// <returns> Object for Json </returns>
+    public static object SceneNodeUpdate(string id, Vector3 rotation)
+    {
+        return new
+        {
+            id = "scene/node/update",
+            data = new
+            {
+                id,
+                transform = new
+                {
+                    position = new int[] { 0, 0, 0 },
+                    scale = 1.0,
+                    rotation = new[] { rotation.X, rotation.Y, rotation.Z },
+                },
+
+            }
+        };
+    }
     #endregion
 
     #region Nodes
@@ -325,7 +374,7 @@ public class Formatting
                     {
                         size = new double[] { sizeX, sizeY },
                         resolution = new int[] { resolutionX, resolutionY },
-                        background = new int[] {1, 1, 1, 1},
+                        background = new int[] {0, 0, 0, 0},
                         castShadow = true
                     }
                 }
@@ -344,7 +393,7 @@ public class Formatting
               text,
               position = new int[] {50, 75},
               size = 16.0 ,
-              color = new int[] {0, 0, 0, 1},
+              color = new int[] {1, 1, 1, 1},
               font = "segoeui"
             }
         };
@@ -383,10 +432,23 @@ public class Formatting
             data = new
             {
                 id,
-                color = new int[] {0, 0, 0, 1}
+                color = new int[] {0, 0, 0, 0}
             }
         };
     }
+    
+  // public static object PanelGetLines(string id)
+  // {
+  //     return new
+  //     {
+  //         id = "scene/panel/drawlines",
+  //         data = new
+  //         {
+  //             id,
+  //             width= 1.0,
+  //         }
+  //     };
+  // }
 
     #endregion
 

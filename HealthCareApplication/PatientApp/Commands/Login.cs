@@ -1,22 +1,14 @@
-using System;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 using Utilities.Communication;
 
 namespace PatientApp.Commands
 {
-    /// <summary>
-    /// Handle the login between client and server
-    /// When no response is submitted in Execute(), send login data to server
-    /// Otherwise handle response
-    /// </summary>
     internal class Login : ISessionCommand
     {
-        // Attempt login when data is null 
-        // Otherwise check for errors in response
+        private readonly JsonObject _dataObject;
+        private readonly ClientConn _connection;
 
-        public bool Execute(JsonObject data, ClientConn conn)
+        public Login(JsonObject dataObject, ClientConn connection)
         {
 
             Console.WriteLine(data.ToString());
@@ -48,8 +40,26 @@ namespace PatientApp.Commands
             {
                 throw new CommunicationException("Combination of username and password was incorrect");
             }
+            _dataObject = dataObject;
+            _connection = connection;
+        }
 
-            return true;
+        /// <summary>
+        /// Handle the login from client to server
+        /// </summary>
+        /// <exception cref="CommunicationException">If the response was not correctly formatted with username and password.</exception>
+        public void Execute()
+        {
+            if (!_dataObject.ContainsKey("username"))
+                throw new CommunicationException("The message did not contain the JSON key 'username'");
+
+            if (!_dataObject.ContainsKey("password"))
+                throw new CommunicationException("The message did not contain the JSON key 'password'");
+
+            string username = _dataObject["username"].ToString();
+            string password = _dataObject["password"].ToString();
+
+            _connection.SendJson(PatientFormat.LoginMessage(username, password)).Wait();
         }
 
         /// <summary>
