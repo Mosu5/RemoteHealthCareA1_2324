@@ -5,7 +5,6 @@ namespace PatientApp.Commands
 {
     internal class SessionStart : ISessionCommand
     {
-        private EventHandler<Statistic> _onReceiveDataDevMgr;
         private readonly EventHandler<Statistic> _onReceiveData;
 
         public SessionStart(EventHandler<Statistic> onReceiveData)
