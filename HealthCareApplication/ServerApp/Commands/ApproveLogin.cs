@@ -23,6 +23,7 @@ namespace ServerApp.Commands
             // Current structure of command usage is not applicable with our application
             // TODO: Refactor this command/state structure: See LoginState.cs for context!
 
+
         }
 
 
