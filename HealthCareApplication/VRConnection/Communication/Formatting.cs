@@ -325,7 +325,7 @@ public class Formatting
                     {
                         size = new double[] { sizeX, sizeY },
                         resolution = new int[] { resolutionX, resolutionY },
-                        background = new int[] {1, 1, 1, 1},
+                        background = new int[] {0, 0, 0, 0},
                         castShadow = true
                     }
                 }
@@ -344,7 +344,7 @@ public class Formatting
               text,
               position = new int[] {50, 75},
               size = 16.0 ,
-              color = new int[] {0, 0, 0, 1},
+              color = new int[] {1, 1, 1, 1},
               font = "segoeui"
             }
         };
@@ -383,10 +383,23 @@ public class Formatting
             data = new
             {
                 id,
-                color = new int[] {0, 0, 0, 1}
+                color = new int[] {0, 0, 0, 0}
             }
         };
     }
+    
+  // public static object PanelGetLines(string id)
+  // {
+  //     return new
+  //     {
+  //         id = "scene/panel/drawlines",
+  //         data = new
+  //         {
+  //             id,
+  //             width= 1.0,
+  //         }
+  //     };
+  // }
 
     #endregion
 
