@@ -59,6 +59,7 @@
     <Compile Include="States\LoginState.cs" />
     <Compile Include="States\SessionStoppedState.cs" />
     <Compile Include="ServerConn.cs"/>
+    <Compile Include="UserAccount.cs"/>
   </ItemGroup>
   <ItemGroup />
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />

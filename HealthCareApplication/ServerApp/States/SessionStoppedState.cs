@@ -26,10 +26,10 @@ namespace ServerApp.States
                 JsonObject data = packet["data"] as JsonObject;
                 Console.WriteLine("Login recieved data: " + data);
 
-                if (this._context.)
-                {
+                //if (this._context.)
+                //{
 
-                }
+                //}
 
                 //if (data.ContainsKey("username") && data.ContainsKey("password"))
                 //{

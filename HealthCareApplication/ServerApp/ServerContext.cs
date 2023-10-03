@@ -49,7 +49,7 @@ namespace ServerApp.States
                         this.nextState = new LoginState(this);
                         break;
                     case "session stop":
-                        this.nextState = new SessionStoppedState();
+                        this.nextState = new SessionStoppedState(this);
                         break;
                     case "session pause":
                         this.nextState = new SessionPausedState();

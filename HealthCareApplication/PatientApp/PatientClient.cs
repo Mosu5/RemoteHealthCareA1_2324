@@ -1,4 +1,5 @@
-﻿using PatientApp.DeviceConnection;
+﻿using PatientApp.Commands;
+using PatientApp.DeviceConnection;
 using System;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -82,11 +83,6 @@ namespace PatientApp
                             { "password", password }
                         };
 
-                        Login login = new Login();
-                        // Login login = new Login(username, password);
-                        login.Username = username;
-                        login.Password = password;
-
                         //ApplyCommand(login, payload);
 
                         JsonObject loginData = new JsonObject {
@@ -100,7 +96,7 @@ namespace PatientApp
                         // TO DO: Implement the following wrapper structure to make JSON formatting easier:
                         // CommandWrapper.Login(username, pass);
 
-                        _clientConn.SendJson(loginData);
+                  
                         _commandHandler.ExecuteCommandToSend("login", dataObject);
                         break;
                     case "stats/send":
