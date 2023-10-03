@@ -39,7 +39,13 @@ public class Program
             Console.WriteLine(setSkyboxObj);
 
             //update the skybox
-            JsonObject skyboxUpdate = await session.UpdateSkybox(@"data\NetworkEngine\textures\SkyBoxes\clouds\graycloud_bk.jpg");
+            String rt = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_rt.jpg";
+            String lf = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_lf.jpg";
+            String up = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_up.jpg";
+            String dn = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_dn.jpg";
+            String bk = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_bk.jpg";
+            String ft = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_ft.jpg";
+            JsonObject skyboxUpdate = await session.UpdateSkybox(rt, lf, up, dn, bk, ft);
             Console.WriteLine(skyboxUpdate);
 
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities

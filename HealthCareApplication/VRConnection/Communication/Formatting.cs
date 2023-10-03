@@ -160,7 +160,7 @@ public class Formatting
 
     }
 
-    public static object SkyboxUpdate(String sky)
+    public static object SkyboxUpdate(String rt, String lf, String up, String dn, String bk, String ft)
     {
         return new
         {
@@ -168,7 +168,15 @@ public class Formatting
             data = new
             {
                 type = "static",
-                files = sky
+                files = new
+                {
+                    xpos = rt,
+                    xneg = lf,
+                    ypos = up,
+                    yneg = dn,
+                    zpos = bk,
+                    zneg = ft
+                }
             }
 
         };
