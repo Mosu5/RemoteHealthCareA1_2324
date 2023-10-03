@@ -53,6 +53,34 @@ public class Program
              );
             Console.WriteLine(tree);
 
+            //houses
+            Vector3 positionHouse1 = new(20, 0, 10);
+            JsonObject house1 = await session.AddModelOnTerrain(
+                 "house",
+                 positionHouse1,
+                 10,
+                 @"data\NetworkEngine\models\houses\set1\house1.obj"
+             );
+            Console.WriteLine(house1);
+
+            Vector3 positionHouse2 = new(70, 0, -50);
+            JsonObject house2 = await session.AddModelOnTerrain(
+                 "house",
+                 positionHouse2,
+                 10,
+                 @"data\NetworkEngine\models\houses\set1\house2.obj"
+             );
+            Console.WriteLine(house2);
+
+            Vector3 positionHouse3 = new(-70, 0, 50);
+            JsonObject house3 = await session.AddModelOnTerrain(
+                 "house",
+                 positionHouse3,
+                 10,
+                 @"data\NetworkEngine\models\houses\set1\house3.obj"
+             );
+            Console.WriteLine(house3);
+
             //bike
             JsonObject bike = await session.AddModelOnTerrain(
                 "bike",
@@ -62,7 +90,7 @@ public class Program
             );
             Console.WriteLine(tree);
 
-            JsonObject[] trees = await session.RandomlyPlaceTrees(10);
+            JsonObject[] trees = await session.RandomlyPlaceTrees(30);
             foreach (var t in trees) Console.WriteLine(t);
 
             //  Vector3 position1 = new(0, 0, 0);
