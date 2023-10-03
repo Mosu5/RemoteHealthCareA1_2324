@@ -159,6 +159,22 @@ public class Formatting
         };
 
     }
+
+    public static object SkyboxUpdate(String sky)
+    {
+        return new
+        {
+            id = "scene/skybox/update",
+            data = new
+            {
+                type = "static",
+                files = sky
+            }
+
+        };
+
+    }
+
     #endregion
 
     #region Terrain

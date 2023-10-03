@@ -38,6 +38,10 @@ public class Program
             JsonObject setSkyboxObj = await session.SetSkyTime(12.0);
             Console.WriteLine(setSkyboxObj);
 
+            //update the skybox
+            JsonObject skyboxUpdate = await session.UpdateSkybox(@"data\NetworkEngine\textures\SkyBoxes\clouds\graycloud_bk.jpg");
+            Console.WriteLine(skyboxUpdate);
+
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
 
             Vector3 position = new(0, 0, 0);

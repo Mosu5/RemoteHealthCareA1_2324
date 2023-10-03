@@ -167,6 +167,15 @@ public class VrSession
         await VrCommunication.SendAsJson(tunnelMessage);
         return await VrCommunication.ReceiveJsonObject();
     }
+    public async Task<JsonObject> UpdateSkybox(String sky)
+    {
+        object setSkyCommand = Formatting.SkyboxUpdate(sky);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, setSkyCommand);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
+
     #endregion
 
     #region Terrain
