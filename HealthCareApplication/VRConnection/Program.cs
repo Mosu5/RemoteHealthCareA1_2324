@@ -48,7 +48,7 @@ public class Program
             JsonObject tree = await session.AddModelOnTerrain(
                  "tree",
                  position,
-                 1,
+                 1.5,
                  @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
              );
             Console.WriteLine(tree);
