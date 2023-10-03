@@ -35,7 +35,7 @@ public class Program
             Console.WriteLine(removeGroundPane);
 
             // Opgave 3c Verander de tijd van de skybox
-            JsonObject setSkyboxObj = await session.SetSkyTime(12.5);
+            JsonObject setSkyboxObj = await session.SetSkyTime(12.0);
             Console.WriteLine(setSkyboxObj);
 
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
@@ -49,6 +49,17 @@ public class Program
             //  );
             //  Console.WriteLine(tree);
 
+            //bike
+            JsonObject bike = await session.AddModelOnTerrain(
+                "bike",
+                position,
+                2,
+                @"data\NetworkEngine\models\bike\bike.fbx"
+            );
+            Console.WriteLine(tree);
+
+            JsonObject[] trees = await session.RandomlyPlaceTrees(10);
+            foreach (var t in trees) Console.WriteLine(t);
 
             //  Vector3 position1 = new(0, 0, 0);
             //  JsonObject tree1 = await session.AddModelOnTerrain(
@@ -79,10 +90,11 @@ public class Program
             JsonObject route = await session.AddRoute(posVectors);
             Console.WriteLine(route);
 
-            // Opgave 3h Laat een 3D opbject de route volgen
-            string treeID = await session.GetNodeId("tree");
+            // Opgave 3h Laat een 3D opbject de route volgen met een gegeven snelheid
+            string bikeID = await session.GetNodeId("bike");
             string routeID = session.GetRouteId(route);
-            JsonObject bike = await session.FollowRoute(routeID, treeID, 20.0);
+            double speed = 20.0;
+            JsonObject bikeFollowingRoute = await session.FollowRoute(routeID, bikeID, speed);
             Console.WriteLine(bike);
 
       
@@ -90,6 +102,15 @@ public class Program
             // Opgave 3f Voeg route toe
             JsonObject road = await session.AddRoad(routeID);
             Console.WriteLine(road);
+
+            // Head op de fiets
+            string headID = await session.GetNodeId("Camera");
+            JsonObject headOnBike = await session.HeadOnBike(headID, bikeID);
+            Console.WriteLine(headOnBike);
+
+
+            JsonObject getScene = await session.GetScene();
+            Console.WriteLine(getScene);
 
             // Voegt een Panel toe
             JsonObject panel = await session.AddPanel();

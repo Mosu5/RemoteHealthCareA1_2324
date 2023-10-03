@@ -75,6 +75,55 @@ public class Formatting
             }
         };
     }
+
+    /// <summary> 
+    /// Update node in VR scene (use to put the head on the bike)
+    /// </summary>
+    /// <param name="id"> Node ID </param>
+    /// <param name="parent"> Parent Node ID </param>
+    /// <returns> Object for Json </returns>
+    public static object SceneNodeUpdate(string id, string parent)
+    {
+        return new
+        {
+            id = "scene/node/update",
+            data = new 
+            { id,
+            parent,
+            transform = new
+            {
+                position = new int[] { 0, 0, 0 },
+                scale = 1.0,
+                rotation = new []{ 0, 0, 0 },
+            },
+       
+            }
+        };
+    }
+    /// <summary> 
+    /// Update node in VR scene (use to put the head on the bike)
+    /// </summary>
+    /// <param name="id"> Node ID </param>
+    /// <param name="rotation"> Rotation of object </param>
+    /// <returns> Object for Json </returns>
+    public static object SceneNodeUpdate(string id, Vector3 rotation)
+    {
+        return new
+        {
+            id = "scene/node/update",
+            data = new
+            {
+                id,
+                transform = new
+                {
+                    position = new int[] { 0, 0, 0 },
+                    scale = 1.0,
+                    rotation = new[] { rotation.X, rotation.Y, rotation.Z },
+                },
+
+            }
+        };
+    }
     #endregion
 
     #region Nodes

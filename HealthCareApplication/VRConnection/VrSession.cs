@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Numerics;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using VRConnection.Communication;
@@ -325,6 +326,30 @@ public class VrSession
 
         return jsonResponses; // return array of json responses
     }
+
+    /// <summary>
+    /// Put head on bike
+    /// </summary>
+    /// <param name="cameraID"> ID of camera</param> 
+    /// <param name="bikeID"> ID of bike </param>
+    /// <returns> Response from server </returns>
+    public async Task<JsonObject> HeadOnBike(string cameraID, string bikeID)
+    {
+        object headOnBike = Formatting.SceneNodeUpdate(cameraID, bikeID);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, headOnBike);
+        
+        //TODO move to another method
+        string headId = await GetNodeId("Head");
+        Vector3 rotation = new Vector3(0, 0,0);
+        object turnHead = Formatting.SceneNodeUpdate(headId, rotation);
+        object tunnelMessage1 = Formatting.TunnelSend(_tunnelId, headOnBike);
+
+        await VrCommunication.SendAsJson(tunnelMessage1);
+        await VrCommunication.ReceiveJsonObject();
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
     #endregion
 
     #region Routes
@@ -349,6 +374,7 @@ public class VrSession
 
         return routeId;
     }
+
 
     /// <summary>
     /// Let an object follow the route
