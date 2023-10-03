@@ -27,7 +27,7 @@ public class Program
             var size = new int[] { 256, 256 };
             float[] heightMap = PerlinNoiseGenerator.GenerateHeightMap(20); // TODO save heightMap as prop
 
-            // string terrainResponse = await session.AddHillTerrain(length, width, new Vector3(-128, 0, -128), Vector3.Zero);
+            string terrainResponse = await session.AddHillTerrain(length, width, new Vector3(-128, 0, -128), Vector3.Zero);
             //Console.WriteLine(terrainResponse);
 
             // Opgave 3b Verwijder de groundplane
@@ -40,14 +40,14 @@ public class Program
 
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
 
-            // Vector3 position = new(0, 0, 0);
-            // JsonObject tree = await session.AddModelOnTerrain(
-            //      "tree",
-            //      position,
-            //      1,
-            //      @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
-            //  );
-            //  Console.WriteLine(tree);
+            Vector3 position = new(0, 0, 0);
+            JsonObject tree = await session.AddModelOnTerrain(
+                 "tree",
+                 position,
+                 1,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
+             );
+            Console.WriteLine(tree);
 
             //bike
             JsonObject bike = await session.AddModelOnTerrain(
@@ -125,7 +125,7 @@ public class Program
             Console.WriteLine(setcolor);
 
 
-            using (StreamReader streamReader = new StreamReader(@"C:\temp\mytest1.json"))
+            using (StreamReader streamReader = new StreamReader(@"mytest1.json"))
             {
                 string line;
                 int times = 0;
