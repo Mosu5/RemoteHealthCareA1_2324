@@ -39,6 +39,10 @@ namespace ServerApp.States
                     {
                         // Update response to the client so the server can retrieve response and send to client
                         context.ResponseToClient = ApproveLogin();
+                        
+                        // To Do: Implement creating of UserAccount in a different command
+                        UserAccount userAccount = new UserAccount(username, password);
+                        context.SetNewUser(userAccount); // Yay
                         context.SetNextState(new SessionActiveState(context));
                     }
                     else

@@ -17,6 +17,9 @@ namespace ServerApp.States
 
         public void Handle(JsonObject packet)
         {
+
+            context.GetUserAccount().hasActiveSession = true;
+
             throw new NotImplementedException();
         }
     }

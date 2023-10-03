@@ -1,5 +1,7 @@
 using ServerApp.States;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -15,6 +17,7 @@ namespace ServerApp
     internal class Server
     {
         private static ServerConn serverConn = new ServerConn("127.0.0.1", 8888);
+        private List<UserAccount> users = new List<UserAccount>();
 
         public static async Task Main(string[] args)
         {
@@ -28,10 +31,10 @@ namespace ServerApp
             }
         }
 
+        // Session of an active user
         public static async void HandleClientAsync(object connectingClient)
         {
             TcpClient client = connectingClient as TcpClient;
-
             ServerContext serverContext = new ServerContext(serverConn);
             while (client.Connected)
             {

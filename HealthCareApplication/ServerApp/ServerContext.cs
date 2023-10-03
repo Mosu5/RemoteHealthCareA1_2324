@@ -16,7 +16,7 @@ namespace ServerApp.States
     internal class ServerContext
     {
 
-      
+        private UserAccount _userAccount { get; set; }
         private IState currentState {  get; set; }
         private IState nextState { get; set;}
         private ServerConn _serverConn { get; set; }
@@ -64,6 +64,13 @@ namespace ServerApp.States
             ApplyNewState();
             currentState.Handle(receivedData);
         }
+
+        public void SetNewUser(UserAccount user)
+        {
+            this._userAccount = user;
+        }
+
+        public UserAccount GetUserAccount() { return this._userAccount; }
 
         
         //public void Run()
