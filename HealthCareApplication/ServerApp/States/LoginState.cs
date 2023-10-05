@@ -15,8 +15,7 @@ namespace ServerApp.States
     internal class LoginState : IState
     {
         //TODO current username and password are for testing
-        private string _username = "bob";
-        private string _password= "bob";
+        private Server server;
 
         private ServerContext context;
         public LoginState(ServerContext context)
@@ -24,40 +23,42 @@ namespace ServerApp.States
             this.context = context;
         }
 
-
-
         public IState Handle(JsonObject packet)
         {
+            //checks if the packet is contains the correct data
             if (packet.ContainsKey("data"))
             {
+                //extracting the needed part of the JsonObject
                 JsonObject data = packet["data"] as JsonObject;
                 Console.WriteLine("Login recieved data: " + data);
 
-                string username= (string)data["username"];
+                //extracting username and password
+                string username = (string)data["username"];
                 string password = (string)data["password"];
-                if(data.ContainsKey("username") && data.ContainsKey("password"))
-                {
-                    if (username == _username && password == _password)
-                    {//TODO create account state veranderen
-                        // Update response to the client so the server can retrieve response and send to client
-                        context.ResponseToClient = ApproveLogin();
-                        // To Do: Implement creating of UserAccount in a different command
-                        UserAccount userAccount = new UserAccount(username, password);
-                        context.SetNewUser(userAccount); // Yay
-                        //context.SetNextState(new SessionActiveState(context));
-                        return new SessionActiveState(context);
 
-                    }
-                    else
+                //checks if the packet is contains the correct data
+                if (data.ContainsKey("username") && data.ContainsKey("password"))
+                {
+                    foreach (UserAccount account in server.users)
                     {
-                        context.ResponseToClient = RefuseLogin();
+                        if (account.GetUserName() == username && account.GetPassword() == password)
+                        {
+                            context.ResponseToClient = ApproveLogin();
+                            //context.SetNextState(new SessionActiveState(context));
+                            return new SessionActiveState(context);
+                        }
+                        else
+                        {
+                            context.ResponseToClient = RefuseLogin();
+                            //context.SetNextState(new SessionActiveState(context));
+                            return this;
+                        }
                     }
                 }
                 else
                 {
                     throw new FormatException("Converting data field to JsonObject failed");
                 }
-                
             }
             else
             {
@@ -67,6 +68,10 @@ namespace ServerApp.States
             return this;
         }
 
+        /// <summary>
+        /// Method to send status of login
+        /// </summary>
+        /// <returns></returns>
         private JsonObject RefuseLogin()
         {
             return new JsonObject
@@ -80,6 +85,10 @@ namespace ServerApp.States
             };
         }
 
+        /// <summary>
+        /// Mehtod to send status login
+        /// </summary>
+        /// <returns></returns>
         private JsonObject ApproveLogin()
         {
             return new JsonObject
