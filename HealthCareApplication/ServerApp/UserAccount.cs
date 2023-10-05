@@ -43,5 +43,14 @@ namespace ServerApp
             return jsonData;
         }
 
+        public string GetUserName() 
+        { 
+            return this._username;
+        }
+
+        public string GetPassword()
+        {
+            return this._password;
+        }
     }
 }

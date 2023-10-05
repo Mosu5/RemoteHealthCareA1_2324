@@ -32,6 +32,7 @@ namespace ServerApp.States
             this.isSessionActive = false;
             currentState = new LoginState(this);
             this.userStats = new List<UserStat>();
+            currentState = new LoginState(this);
         }
 
         public void SetNextState(IState newState)
@@ -49,27 +50,29 @@ namespace ServerApp.States
             {
                 string commando = (string)receivedData["commando"];
                 Console.WriteLine("Recieved command from client: " + commando);
+                currentState = currentState.Handle(receivedData);
 
-                switch (commando)
-                {
-                    case "login":
-                        this.nextState = new LoginState(this);
-                        break;
-                    case "session stop":
-                        this.nextState = new SessionStoppedState(this);
-                        break;
-                    case "session pause":
-                        this.nextState = new SessionPausedState();
-                        break;
-                    case "session start":
-                        this.nextState = new SessionActiveState(this);
-                        break;
-                }
+                //switch (commando)
+                //{
+                //    case "create account":
+                //        this.nextState = new CreateAccountState(this);
+                //        break;
+                //    case "login":
+                //        this.nextState = new LoginState(this);
+                //        break;
+                //    case "session stop":
+                //        this.nextState = new SessionStoppedState(this);
+                //        break;
+                //    case "session pause":
+                //        this.nextState = new SessionPausedState();
+                //        break;
+                //    case "session start":
+                //        this.nextState = new SessionActiveState(this);
+                //        break;
+                //}
 
             }
-
-            ApplyNewState();
-            currentState.Handle(receivedData);
+            //ApplyNewState();
         }
 
         private void SaveUserData()
