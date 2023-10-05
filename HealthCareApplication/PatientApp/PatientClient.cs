@@ -96,7 +96,6 @@ namespace PatientApp
                         // TO DO: Implement the following wrapper structure to make JSON formatting easier:
                         // CommandWrapper.Login(username, pass);
 
-                  
                         _commandHandler.ExecuteCommandToSend("login", dataObject);
                         break;
                     case "stats/send":

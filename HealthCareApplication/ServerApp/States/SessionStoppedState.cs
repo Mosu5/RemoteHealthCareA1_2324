@@ -26,7 +26,7 @@ namespace ServerApp.States
                 JsonObject data = packet["data"] as JsonObject;
                 Console.WriteLine("Recieved data: " + data);
 
-
+                // Save data to file
 
 
                 //if (this._context.)
