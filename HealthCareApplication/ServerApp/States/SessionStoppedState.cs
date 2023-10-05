@@ -24,7 +24,10 @@ namespace ServerApp.States
             if (packet.ContainsKey("data"))
             {
                 JsonObject data = packet["data"] as JsonObject;
-                Console.WriteLine("Login recieved data: " + data);
+                Console.WriteLine("Recieved data: " + data);
+
+
+
 
                 //if (this._context.)
                 //{
@@ -44,7 +47,6 @@ namespace ServerApp.States
                 //        context.ResponseToClient = RefuseLogin();
                 //    }
 
-
                 //}
                 //else
                 //{
@@ -58,5 +60,7 @@ namespace ServerApp.States
             }
             return this;
         }
+
+
     }
 }

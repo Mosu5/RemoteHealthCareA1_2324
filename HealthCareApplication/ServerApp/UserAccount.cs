@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace ServerApp
@@ -25,7 +26,7 @@ namespace ServerApp
 
 
         // To Do: In the future we want to check duplicate files, and add data if file already exist, rather than overwriting
-        public void SaveUserStats(string jsonData)
+        public void SaveUserStats(JsonObject jsonData)
         {
             StreamWriter writer = new StreamWriter($"@{Environment.CurrentDirectory}/{this._username}-stats.json");
             if (jsonData != null )
@@ -41,8 +42,6 @@ namespace ServerApp
             string jsonData = reader.ReadToEnd();
             return jsonData;
         }
-
-
 
     }
 }

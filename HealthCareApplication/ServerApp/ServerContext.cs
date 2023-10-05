@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Sockets;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
@@ -21,11 +24,14 @@ namespace ServerApp.States
         private IState nextState { get; set;}
         private ServerConn _serverConn { get; set; }
         public JsonObject ResponseToClient { get; set; }
+        public List<UserStat> userStats;
+        
         public ServerContext(ServerConn serverConn) 
         {
             this._serverConn = serverConn;
             this.isSessionActive = false;
-            currentState = new CreateAccountState(this);
+            currentState = new LoginState(this);
+            this.userStats = new List<UserStat>();
         }
 
         public void SetNextState(IState newState)
@@ -64,6 +70,14 @@ namespace ServerApp.States
 
             ApplyNewState();
             currentState.Handle(receivedData);
+        }
+
+        private void SaveUserData()
+        {
+            JsonObject userData = (JsonObject)JsonSerializer.Serialize(userStats);
+
+
+            this._userAccount.SaveUserStats(userData);
         }
 
         public void SetNewUser(UserAccount user)
