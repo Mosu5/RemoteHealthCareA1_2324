@@ -1,4 +1,6 @@
+using System;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Utilities.Communication;
 
 namespace PatientApp.Commands
