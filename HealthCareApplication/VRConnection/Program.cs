@@ -25,15 +25,14 @@ public class Program
             // Opgave 3e Verander de code van 3a zodat het terrein hoogteverschillen krijgt
             int length = 256, width = 256;
             var size = new int[] { 256, 256 };
-            int height = 0;
+            int height = 5;
 
             float[] heightMap = PerlinNoiseGenerator.GenerateHeightMap(20); // TODO save heightMap as prop
 
             string terrainResponse = await session.AddHillTerrain(length, width, new Vector3(-128, 0, -128), Vector3.Zero, height);
-
             //add hills around the flat area
             //int hillsWidth = 58, hillsLength = 256;
-            
+
             //string terrainResponse1 = await session.AddHillTerrain(100, 100, new Vector3(-70, 0, -70), Vector3.Zero, 0);
 
 

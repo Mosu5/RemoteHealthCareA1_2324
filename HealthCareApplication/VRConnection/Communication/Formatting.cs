@@ -290,7 +290,7 @@ public class Formatting
                 {
                     transform = new
                     {
-                        position = new[] { pos.X, pos.Y, pos.Z },
+                        position = new[] { pos.X, pos.Y-0.8, pos.Z },
                         scale,
                         rotation = new[] { 0, rotation, 0 }
                     },
