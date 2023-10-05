@@ -5,8 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UIApp.View"
         mc:Ignorable="d"
-        Title="Chats" Height="450" Width="800">
+        Title="Chats" Height="499" Width="371">
     <Grid>
-        
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,40,0,0">
+            <StackPanel  VerticalAlignment="Top" HorizontalAlignment="Left">
+                <TextBox HorizontalAlignment="Left" Margin="5, 30,0,0" TextWrapping="Wrap" Text="sexy" VerticalAlignment="Top" Width="120" Height="20"/>
+                <TextBox HorizontalAlignment="Left" Margin="5, 30,0,0" TextWrapping="Wrap" Text="sexy" VerticalAlignment="Top" Width="120" Height="20"/>
+                <TextBox HorizontalAlignment="Left" Margin="5, 30,0,0" TextWrapping="Wrap" Text="sexy" VerticalAlignment="Top" Width="120" Height="20"/>
+                <TextBox HorizontalAlignment="Left" Margin="5, 30,0,0" TextWrapping="Wrap" Text="sexy" VerticalAlignment="Top" Width="120" Height="20"/>
+            </StackPanel>
+        </ScrollViewer>
+        <Button Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="-7.227,0.207" Click="Button_Click" Height="35" Width="68"/>
+
     </Grid>
 </Window>

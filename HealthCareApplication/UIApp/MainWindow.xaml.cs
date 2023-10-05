@@ -19,7 +19,11 @@ namespace UIApp
                 Close();
                 sessionSetting.Show();
             }
-            
+            else
+            {
+                MessageBox.Show("Wrong username or password.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
 
         
