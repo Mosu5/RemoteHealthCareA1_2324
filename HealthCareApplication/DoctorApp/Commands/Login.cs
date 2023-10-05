@@ -1,11 +1,13 @@
-﻿using DoctorApp.Helpers;
+﻿using DoctorApp.Communication;
+using DoctorApp.Helpers;
+using RHSandbox.Communication;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Utilities.Communication;
 
 namespace DoctorApp.Commands
 {
-    internal class Login : IDoctorCommand
+    public class Login : IDoctorCommand
     {
         private readonly string _username;
         private readonly string _password;
@@ -16,18 +18,18 @@ namespace DoctorApp.Commands
             _password = password;
         }
 
-        public async Task<bool> Execute(ClientConn clientConn)
+        public async Task<bool> Execute()
         {
-            // Send out the request
-            JsonObject request = DoctorFormat.LoginMessage(_username, _password);
-            await clientConn.SendJson(request);
+            Request request = new Request(DoctorFormat.LoginMessage(_username, _password));
+            JsonObject response = await DoctorProxy.GetResponse(request);
 
-            // Receive the response, and look for the JSON keypair 'status'
-            JsonObject response = await clientConn.ReceiveJson();
-            JsonNode[] nodeKeys = DoctorFormat.GetKeys(response, "login", "status");
-            string statusCode = nodeKeys[0].ToString();
+            if (!response.ContainsKey("status"))
+                throw new CommunicationException("The login message did not contain the JSON key 'status'");
 
-            return statusCode.Equals("ok");
+            if (response["status"].ToString().Equals("ok"))
+                return true;
+
+            return false;
         }
     }
 }

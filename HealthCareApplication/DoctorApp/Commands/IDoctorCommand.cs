@@ -5,6 +5,6 @@ namespace DoctorApp.Commands
 {
     internal interface IDoctorCommand
     {
-        Task<bool> Execute(ClientConn clientConn);
+        Task<bool> Execute();
     }
 }

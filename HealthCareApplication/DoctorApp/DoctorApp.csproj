@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\DoctorProxy.cs" />
+    <Compile Include="Communication\Request.cs" />
     <Compile Include="DoctorClient.cs" />
     <Compile Include="Commands\ChatsSend.cs" />
     <Compile Include="Commands\IDoctorCommand.cs" />
