@@ -72,64 +72,64 @@ public class Program
 
             JsonObject house1 = await session.AddModelOnTerrain(
                  "house",
-                 new(-50, 0, 25),
-                 8,
+                 new(-52, 0, 25),
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  90
              );
             JsonObject house2 = await session.AddModelOnTerrain(
                  "house",
-                 new(-50, 0, 0),
-                 8,
+                 new(-49, 0, -5),
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house7.obj",
                  90
              );
             JsonObject house3 = await session.AddModelOnTerrain(
                  "house",
-                 new(-50, 0, -25),
-                 8,
+                 new(-52, 0, -35),
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  90
              );
             JsonObject house4 = await session.AddModelOnTerrain(
                  "house",
                  new(0, 0, 50),
-                 8,
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  180
              );
             JsonObject house5 = await session.AddModelOnTerrain(
                  "house",
-                 new(25, 0, 50),
-                 8,
+                 new(30, 0, 50),
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house7.obj",
                  180
              );
             JsonObject house6 = await session.AddModelOnTerrain(
                  "house",
-                 new(15, 0, 28),
-                 8,
+                 new(20, 0, 28),
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house7.obj",
                  0
              );
             JsonObject house7 = await session.AddModelOnTerrain(
                  "house",
                  new(-30, 0, 28),
-                 8,
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  0
              );
             JsonObject house8 = await session.AddModelOnTerrain(
                  "house",
                  new(-10, 0, 28),
-                 8,
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  0
              );
             JsonObject house9 = await session.AddModelOnTerrain(
                  "house",
-                 new(-30, 0, 10),
-                 8,
+                 new(-28, 0, 10),
+                 9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  -90
              );
