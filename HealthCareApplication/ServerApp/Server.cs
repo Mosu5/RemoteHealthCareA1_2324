@@ -38,14 +38,6 @@ namespace ServerApp
                 {"data", new JsonObject()}
             });
 
-            Thread.Sleep(5000);
-
-            await serverConn.SendJson(client, new JsonObject
-            {
-                { "command", "session/stop" },
-                {"data", new JsonObject()}
-            });
-
            while (client.Connected)
            {
                JsonObject data = await serverConn.ReceiveJson(client);
