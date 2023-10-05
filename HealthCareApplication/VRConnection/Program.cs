@@ -25,9 +25,18 @@ public class Program
             // Opgave 3e Verander de code van 3a zodat het terrein hoogteverschillen krijgt
             int length = 256, width = 256;
             var size = new int[] { 256, 256 };
+            int height = 0;
+
             float[] heightMap = PerlinNoiseGenerator.GenerateHeightMap(20); // TODO save heightMap as prop
 
-            string terrainResponse = await session.AddHillTerrain(length, width, new Vector3(-128, 0, -128), Vector3.Zero);
+            string terrainResponse = await session.AddHillTerrain(length, width, new Vector3(-128, 0, -128), Vector3.Zero, height);
+
+            //add hills around the flat area
+            //int hillsWidth = 58, hillsLength = 256;
+            
+            //string terrainResponse1 = await session.AddHillTerrain(100, 100, new Vector3(-70, 0, -70), Vector3.Zero, 0);
+
+
             //Console.WriteLine(terrainResponse);
 
             // Opgave 3b Verwijder de groundplane
@@ -39,6 +48,7 @@ public class Program
             Console.WriteLine(setSkyboxObj);
 
             //update the skybox
+
             String rt = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_rt.jpg";
             String lf = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_lf.jpg";
             String up = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_up.jpg";
@@ -49,55 +59,96 @@ public class Program
             Console.WriteLine(skyboxUpdate);
 
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
-
             Vector3 position = new(0, 0, 0);
             JsonObject tree = await session.AddModelOnTerrain(
                  "tree",
                  position,
                  1.5,
-                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
              );
             Console.WriteLine(tree);
 
             //houses
-            Vector3 positionHouse1 = new(20, 0, 10);
+
             JsonObject house1 = await session.AddModelOnTerrain(
                  "house",
-                 positionHouse1,
-                 10,
-                 @"data\NetworkEngine\models\houses\set1\house1.obj"
+                 new(-50, 0, 25),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 90
              );
-            Console.WriteLine(house1);
-
-            Vector3 positionHouse2 = new(70, 0, -50);
             JsonObject house2 = await session.AddModelOnTerrain(
                  "house",
-                 positionHouse2,
-                 10,
-                 @"data\NetworkEngine\models\houses\set1\house2.obj"
+                 new(-50, 0, 0),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house7.obj",
+                 90
              );
-            Console.WriteLine(house2);
-
-            Vector3 positionHouse3 = new(-70, 0, 50);
             JsonObject house3 = await session.AddModelOnTerrain(
                  "house",
-                 positionHouse3,
-                 10,
-                 @"data\NetworkEngine\models\houses\set1\house3.obj"
+                 new(-50, 0, -25),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 90
              );
-            Console.WriteLine(house3);
+            JsonObject house4 = await session.AddModelOnTerrain(
+                 "house",
+                 new(0, 0, 50),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 180
+             );
+            JsonObject house5 = await session.AddModelOnTerrain(
+                 "house",
+                 new(25, 0, 50),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house7.obj",
+                 180
+             );
+            JsonObject house6 = await session.AddModelOnTerrain(
+                 "house",
+                 new(15, 0, 28),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house7.obj",
+                 0
+             );
+            JsonObject house7 = await session.AddModelOnTerrain(
+                 "house",
+                 new(-30, 0, 28),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 0
+             );
+            JsonObject house8 = await session.AddModelOnTerrain(
+                 "house",
+                 new(-10, 0, 28),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 0
+             );
+            JsonObject house9 = await session.AddModelOnTerrain(
+                 "house",
+                 new(-30, 0, 10),
+                 8,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 -90
+             );
+
 
             //bike
+
             JsonObject bike = await session.AddModelOnTerrain(
                 "bike",
                 position,
                 2,
-                @"data\NetworkEngine\models\bike\bike.fbx"
+                @"data\NetworkEngine\models\bike\bike.fbx",
+                0
             );
             Console.WriteLine(tree);
 
-            JsonObject[] trees = await session.RandomlyPlaceTrees(30);
-            foreach (var t in trees) Console.WriteLine(t);
+            //JsonObject[] trees = await session.RandomlyPlaceTrees(30);
+            //foreach (var t in trees) Console.WriteLine(t);
 
             //  Vector3 position1 = new(0, 0, 0);
             //  JsonObject tree1 = await session.AddModelOnTerrain(
@@ -114,15 +165,10 @@ public class Program
             // Opgave 3f Voeg route toe
             PosVector[] posVectors = new PosVector[]
             {
-                new PosVector(new int[] { -22, 0, 40 }, new int[] { 5, 0, 5 }),
-                new PosVector(new int[] { 0, 0, 62 }, new int[] { 5, 0, 5 }),
-                new PosVector(new int[] { 42, 0, 63 }, new int[] { 5, 0, -5 }),
-                new PosVector(new int[] { 65, 0, 42 }, new int[] { 5, 0, -5 }),
-                new PosVector(new int[] { 75, 0, 10 }, new int[] { 5, 0, -5 }),
-                new PosVector(new int[] { 63, 0, -30 }, new int[] { -5, 0, 5 }),
-                new PosVector(new int[] { 20, 0, -40 }, new int[] { -5, 0, -5 }),
-                new PosVector(new int[] { -10, 0, -30 }, new int[] { -5, 0, 5 }),
-                new PosVector(new int[] { -25, 0, -5 }, new int[] { -5, 0, 5 })
+                new PosVector(new int[] { -40, 0, -40 }, new int[] { 5, 0, 5 }),
+                new PosVector(new int[] { -40, 0, 40 }, new int[] { 5, 0, -5 }),
+                new PosVector(new int[] { 40, 0, 40 }, new int[] { -5, 0, 5 }),
+                new PosVector(new int[] { 40, 0, -40 }, new int[] { -5, 0, -5 })
             };
 
             JsonObject route = await session.AddRoute(posVectors);
@@ -131,7 +177,7 @@ public class Program
             // Opgave 3h Laat een 3D opbject de route volgen met een gegeven snelheid
             string bikeID = await session.GetNodeId("bike");
             string routeID = session.GetRouteId(route);
-            double speed = 20.0;
+            double speed = 7.0;
             JsonObject bikeFollowingRoute = await session.FollowRoute(routeID, bikeID, speed);
             Console.WriteLine(bike);
 

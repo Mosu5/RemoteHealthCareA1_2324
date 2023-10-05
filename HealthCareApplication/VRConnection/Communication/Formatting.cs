@@ -140,6 +140,7 @@ public class Formatting
     }
     #endregion
 
+    
     #region Skybox
     /// <summary>
     /// Sets the time of the sky if the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
@@ -277,7 +278,7 @@ public class Formatting
     #endregion
 
     #region Objects
-    public static object Add3DObject(string name, Vector3 pos, double scale, string fileName)
+    public static object Add3DObject(string name, Vector3 pos, double scale, string fileName, int rotation)
     {
         return new
         {
@@ -291,7 +292,7 @@ public class Formatting
                     {
                         position = new[] { pos.X, pos.Y, pos.Z },
                         scale,
-                        rotation = new[] { 0, 0, 0 }
+                        rotation = new[] { 0, rotation, 0 }
                     },
                     model = new
                     {
