@@ -58,15 +58,51 @@ public class Program
             Console.WriteLine(skyboxUpdate);
 
             // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
-            Vector3 position = new(0, 0, 0);
-            JsonObject tree = await session.AddModelOnTerrain(
+            
+            //trees
+            JsonObject tree1 = await session.AddModelOnTerrain(
                  "tree",
-                 position,
+                 new(-30, 0, -1),
+                 1.9,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+             );
+            JsonObject tree2 = await session.AddModelOnTerrain(
+                 "tree",
+                 new(-27, 0, -8),
                  1.5,
                  @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
                  0
              );
-            Console.WriteLine(tree);
+            JsonObject tree3 = await session.AddModelOnTerrain(
+                 "tree",
+                 new(-31, 0, -19),
+                 2,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+             );
+            JsonObject tree4 = await session.AddModelOnTerrain(
+                 "tree",
+                 new(-25, 0, -26),
+                 2.1,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+             );
+            JsonObject tree5 = await session.AddModelOnTerrain(
+                 "tree",
+                 new(-30, 0, -34),
+                 1.7,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+             );
+
+            JsonObject tree6 = await session.AddModelOnTerrain(
+                 "tree",
+                 new(-45, 0, 16),
+                 1.7,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+             );
 
             //houses
 
@@ -134,17 +170,35 @@ public class Program
                  -90
              );
 
+            //cars
+
+            JsonObject car1 = await session.AddModelOnTerrain(
+                 "car",
+                 new(-35, 0, -11),
+                 1.4,
+                 @"data\NetworkEngine\models\cars\generic\black.obj",
+                 0
+             );
+
+            JsonObject car2 = await session.AddModelOnTerrain(
+                 "car",
+                 new(-12, 0, 45),
+                 1.4,
+                 @"data\NetworkEngine\models\cars\generic\white.obj",
+                 90
+             );
+
 
             //bike
 
             JsonObject bike = await session.AddModelOnTerrain(
                 "bike",
-                position,
+                new(0, 0, 0),
                 2,
                 @"data\NetworkEngine\models\bike\bike.fbx",
                 0
             );
-            Console.WriteLine(tree);
+            
 
             //JsonObject[] trees = await session.RandomlyPlaceTrees(30);
             //foreach (var t in trees) Console.WriteLine(t);
