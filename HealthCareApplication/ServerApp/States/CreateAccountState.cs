@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 
 namespace ServerApp.States
 {
-    internal class SessionActiveState : IState
+    internal class CreateAccountState : IState
     {
         private ServerContext context;
-        public SessionActiveState(ServerContext context)
+        public CreateAccountState(ServerContext context)
         {
-            this.context = context;
+
         }
 
         public IState Handle(JsonObject packet)
         {
-            context.GetUserAccount().hasActiveSession = true;
-
             throw new NotImplementedException();
+            return this;
         }
     }
 }

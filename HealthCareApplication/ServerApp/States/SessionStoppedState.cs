@@ -18,7 +18,7 @@ namespace ServerApp.States
         }
 
 
-        public void Handle(JsonObject packet)
+        public IState Handle(JsonObject packet)
         {
 
             if (packet.ContainsKey("data"))
@@ -56,6 +56,7 @@ namespace ServerApp.States
             {
                 throw new FormatException("Json packet format corrupted!");
             }
+            return this;
         }
     }
 }

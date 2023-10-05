@@ -24,7 +24,9 @@ namespace ServerApp.States
             this.context = context;
         }
 
-        public void Handle(JsonObject packet)
+
+
+        public IState Handle(JsonObject packet)
         {
             if (packet.ContainsKey("data"))
             {
@@ -36,21 +38,20 @@ namespace ServerApp.States
                 if(data.ContainsKey("username") && data.ContainsKey("password"))
                 {
                     if (username == _username && password == _password)
-                    {
+                    {//TODO create account state veranderen
                         // Update response to the client so the server can retrieve response and send to client
                         context.ResponseToClient = ApproveLogin();
-                        
                         // To Do: Implement creating of UserAccount in a different command
                         UserAccount userAccount = new UserAccount(username, password);
                         context.SetNewUser(userAccount); // Yay
-                        context.SetNextState(new SessionActiveState(context));
+                        //context.SetNextState(new SessionActiveState(context));
+                        return new SessionActiveState(context);
+
                     }
                     else
                     {
                         context.ResponseToClient = RefuseLogin();
                     }
-
-
                 }
                 else
                 {
@@ -62,6 +63,8 @@ namespace ServerApp.States
             {
                 throw new FormatException("Json packet format corrupted!");
             }
+            //Login Failed so it stays in LoginState
+            return this;
         }
 
         private JsonObject RefuseLogin()

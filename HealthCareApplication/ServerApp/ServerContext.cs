@@ -15,7 +15,7 @@ namespace ServerApp.States
     /// </summary>
     internal class ServerContext
     {
-
+        public bool isSessionActive { get; set; }
         private UserAccount _userAccount { get; set; }
         private IState currentState {  get; set; }
         private IState nextState { get; set;}
@@ -24,7 +24,8 @@ namespace ServerApp.States
         public ServerContext(ServerConn serverConn) 
         {
             this._serverConn = serverConn;
-            currentState = new LoginState(this);
+            this.isSessionActive = false;
+            currentState = new CreateAccountState(this);
         }
 
         public void SetNextState(IState newState)

@@ -9,7 +9,7 @@ namespace ServerApp.States
 {
     internal class SessionPausedState : IState
     {
-        public void Handle(JsonObject packet)
+        public IState Handle(JsonObject packet)
         {
             throw new NotImplementedException();
         }
