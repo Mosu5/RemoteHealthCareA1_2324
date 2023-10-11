@@ -20,7 +20,7 @@ namespace DoctorApp.Commands
         public async Task<bool> Execute()
         {
             Request request = new Request(DoctorFormat.StatsSummaryMessage(_clientUsername));
-            JsonObject response = await DoctorProxy.GetResponse(request);
+            JsonObject response = await RequestHandler.GetResponse(request);
 
             Logger.Log($"Response was: {response}", LogType.Debug);
 

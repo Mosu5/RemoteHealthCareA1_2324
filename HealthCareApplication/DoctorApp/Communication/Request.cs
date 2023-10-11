@@ -24,7 +24,7 @@ namespace RHSandbox.Communication
         public Request(JsonObject message)
         {
             _waiter = new TaskCompletionSource<JsonObject>();
-            (Command, Message) = DoctorProxy.GetCommandAndData(message);
+            (Command, Message) = RequestHandler.GetCommandAndData(message);
         }
 
         /// <summary>

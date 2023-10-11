@@ -21,7 +21,7 @@ namespace DoctorApp.Commands
         public async Task<bool> Execute()
         {
             Request request = new Request(DoctorFormat.LoginMessage(_username, _password));
-            JsonObject response = await DoctorProxy.GetResponse(request);
+            JsonObject response = await RequestHandler.GetResponse(request);
 
             if (!response.ContainsKey("status"))
                 throw new CommunicationException("The login message did not contain the JSON key 'status'");

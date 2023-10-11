@@ -17,7 +17,7 @@ namespace DoctorApp
                 Task.Run(ReceiveConsoleInput);
 
                 // Start listening for messages
-                await DoctorProxy.Listen();
+                await RequestHandler.Listen();
             }
             catch (CommunicationException ex)
             {

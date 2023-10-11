@@ -22,7 +22,7 @@ namespace DoctorApp.Commands
         public async Task<bool> Execute()
         {
             Request request = new Request(DoctorFormat.ChatsSendMessage(_patientUsername, _chatMessage));
-            JsonObject response = await DoctorProxy.GetResponse(request);
+            JsonObject response = await RequestHandler.GetResponse(request);
 
             // Expect no response from the server
 

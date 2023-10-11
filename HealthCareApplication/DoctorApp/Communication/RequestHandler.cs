@@ -8,7 +8,7 @@ using Utilities.Logging;
 
 namespace DoctorApp.Communication
 {
-    public class DoctorProxy
+    public class RequestHandler
     {
         // List for holding all the requests that have been sent to the server,
         // but which the server has not yet responded to.
