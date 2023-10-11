@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="BikeConnection\Libraries\BLELibrary.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="BikeConnection\Libraries\BLELibrary.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotnetNoise" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BLELibrary">
+      <HintPath>BikeConnection\Libraries\BLELibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
