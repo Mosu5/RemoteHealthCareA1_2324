@@ -52,33 +52,13 @@ namespace ServerApp.States
                 Console.WriteLine("Recieved command from client: " + commando);
                 currentState = currentState.Handle(receivedData);
 
-                //switch (commando)
-                //{
-                //    case "create account":
-                //        this.nextState = new CreateAccountState(this);
-                //        break;
-                //    case "login":
-                //        this.nextState = new LoginState(this);
-                //        break;
-                //    case "session stop":
-                //        this.nextState = new SessionStoppedState(this);
-                //        break;
-                //    case "session pause":
-                //        this.nextState = new SessionPausedState();
-                //        break;
-                //    case "session start":
-                //        this.nextState = new SessionActiveState(this);
-                //        break;
-                //}
-
             }
-            //ApplyNewState();
+            
         }
 
-        private void SaveUserData()
+        public void SaveUserData()
         {
             JsonObject userData = (JsonObject)JsonSerializer.Serialize(userStats);
-
 
             this._userAccount.SaveUserStats(userData);
         }
@@ -90,45 +70,6 @@ namespace ServerApp.States
 
         public UserAccount GetUserAccount() { return this._userAccount; }
 
-        
-        //public void Run()
-        //{
-        //    while (this.stream.DataAvailable)
-        //    {
-        //        StreamReader streamReader = new StreamReader(stream);
-        //        JsonObject receivedData = (JsonObject)streamReader.Read();
-
-        //        if (receivedData != null)
-        //        {
-        //            throw new NullReferenceException("Error while receiving JsonObject");
-        //        }
-        //        if (receivedData.ContainsKey("command"))
-        //        {
-        //            string commando = (string)receivedData["commando"];
-        //            Console.WriteLine("Recieved command from client: " + commando);
-
-        //            switch (commando)
-        //            {
-        //                case "login":
-        //                    this.nextState = new LoginState(this);
-        //                    break;
-        //                case "session stop":
-        //                    this.nextState = new SessionStoppedState();
-        //                    break;
-        //                case "session pause":
-        //                    this.nextState = new SessionPausedState();
-        //                    break;
-        //                case "session start":
-        //                    this.nextState = new SessionActiveState(this);
-        //                    break;
-        //            }
-                        
-        //        }
-
-        //        ApplyNewState();
-        //        currentState.Handle(receivedData);
-        //    }
-        //}
 
         private void ApplyNewState()
         {

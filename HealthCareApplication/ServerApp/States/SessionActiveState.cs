@@ -17,6 +17,19 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
+            //checking if the packet has a valid format
+            if (!packet.ContainsKey("command") || !packet.ContainsKey("data"))
+            {
+                throw new FormatException("Json packet format corrupted!");
+            }
+
+            //extracting the needed part of the JsonObject from the packet
+            JsonObject command = packet["command"] as JsonObject;
+            JsonObject data = packet["data"] as JsonObject;
+
+            //extracting the command from the command JsonObject
+            string _command = (string)command["command"];
+
             if (packet.ContainsKey("session/start")) 
             {
                 // Mark user as active in session

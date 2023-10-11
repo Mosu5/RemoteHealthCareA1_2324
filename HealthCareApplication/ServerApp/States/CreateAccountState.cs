@@ -89,7 +89,7 @@ namespace ServerApp.States
                 {"data", new JsonObject
                     {
                         {"status", "error"},
-                        {"description", "username and password are the same" }
+                        {"description", "username and/or password are not correct bozozozo" }
                     }
                 }
             };
