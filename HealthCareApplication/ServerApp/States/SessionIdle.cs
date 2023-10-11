@@ -31,18 +31,21 @@ namespace ServerApp.States
             }
             if (command == "stats/summary")
             {
-                
+                context.ResponseToClient = SendSummary();
             }
             return this;
 
         }
 
-        JsonObject GetSummary()
+        JsonObject SendSummary()
         {
             return new JsonObject
             {
-                // {"command", "stats/summary" },
-                //{"data", n}
+                 {"command", "stats/summary" },
+                {"data", new JsonArray{
+                    context.userStats
+                }
+                }
             };
         }
     }

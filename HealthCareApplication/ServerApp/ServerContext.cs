@@ -20,13 +20,13 @@ namespace ServerApp.States
     {
         public bool isSessionActive { get; set; }
         private UserAccount _userAccount { get; set; }
-        private IState currentState {  get; set; }
-        private IState nextState { get; set;}
+        private IState currentState { get; set; }
+        private IState nextState { get; set; }
         private ServerConn _serverConn { get; set; }
         public JsonObject ResponseToClient { get; set; }
         public List<UserStat> userStats;
-        
-        public ServerContext(ServerConn serverConn) 
+
+        public ServerContext(ServerConn serverConn)
         {
             this._serverConn = serverConn;
             this.isSessionActive = false;

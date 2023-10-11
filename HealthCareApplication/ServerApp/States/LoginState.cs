@@ -14,8 +14,7 @@ namespace ServerApp.States
     /// </summary>
     internal class LoginState : IState
     {
-        //TODO current username and password are for testing
-        private Server server;
+        //TODO current username and password are for 
 
         private ServerContext context;
         public LoginState(ServerContext context)
@@ -26,27 +25,35 @@ namespace ServerApp.States
         public IState Handle(JsonObject packet)
         {
             //extracting the needed values from packet
-            string username = JsonUtil.GetValueFromPacket(packet, "data", "username") as string;
-            string password = JsonUtil.GetValueFromPacket(packet, "data", "password") as string;
+            string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
+            string password = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();
 
             Console.WriteLine("Login recieved data: " + username + "    " + password);
 
 
-            foreach (UserAccount account in server.users)
+            if(!Server.users.Any())
             {
-                if (account.GetUserName() == username && account.GetPassword() == password)
+                foreach (UserAccount account in Server.users)
                 {
-                    context.ResponseToClient = ApproveLogin();
-                    //context.SetNextState(new SessionActiveState(context));
-                    return new SessionActiveState(context);
-                }
-                else
-                {
-                    context.ResponseToClient = RefuseLogin();
-                    //context.SetNextState(new SessionActiveState(context));
-                    return new CreateAccountState(context);
+                    if (account.GetUserName() == username && account.GetPassword() == password)
+                    {
+                        context.ResponseToClient = ApproveLogin();
+                        //context.SetNextState(new SessionActiveState(context));
+                        return new SessionActiveState(context);
+                    }
+                    else
+                    {
+                        context.ResponseToClient = RefuseLogin();
+                        //context.SetNextState(new SessionActiveState(context));
+                        return new CreateAccountState(context);
+                    }
                 }
             }
+            else
+            {
+                return new CreateAccountState(context);
+            }
+         
             //Login Failed so it stays in LoginState
             return this;
         }

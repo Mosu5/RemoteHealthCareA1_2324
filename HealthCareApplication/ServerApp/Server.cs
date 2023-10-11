@@ -17,7 +17,7 @@ namespace ServerApp
     internal class Server
     {
         private static ServerConn serverConn = new ServerConn("127.0.0.1", 8888);
-        public List<UserAccount> users = new List<UserAccount>();//List of users
+        public static List<UserAccount> users = new List<UserAccount>();//List of users
 
         public static async Task Main(string[] args)
         {

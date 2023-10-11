@@ -12,7 +12,6 @@ namespace ServerApp.States
     internal class SessionPausedState : IState
     {
         private ServerContext context;
-        private Server server;
 
         public SessionPausedState(ServerContext context)
         {
@@ -29,7 +28,7 @@ namespace ServerApp.States
             if (command == "session/pause")
             {
                 //extracting the username after check;
-                foreach (UserAccount account in server.users)
+                foreach (UserAccount account in Server.users)
                 {
                     if (username.Equals(account.GetUserName()))
                     {
@@ -44,7 +43,7 @@ namespace ServerApp.States
             }
             else if (command == "session/resume")
             {
-                foreach (UserAccount account in server.users)
+                foreach (UserAccount account in Server.users)
                 {
                     if (username.Equals(account.GetUserName()))
                     {

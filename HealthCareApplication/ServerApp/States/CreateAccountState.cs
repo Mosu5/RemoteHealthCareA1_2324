@@ -33,7 +33,7 @@ namespace ServerApp.States
                 //checks if the packet is contains the correct data
                 if (data.ContainsKey("username") && data.ContainsKey("password"))
                 {
-                    foreach (UserAccount account in server.users)
+                    foreach (UserAccount account in Server.users)
                     {
                         if (account.GetUserName() == username)
                         {
@@ -41,7 +41,8 @@ namespace ServerApp.States
                             return new LoginState(context);
                         }else 
                         {
-                            server.users.Add(new UserAccount(username,password));
+                            context.ResponseToClient = AccSuccesfullCreated();
+                            Server.users.Add(new UserAccount(username,password));
                             return new SessionActiveState(context);
                         }
                     }
