@@ -2,9 +2,9 @@
 
 namespace DoctorWPFApp.View
 {
-    public partial class Chats : Window
+    public partial class ChatsD : Window
     {
-        public Chats()
+        public ChatsD()
         {
             InitializeComponent();
         }

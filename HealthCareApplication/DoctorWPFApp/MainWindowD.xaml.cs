@@ -15,7 +15,7 @@ namespace DoctorWPFApp
         {
             if (gbBox.Text.ToString() == "super" && wwBox.Password.ToString() == "sexy")
             {
-                SessionSetting sessionSetting = new SessionSetting();
+                SessionSettingD sessionSetting = new SessionSettingD();
                 Close();
                 sessionSetting.Show();
             }

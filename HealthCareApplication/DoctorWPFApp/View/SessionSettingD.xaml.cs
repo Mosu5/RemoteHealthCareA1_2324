@@ -2,17 +2,17 @@
 
 namespace DoctorWPFApp.View
 {
-    public partial class SessionSetting : Window
+    public partial class SessionSettingD : Window
     {
         public bool isRunning = false;
-        public SessionSetting()
+        public SessionSettingD()
         {
             InitializeComponent();
         }
 
         private void chatsBtn_Click(object sender, RoutedEventArgs e)
         {
-            Chats chats = new Chats();
+            ChatsD chats = new ChatsD();
             Close();
             chats.Show();
         }
