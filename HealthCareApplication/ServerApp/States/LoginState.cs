@@ -29,7 +29,6 @@ namespace ServerApp.States
             string username = JsonUtil.GetValueFromPacket(packet, "data", "username") as string;
             string password = JsonUtil.GetValueFromPacket(packet, "data", "password") as string;
 
-
             Console.WriteLine("Login recieved data: " + username + "    " + password);
 
             if (!server.users.Any())
