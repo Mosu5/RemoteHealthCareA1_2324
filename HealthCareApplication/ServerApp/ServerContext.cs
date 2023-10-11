@@ -51,7 +51,6 @@ namespace ServerApp.States
                 string commando = (string)receivedData["commando"];
                 Console.WriteLine("Recieved command from client: " + commando);
                 currentState = currentState.Handle(receivedData);
-
             }
             
         }
@@ -70,7 +69,6 @@ namespace ServerApp.States
 
         public UserAccount GetUserAccount() { return this._userAccount; }
 
-
         private void ApplyNewState()
         {
             if (this.nextState != null)
@@ -79,5 +77,7 @@ namespace ServerApp.States
             }
             this.nextState = null;
         }
+
+       
     }
 }

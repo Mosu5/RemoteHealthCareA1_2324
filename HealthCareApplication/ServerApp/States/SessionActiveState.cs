@@ -17,44 +17,21 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
-            //checking if the packet has a valid format
-            if (!packet.ContainsKey("command") || !packet.ContainsKey("data"))
+
+            string command = JsonUtil.GetValueFromPacket(packet, "command") as string;
+         
+            if (command == "stats/send")
             {
-                throw new FormatException("Json packet format corrupted!");
+                double speed = (double)JsonUtil.GetValueFromPacket(packet, "data", "speed");
+                int distance = (int)JsonUtil.GetValueFromPacket(packet, "data", "distance");
+                byte heartRate = (byte)JsonUtil.GetValueFromPacket(packet, "data", "heartrate");
+
+                // Save data in server
+                BufferUserData(speed, distance, heartRate);
+                return this; // Stay in this state to recieve more data
+
             }
-
-            //extracting the needed part of the JsonObject from the packet
-            JsonObject command = packet["command"] as JsonObject;
-            JsonObject data = packet["data"] as JsonObject;
-
-            //extracting the command from the command JsonObject
-            string _command = (string)command["command"];
-
-            if (packet.ContainsKey("session/start")) 
-            {
-                // Mark user as active in session
-                context.GetUserAccount().hasActiveSession = true;
-                context.isSessionActive = true;
-                return this;
-            }
-            else if (packet.ContainsKey("stats/send"))
-            {
-                if (packet.ContainsKey("data"))
-                {
-                    JsonObject data = packet["data"] as JsonObject;
-                    Console.WriteLine("Login recieved data: " + data);
-
-                    double speed = (double)data["speed"];
-                    int distance = (int)data["distance"];
-                    byte heartRate = (byte)data["heartrate"];
-
-                    // Save data in server buffer
-                    BufferUserData(speed, distance, heartRate);
-
-                    return this;
-                }
-            }
-            else if(packet.ContainsKey("session/stop"))
+            else if (packet.ContainsKey("session/stop"))
             {
                 return new SessionStoppedState(this.context);
             }

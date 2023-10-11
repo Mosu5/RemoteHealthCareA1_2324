@@ -29,7 +29,6 @@ namespace ServerApp.States
             string username = JsonUtil.GetValueFromPacket(packet, "data", "username") as string;
             string password = JsonUtil.GetValueFromPacket(packet, "data", "password") as string;
 
-
             Console.WriteLine("Login recieved data: " + username + "    " + password);
 
 
@@ -37,14 +36,12 @@ namespace ServerApp.States
             {
                 if (account.GetUserName() == username && account.GetPassword() == password)
                 {
-                    Console.WriteLine("IM INSIDE IF BLOCK");
                     context.ResponseToClient = ApproveLogin();
                     //context.SetNextState(new SessionActiveState(context));
                     return new SessionActiveState(context);
                 }
                 else
                 {
-                    Console.WriteLine("IM INSIDE ELSE BLOCK");
                     context.ResponseToClient = RefuseLogin();
                     //context.SetNextState(new SessionActiveState(context));
                     return new CreateAccountState(context);
