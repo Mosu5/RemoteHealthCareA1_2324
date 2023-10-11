@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace UIApp.View
+namespace DoctorWPFApp.View
 {
     /// <summary>
     /// Interaction logic for ChatRoom.xaml

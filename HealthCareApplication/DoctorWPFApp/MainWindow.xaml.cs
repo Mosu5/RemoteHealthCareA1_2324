@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using UIApp.View;
+using DoctorWPFApp.View;
 
-namespace UIApp
+namespace DoctorWPFApp
 {
    
     public partial class MainWindow : Window

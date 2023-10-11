@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace UIApp.View
+namespace DoctorWPFApp.View
 {
     public partial class SessionSetting : Window
     {
