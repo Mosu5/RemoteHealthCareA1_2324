@@ -26,10 +26,10 @@ namespace DoctorApp.Commands
             if (!response.ContainsKey("status"))
                 throw new CommunicationException("The login message did not contain the JSON key 'status'");
 
-            if (response["status"].ToString().Equals("ok"))
-                return true;
+            if (!response["status"].ToString().Equals("ok"))
+                return false;
 
-            return false;
+            return true;
         }
     }
 }

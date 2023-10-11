@@ -13,7 +13,7 @@ namespace DoctorApp
         {
             try
             {
-                // Don't await this, so we're not stuck in an infinite loop
+                // Don't await this, so we're not stuck in an infinite loop before the listener runs
                 Task.Run(ReceiveConsoleInput);
 
                 // Start listening for messages
@@ -36,6 +36,8 @@ namespace DoctorApp
             {
                 // Read input
                 string input = Console.ReadLine();
+                string patientUsername;
+
                 switch (input)
                 {
                     case "login":
@@ -54,19 +56,22 @@ namespace DoctorApp
                             return;
                         }
                         break;
-                    //case "logout":
-                    //    // Attempt logging out of the server
-                    //    if (await new Logout().Execute())
-                    //        Logger.Log($"The user has logged out of the server.", LogType.GeneralInfo);
-                    //    else
-                    //    {
-                    //        Logger.Log($"The user could not be logged out.", LogType.Error);
-                    //        return;
-                    //    }
-                    //    break;
+                    case "logout":
+                        // Attempt logging out of the server
+                        if (await new Logout().Execute())
+                            Logger.Log($"The user has logged out of the server.", LogType.GeneralInfo);
+                        else
+                        {
+                            Logger.Log($"The user could not be logged out.", LogType.Error);
+                            return;
+                        }
+                        break;
                     case "stats/summary":
+                        Console.WriteLine("Enter username of the patient to send command to:");
+                        patientUsername = Console.ReadLine();
+
                         // Attempt retrieving a summary
-                        var summaryCommand = new StatsSummary();
+                        var summaryCommand = new StatsSummary(patientUsername);
                         if (await summaryCommand.Execute())
                             Logger.Log($"Received summary response", LogType.GeneralInfo);
                         else
@@ -75,54 +80,56 @@ namespace DoctorApp
                             return;
                         }
                         break;
-                    //case "chats/send":
-                    //    // Receive chat message
-                    //    Console.WriteLine("Chat message:");
-                    //    string chatMessage = Console.ReadLine();
+                    case "chats/send":
+                        // Receive chat message
+                        Console.WriteLine("Enter username of the patient to send command to:");
+                        patientUsername = Console.ReadLine();
+                        Console.WriteLine("Chat message:");
+                        string chatMessage = Console.ReadLine();
 
-                    //    // Send a chat
-                    //    await new ChatsSend(chatMessage).Execute(_clientConn);
-                    //    break;
-                    //case "session/start":
-                    //    // Attempt starting the session
-                    //    if (await new SessionStart().Execute(_clientConn))
-                    //        Logger.Log($"A new session has started.", LogType.GeneralInfo);
-                    //    else
-                    //    {
-                    //        Logger.Log("A new session could not be started.", LogType.Error);
-                    //        return;
-                    //    }
-                    //    break;
-                    //case "session/stop":
-                    //    // Attempt stopping the session
-                    //    if (await new SessionStop().Execute(_clientConn))
-                    //        Logger.Log($"The current session has been stopped.", LogType.GeneralInfo);
-                    //    else
-                    //    {
-                    //        Logger.Log("The current session could not be stopped.", LogType.Error);
-                    //        return;
-                    //    }
-                    //    break;
-                    //case "session/pause":
-                    //    // Attempt stopping the session
-                    //    if (await new SessionPause().Execute(_clientConn))
-                    //        Logger.Log($"The current session has been paused.", LogType.GeneralInfo);
-                    //    else
-                    //    {
-                    //        Logger.Log("The current session could not be paused.", LogType.Error);
-                    //        return;
-                    //    }
-                    //    break;
-                    //case "session/resume":
-                    //    // Attempt stopping the session
-                    //    if (await new SessionResume().Execute(_clientConn))
-                    //        Logger.Log($"The current session has been resumed.", LogType.GeneralInfo);
-                    //    else
-                    //    {
-                    //        Logger.Log("The current session could not be resumed.", LogType.Error);
-                    //        return;
-                    //    }
-                    //    break;
+                        // Send a chat
+                        await new ChatsSend(patientUsername, chatMessage).Execute();
+                        break;
+                    case "session/start":
+                        Console.WriteLine("Enter username of the patient to send command to:");
+                        patientUsername = Console.ReadLine();
+
+                        // Attempt starting the session
+                        if (await new SessionStart(patientUsername).Execute())
+                            Logger.Log($"A new session has started.", LogType.GeneralInfo);
+                        else
+                            Logger.Log("A new session could not be started.", LogType.Error);
+                        break;
+                    case "session/stop":
+                        Console.WriteLine("Enter username of the patient to send command to:");
+                        patientUsername = Console.ReadLine();
+
+                        // Attempt stopping the session
+                        if (await new SessionStop(patientUsername).Execute())
+                            Logger.Log($"The current session has been stopped.", LogType.GeneralInfo);
+                        else
+                            Logger.Log("The current session could not be stopped.", LogType.Error);
+                        break;
+                    case "session/pause":
+                        Console.WriteLine("Enter username of the patient to send command to:");
+                        patientUsername = Console.ReadLine();
+
+                        // Attempt stopping the session
+                        if (await new SessionPause(patientUsername).Execute())
+                            Logger.Log($"The current session has been paused.", LogType.GeneralInfo);
+                        else
+                            Logger.Log("The current session could not be paused.", LogType.Error);
+                        break;
+                    case "session/resume":
+                        Console.WriteLine("Enter username of the patient to send command to:");
+                        patientUsername = Console.ReadLine();
+
+                        // Attempt stopping the session
+                        if (await new SessionResume(patientUsername).Execute())
+                            Logger.Log($"The current session has been resumed.", LogType.GeneralInfo);
+                        else
+                            Logger.Log("The current session could not be resumed.", LogType.Error);
+                        break;
                     default:
                         Logger.Log($"Unknown command: {input}", LogType.Error);
                         break;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Utilities.Communication;
 
@@ -6,7 +7,8 @@ namespace DoctorApp.Helpers
 {
     internal class DoctorFormat
     {
-        public static JsonObject BaseMessage(string command)
+        // BASE MESSAGES
+        public static JsonObject BaseMessageEmpty(string command)
         {
             return BaseMessage(command, new JsonObject());
         }
@@ -20,6 +22,15 @@ namespace DoctorApp.Helpers
             };
         }
 
+        public static JsonObject BaseMessageWithUsername(string command, string clientUsername)
+        {
+            return BaseMessage(command, new JsonObject()
+            {
+                { "clientUsername", clientUsername }
+            });
+        }
+
+        // OTHER MESSAGES
         public static JsonObject LoginMessage(string username, string password)
         {
             return BaseMessage("login", new JsonObject
@@ -29,10 +40,41 @@ namespace DoctorApp.Helpers
             });
         }
 
-        public static JsonObject ChatsSendMessage(string chatMessage)
+        public static JsonObject LogoutMessage()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static JsonObject SessionStartMessage(string clientUsername)
+        {
+            return BaseMessageWithUsername("session/start", clientUsername);
+        }
+
+        public static JsonObject SessionStopMessage(string clientUsername)
+        {
+            return BaseMessageWithUsername("session/stop", clientUsername);
+        }
+
+        public static JsonObject SessionPauseMessage(string clientUsername)
+        {
+            return BaseMessageWithUsername("session/pause", clientUsername);
+        }
+
+        public static JsonObject SessionResumeMessage(string clientUsername)
+        {
+            return BaseMessageWithUsername("session/resume", clientUsername);
+        }
+
+        public static JsonObject StatsSummaryMessage(string clientUsername)
+        {
+            return BaseMessageWithUsername("stats/summary", clientUsername);
+        }
+
+        public static JsonObject ChatsSendMessage(string patientUsername, string chatMessage)
         {
             return BaseMessage("chats/send", new JsonObject
             {
+                { "clientUsername", patientUsername },
                 { "message", chatMessage }
             });
         }
