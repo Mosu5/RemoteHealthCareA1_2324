@@ -32,23 +32,28 @@ namespace ServerApp.States
 
             Console.WriteLine("Login recieved data: " + username + "    " + password);
 
-
-            foreach (UserAccount account in server.users)
+            if (!server.users.Any())
             {
-                if (account.GetUserName() == username && account.GetPassword() == password)
+                foreach (UserAccount account in server.users)
                 {
-                    Console.WriteLine("IM INSIDE IF BLOCK");
-                    context.ResponseToClient = ApproveLogin();
-                    //context.SetNextState(new SessionActiveState(context));
-                    return new SessionActiveState(context);
+                    if (account.GetUserName() == username && account.GetPassword() == password)
+                    {
+                        context.ResponseToClient = ApproveLogin();
+                        //context.SetNextState(new SessionActiveState(context));
+                        return new SessionActiveState(context);
+                    }
+                    else
+                    {
+                        Console.WriteLine("IM INSIDE ELSE BLOCK");
+                        context.ResponseToClient = RefuseLogin();
+                        //context.SetNextState(new SessionActiveState(context));
+                        return new CreateAccountState(context);
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("IM INSIDE ELSE BLOCK");
-                    context.ResponseToClient = RefuseLogin();
-                    //context.SetNextState(new SessionActiveState(context));
-                    return new CreateAccountState(context);
-                }
+            }
+            else
+            {
+                return new CreateAccountState(context);
             }
             //Login Failed so it stays in LoginState
             return this;
