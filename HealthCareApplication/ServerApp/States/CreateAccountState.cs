@@ -18,6 +18,7 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
+            Console.WriteLine(packet.ToJsonString());
             //extracting username and password
             string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
             string password = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();

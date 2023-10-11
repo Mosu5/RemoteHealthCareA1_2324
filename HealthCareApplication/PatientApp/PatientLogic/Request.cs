@@ -27,7 +27,8 @@ namespace PatientApp.PatientLogic
         public Request(JsonObject message)
         {
             _waiter = new TaskCompletionSource<JsonObject>();
-            (Command, Message) = RequestHandler.GetCommandAndData(message);
+            (Command, _) = RequestHandler.GetCommandAndData(message);
+            Message = message;
         }
 
         /// <summary>

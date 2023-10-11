@@ -1,5 +1,4 @@
-﻿using PatientApp.Commands;
-using PatientApp.DeviceConnection;
+﻿using PatientApp.DeviceConnection;
 using PatientApp.PatientLogic;
 using PatientApp.PatientLogic.Commands;
 using System;
