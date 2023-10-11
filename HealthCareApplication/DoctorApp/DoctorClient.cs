@@ -7,7 +7,7 @@ using DoctorApp.Commands;
 
 namespace DoctorApp
 {
-    internal class Server
+    internal class DoctorClient
     {
         static async Task Main()
         {
@@ -88,7 +88,7 @@ namespace DoctorApp
                         string chatMessage = Console.ReadLine();
 
                         // Send a chat
-                        await new ChatsSend(patientUsername, chatMessage).Execute();
+                        await new ChatsSend(patientUsername, chatMessage, RequestHandler.ClientConn).Execute();
                         break;
                     case "session/start":
                         Console.WriteLine("Enter username of the patient to send command to:");
@@ -114,7 +114,7 @@ namespace DoctorApp
                         Console.WriteLine("Enter username of the patient to send command to:");
                         patientUsername = Console.ReadLine();
 
-                        // Attempt stopping the session
+                        // Attempt pausing the session
                         if (await new SessionPause(patientUsername).Execute())
                             Logger.Log($"The current session has been paused.", LogType.GeneralInfo);
                         else
@@ -124,7 +124,7 @@ namespace DoctorApp
                         Console.WriteLine("Enter username of the patient to send command to:");
                         patientUsername = Console.ReadLine();
 
-                        // Attempt stopping the session
+                        // Attempt resuming the session
                         if (await new SessionResume(patientUsername).Execute())
                             Logger.Log($"The current session has been resumed.", LogType.GeneralInfo);
                         else

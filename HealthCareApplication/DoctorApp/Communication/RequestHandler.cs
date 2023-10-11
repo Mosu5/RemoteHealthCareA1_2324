@@ -14,17 +14,17 @@ namespace DoctorApp.Communication
         // List for holding all the requests that have been sent to the server,
         // but which the server has not yet responded to.
         private static readonly List<Request> _pendingRequests = new List<Request>();
-        private static readonly ClientConn _clientConn = new ClientConn("127.0.0.1", 8888);
+        public static readonly ClientConn ClientConn = new ClientConn("127.0.0.1", 8888);
 
         /// <summary>
         /// Listen for messages from the server and checks if each message is a response or not.
         /// </summary>
         public static async Task Listen()
         {
-            if (!await _clientConn.ConnectToServer())
+            if (!await ClientConn.ConnectToServer())
                 throw new CommunicationException("Could not connect to the server.");
 
-            while (await _clientConn.ReceiveJson() is var message) // listening for message
+            while (await ClientConn.ReceiveJson() is var message) // listening for message
             {
                 Logger.Log($"Received: {message}", LogType.Debug);
 
@@ -108,7 +108,7 @@ namespace DoctorApp.Communication
         /// <returns>The data field of the response sent by the server</returns>
         public static async Task<JsonObject> GetResponse(Request request)
         {
-            await _clientConn.SendJson(request.Message);
+            await ClientConn.SendJson(request.Message);
 
             lock (_pendingRequests)
                 _pendingRequests.Add(request);

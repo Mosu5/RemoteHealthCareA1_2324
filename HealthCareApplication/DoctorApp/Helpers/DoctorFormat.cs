@@ -27,7 +27,7 @@ namespace DoctorApp.Helpers
         {
             return BaseMessage(command, new JsonObject()
             {
-                { "clientUsername", clientUsername }
+                { "username", clientUsername }
             });
         }
 
@@ -75,7 +75,7 @@ namespace DoctorApp.Helpers
         {
             return BaseMessage("chats/send", new JsonObject
             {
-                { "clientUsername", patientUsername },
+                { "username", patientUsername },
                 { "message", chatMessage }
             });
         }
