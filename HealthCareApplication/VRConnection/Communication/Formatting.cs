@@ -94,7 +94,7 @@ public class Formatting
             {
                 position = new int[] { 0, 0, 0 },
                 scale = 1.0,
-                rotation = new []{ 0, 0, 0 },
+                rotation = new []{ 0, 90, 0 },
             },
        
             }
@@ -140,6 +140,7 @@ public class Formatting
     }
     #endregion
 
+    
     #region Skybox
     /// <summary>
     /// Sets the time of the sky if the skybox is set to the dynamic skybox. Time value ranges from 0 to 24. 12.5 is equal to 12:30
@@ -159,6 +160,30 @@ public class Formatting
         };
 
     }
+
+    public static object SkyboxUpdate(String rt, String lf, String up, String dn, String bk, String ft)
+    {
+        return new
+        {
+            id = "scene/skybox/update",
+            data = new
+            {
+                type = "static",
+                files = new
+                {
+                    xpos = rt,
+                    xneg = lf,
+                    ypos = up,
+                    yneg = dn,
+                    zpos = bk,
+                    zneg = ft
+                }
+            }
+
+        };
+
+    }
+
     #endregion
 
     #region Terrain
@@ -253,7 +278,7 @@ public class Formatting
     #endregion
 
     #region Objects
-    public static object Add3DObject(string name, Vector3 pos, double scale, string fileName)
+    public static object Add3DObject(string name, Vector3 pos, double scale, string fileName, int rotation)
     {
         return new
         {
@@ -265,9 +290,9 @@ public class Formatting
                 {
                     transform = new
                     {
-                        position = new[] { pos.X, pos.Y, pos.Z },
+                        position = new[] { pos.X, pos.Y-0.8, pos.Z },
                         scale,
-                        rotation = new[] { 0, 0, 0 }
+                        rotation = new[] { 0, rotation, 0 }
                     },
                     model = new
                     {
@@ -454,7 +479,7 @@ public class Formatting
 
     
     #region Roads
-    public static object RoadAdd(string route, string diffuse, string normal, string specular)
+    public static object RoadAdd(string route, string road)
     {
         return new
         {
@@ -462,9 +487,7 @@ public class Formatting
             data = new
             {
                 route,
-                diffuse,
-                normal,
-                specular,
+                normal = road,
                 heightoffset = 0.01
             }
         };
