@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text.Json.Nodes;
 using Utilities.Communication;
 
@@ -77,6 +78,14 @@ namespace DoctorApp.Helpers
                 { "clientUsername", patientUsername },
                 { "message", chatMessage }
             });
+        }
+
+        public static JsonNode GetKey(JsonObject dataObject, string key)
+        {
+            if (dataObject.ContainsKey(key))
+                return dataObject[key];
+            else
+                throw new CommunicationException($"The message did not contain the JSON key '{key}'.");
         }
 
         public static JsonNode[] GetKeys(JsonObject fullMessage, string expectedCommand, params string[] keys)

@@ -1,4 +1,5 @@
-﻿using RHSandbox.Communication;
+﻿using DoctorApp.Helpers;
+using RHSandbox.Communication;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
@@ -48,6 +49,32 @@ namespace DoctorApp.Communication
 
                 // TODO here goes code for anything that was not a response, e.g. the chat listener
                 Logger.Log($"Was not response, but was {command}", LogType.GeneralInfo);
+
+                switch (command)
+                {
+                    case "chats/send":
+                        string patientUsername = DoctorFormat.GetKey(dataObject, "clientUsername").ToString();
+                        string chatMessage = DoctorFormat.GetKey(dataObject, "message").ToString();
+                        Logger.Log($"<{patientUsername}> :\t{chatMessage}", LogType.GeneralInfo);
+                        break;
+                    // If any session/... has been sent and the code reaches this place,
+                    // then assume that the doctor did not send the command, but that the patient did.
+                    case "session/start":
+                        Logger.Log("Patient has started the session", LogType.GeneralInfo);
+                        break;
+                    case "session/stop":
+                        Logger.Log("Patient has stopped the session", LogType.GeneralInfo);
+                        break;
+                    case "session/pause":
+                        Logger.Log("Patient has paused the session", LogType.GeneralInfo);
+                        break;
+                    case "session/resume":
+                        Logger.Log("Patient has resumed the session", LogType.GeneralInfo);
+                        break;
+                    default:
+                        Logger.Log($"Cannot process command '{command}'.", LogType.Warning);
+                        break;
+                }
             }
         }
 
