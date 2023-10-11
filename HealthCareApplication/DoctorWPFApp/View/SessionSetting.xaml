@@ -1,0 +1,34 @@
+﻿<Window x:Class="DoctorWPFApp.View.SessionSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DoctorWPFApp.View"
+        mc:Ignorable="d"
+        Title="SessionSetting" Height="487" Width="490">
+    <Grid Margin="-35,0,59,-117">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="183*"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Column="1" Content="Session" HorizontalAlignment="Left" Margin="12,40,0,0" VerticalAlignment="Top" Height="47" Width="128" FontSize="30" FontWeight="Bold"/>
+        <Label Grid.Column="1" Content="Settings" HorizontalAlignment="Left" Margin="12,221,0,0" VerticalAlignment="Top" Height="53" Width="128" FontSize="30" FontWeight="Bold" />
+        <Label Name="StatusLabel" Grid.Column="1" Content="Status: disconnected" HorizontalAlignment="Left" Margin="12,92,0,0" VerticalAlignment="Top" Height="33" Width="284" FontSize="20"/>
+        <Label Grid.Column="1" Content="Server connection" HorizontalAlignment="Left" Margin="12,274,0,0" VerticalAlignment="Top" Height="33" Width="284" FontSize="20"/>
+        <Label Grid.Column="1" Content="Patient:" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Height="33" Width="83" FontSize="20"/>
+        <Label Grid.Column="1" Content="LocalHost" HorizontalAlignment="Left" Margin="11,324,0,0" VerticalAlignment="Top" Width="65"/>
+        <Label Grid.Column="1" Content="Port" HorizontalAlignment="Left" Margin="184,324,0,0" VerticalAlignment="Top" Width="65"/>
+
+        <Button Name="stopstartBtn" Grid.Column="1" Content="Start" HorizontalAlignment="Left" Margin="12,177,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="#FFADFE86" FontSize="15" 
+                Click="stopstartBtn_Click"/>
+        <Button Name="summaryBtn" Grid.Column="1" Content="Summary" Margin="113,177,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="39" Width="81" FontSize="15" 
+                Click="summaryBtn_Click"/>
+        <Button Name="chatsBtn" Grid.Column="1" Content="Chats" HorizontalAlignment="Left" Margin="215,177,0,0" VerticalAlignment="Top" Height="39" Width="81" FontSize="15" 
+                Click="chatsBtn_Click"/>
+
+        <TextBox Name="LocalhostBox" Grid.Column="1" HorizontalAlignment="Left" Margin="11,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" Height="38" FontSize="15"/>
+        <TextBox Name="PortBox" Grid.Column="1" HorizontalAlignment="Left" Margin="184,349,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" Height="39" FontSize="15"/>
+
+        <ComboBox Name="patientComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="93,130,0,0" VerticalAlignment="Top" Width="183" FontSize="20"/>
+    </Grid>
+</Window>
