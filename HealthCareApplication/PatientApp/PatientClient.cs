@@ -5,6 +5,7 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Communication;
+using Utilities.Logging;
 
 namespace PatientApp
 {
@@ -34,6 +35,7 @@ namespace PatientApp
 
         public async Task Initialize()
         {
+            Logger.SetTypesToLogFor(LogType.Error, LogType.Debug, LogType.Warning);
             if (await _clientConn.ConnectToServer())
             {
                 // Catch any CommunicationExceptions that could be thrown here

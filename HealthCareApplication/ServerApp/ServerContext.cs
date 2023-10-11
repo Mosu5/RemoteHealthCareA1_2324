@@ -46,12 +46,9 @@ namespace ServerApp.States
             {
                 throw new NullReferenceException("Error while receiving JsonObject");
             }
-            if (receivedData.ContainsKey("command"))
-            {
-                string commando = (string)receivedData["commando"];
-                Console.WriteLine("Recieved command from client: " + commando);
-                currentState = currentState.Handle(receivedData);
-            }
+ 
+            currentState = currentState.Handle(receivedData);
+            
             
         }
 

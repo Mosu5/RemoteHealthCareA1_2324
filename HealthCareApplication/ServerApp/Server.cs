@@ -11,6 +11,7 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Communication;
+using Utilities.Logging;
 
 namespace ServerApp
 {
@@ -21,6 +22,7 @@ namespace ServerApp
 
         public static async Task Main(string[] args)
         {
+            
             serverConn.StartListener();
             
             while (serverConn.AcceptClient() is var client)
@@ -47,21 +49,6 @@ namespace ServerApp
                 await serverConn.SendJson(client, serverContext.ResponseToClient);
                 
             }
-
-            Thread.Sleep(5000);
-
-            await serverConn.SendJson(client, new JsonObject
-            {
-                { "command", "session/stop" },
-                {"data", new JsonObject()}
-            });
-
-           while (client.Connected)
-           {
-               JsonObject data = await serverConn.ReceiveJson(client);
-               await Console.Out.WriteLineAsync("received " + data.ToString());
-           
-           }
         }
     }   
 }

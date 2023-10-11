@@ -10,7 +10,6 @@ namespace ServerApp.States
     internal class CreateAccountState : IState
     {
         private ServerContext context;
-        private Server server;
 
         public CreateAccountState(ServerContext context)
         {
@@ -20,15 +19,15 @@ namespace ServerApp.States
         public IState Handle(JsonObject packet)
         {
             //extracting username and password
-            string username = JsonUtil.GetValueFromPacket(packet, "data", "username") as string;
-            string password = JsonUtil.GetValueFromPacket(packet, "data", "password") as string;
+            string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
+            string password = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();
 
             //extracting the needed part of the JsonObject
             Console.WriteLine("Create account recieved data: " + username + "   " + password);
 
             //checks if the packet is contains the correct data
 
-            foreach (UserAccount account in server.users)
+            foreach (UserAccount account in Server.users)
             {
                 if (account.GetUserName() == username)
                 {
@@ -38,7 +37,7 @@ namespace ServerApp.States
                 else
                 {
                     context.ResponseToClient = AccSuccesfullCreated();
-                    server.users.Add(new UserAccount(username, password));
+                    Server.users.Add(new UserAccount(username, password));
                     return new SessionActiveState(context);
                 }
             }

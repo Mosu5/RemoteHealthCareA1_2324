@@ -31,26 +31,25 @@ namespace ServerApp.States
             Console.WriteLine("Login recieved data: " + username + "    " + password);
 
 
-            if(!Server.users.Any())
+            if(Server.users.Any())
             {
                 foreach (UserAccount account in Server.users)
                 {
                     if (account.GetUserName() == username && account.GetPassword() == password)
                     {
                         context.ResponseToClient = ApproveLogin();
-                        //context.SetNextState(new SessionActiveState(context));
                         return new SessionActiveState(context);
                     }
                     else
                     {
                         context.ResponseToClient = RefuseLogin();
-                        //context.SetNextState(new SessionActiveState(context));
                         return new CreateAccountState(context);
                     }
                 }
             }
             else
             {
+                context.ResponseToClient = RefuseLogin();
                 return new CreateAccountState(context);
             }
          
