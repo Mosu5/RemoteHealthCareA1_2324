@@ -25,44 +25,30 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
-            //checks if the packet is contains the correct data
-            if (packet.ContainsKey("data"))
+            //extracting the needed values from packet
+            string username = JsonUtil.GetValueFromPacket(packet, "data", "username") as string;
+            string password = JsonUtil.GetValueFromPacket(packet, "data", "password") as string;
+
+
+            Console.WriteLine("Login recieved data: " + username + "    " + password);
+
+
+            foreach (UserAccount account in server.users)
             {
-                //extracting the needed part of the JsonObject
-                JsonObject data = packet["data"] as JsonObject;
-                Console.WriteLine("Login recieved data: " + data);
-
-                //extracting username and password
-                string username = (string)data["username"];
-                string password = (string)data["password"];
-
-                //checks if the packet is contains the correct data
-                if (data.ContainsKey("username") && data.ContainsKey("password"))
+                if (account.GetUserName() == username && account.GetPassword() == password)
                 {
-                    foreach (UserAccount account in server.users)
-                    {
-                        if (account.GetUserName() == username && account.GetPassword() == password)
-                        {
-                            context.ResponseToClient = ApproveLogin();
-                            //context.SetNextState(new SessionActiveState(context));
-                            return new SessionActiveState(context);
-                        }
-                        else
-                        {
-                            context.ResponseToClient = RefuseLogin();
-                            //context.SetNextState(new SessionActiveState(context));
-                            return this;
-                        }
-                    }
+                    Console.WriteLine("IM INSIDE IF BLOCK");
+                    context.ResponseToClient = ApproveLogin();
+                    //context.SetNextState(new SessionActiveState(context));
+                    return new SessionActiveState(context);
                 }
                 else
                 {
-                    throw new FormatException("Converting data field to JsonObject failed");
+                    Console.WriteLine("IM INSIDE ELSE BLOCK");
+                    context.ResponseToClient = RefuseLogin();
+                    //context.SetNextState(new SessionActiveState(context));
+                    return new CreateAccountState(context);
                 }
-            }
-            else
-            {
-                throw new FormatException("Json packet format corrupted!");
             }
             //Login Failed so it stays in LoginState
             return this;

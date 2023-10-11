@@ -22,7 +22,7 @@ namespace ServerApp
         public static async Task Main(string[] args)
         {
             serverConn.StartListener();
-
+            
             while (serverConn.AcceptClient() is var client)
             {
                 Console.Out.WriteLineAsync("A client has connected");
@@ -34,6 +34,8 @@ namespace ServerApp
         // Session of an active user
         public static async void HandleClientAsync(object connectingClient)
         {
+            //UserAccount userAccount = new UserAccount("bob", "bob");
+            //users.Add(userAccount);
             TcpClient client = connectingClient as TcpClient;
             ServerContext serverContext = new ServerContext(serverConn);
             while (client.Connected)

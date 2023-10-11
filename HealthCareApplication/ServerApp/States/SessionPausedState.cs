@@ -21,28 +21,14 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
+            //Getting needed values from the packet
+            string command = (string) JsonUtil.GetValueFromPacket(packet, "command");
+            string username = (string)JsonUtil.GetValueFromPacket(packet, "data", "username");
 
-            //checking if the packet has a valid format
-            if (!packet.ContainsKey("command") || !packet.ContainsKey("data"))
-            {
-                throw new FormatException("Json packet format corrupted!");
-            }
-
-            //extracting the needed part of the JsonObject from the packet
-            JsonObject command = packet["command"] as JsonObject;
-            JsonObject data = packet["data"] as JsonObject;
-
-            Console.WriteLine("Pause data received: " + data + "\n" + command);
-
-            //extracting the command from the command JsonObject
-            string _command = (string)command["command"];
-
-            //checking if the command equals session/pause en extra checking for the format of the data JsonObject
-            if (_command == "session/pause" && data.ContainsKey("username"))
+            //checking if the command equals session/pause
+            if (command == "session/pause")
             {
                 //extracting the username after check;
-                string username = (string)data["username"];
-
                 foreach (UserAccount account in server.users)
                 {
                     if (username.Equals(account.GetUserName()))
@@ -52,18 +38,14 @@ namespace ServerApp.States
                         return this;
                     }
                     else
-                    {
                         throw new Exception("User account not found");
-                    }
+                    
                 }
             }
-            else if (_command == "session/resume")
+            else if (command == "session/resume")
             {
                 foreach (UserAccount account in server.users)
                 {
-
-                    string username = (string)data["username"];
-
                     if (username.Equals(account.GetUserName()))
                     {
                         account.isPaused = false;
@@ -71,16 +53,11 @@ namespace ServerApp.States
                         return this;
                     }
                     else
-                    {
                         throw new Exception("User account not found");
-                    }
+                    
                 }
 
                 return new SessionActiveState(context);
-            }
-            else
-            {
-                throw new FormatException("");
             }
             return this;
         }

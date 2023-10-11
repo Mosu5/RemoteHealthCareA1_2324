@@ -32,7 +32,7 @@ namespace ServerApp.States
             this.isSessionActive = false;
             currentState = new LoginState(this);
             this.userStats = new List<UserStat>();
-            currentState = new SessionActiveState(this);
+            
         }
 
         public void SetNextState(IState newState)

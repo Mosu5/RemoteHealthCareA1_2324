@@ -30,6 +30,5 @@ namespace ServerApp.States
 
             return valueFromField;
         }
-
     }
 }
