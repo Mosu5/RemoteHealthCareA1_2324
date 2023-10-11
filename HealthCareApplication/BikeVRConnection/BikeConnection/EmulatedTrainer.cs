@@ -119,7 +119,7 @@ namespace BikeVRConnection.BikeConnection
             return message;
         }
 
-        //Generator of the speed data
+        //Generator of the speed data 
         public byte[] GenerateSpeedData()
         {
             elapsedTime++;
