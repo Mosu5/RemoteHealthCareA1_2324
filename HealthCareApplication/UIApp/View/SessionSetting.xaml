@@ -13,18 +13,20 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Column="1" Content="Session" HorizontalAlignment="Left" Margin="12,40,0,0" VerticalAlignment="Top" Height="47" Width="128" FontSize="30" FontWeight="Bold"/>
         <Label Grid.Column="1" Content="Settings" HorizontalAlignment="Left" Margin="12,221,0,0" VerticalAlignment="Top" Height="53" Width="128" FontSize="30" FontWeight="Bold" />
-        <Label Grid.Column="1" Content="Status: disconnected" HorizontalAlignment="Left" Margin="12,92,0,0" VerticalAlignment="Top" Height="33" Width="284" FontSize="20"/>
+        <Label Name="StatusLabel" Grid.Column="1" Content="Status: disconnected" HorizontalAlignment="Left" Margin="12,92,0,0" VerticalAlignment="Top" Height="33" Width="284" FontSize="20"/>
         <Label Grid.Column="1" Content="Server connection" HorizontalAlignment="Left" Margin="12,274,0,0" VerticalAlignment="Top" Height="33" Width="284" FontSize="20"/>
 
-        <Button Name="stopstartBtn" Grid.Column="1" Content="Start" HorizontalAlignment="Left" Margin="10,148,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="#FFADFE86" FontSize="15" 
+        <Button Name="stopstartBtn" Grid.Column="1" Content="Start" HorizontalAlignment="Left" Margin="12,177,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="#FFADFE86" FontSize="15" 
                 Click="stopstartBtn_Click"/>
-        <Button Name="summaryBtn" Grid.Column="1" Content="Summary" Margin="114,148,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="39" Width="81" FontSize="15" 
+        <Button Name="summaryBtn" Grid.Column="1" Content="Summary" Margin="113,177,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="39" Width="81" FontSize="15" 
                 Click="summaryBtn_Click"/>
-        <Button Name="chatsBtn" Grid.Column="1" Content="Chats" HorizontalAlignment="Left" Margin="215,148,0,0" VerticalAlignment="Top" Height="39" Width="81" FontSize="15" 
+        <Button Name="chatsBtn" Grid.Column="1" Content="Chats" HorizontalAlignment="Left" Margin="215,177,0,0" VerticalAlignment="Top" Height="39" Width="81" FontSize="15" 
                 Click="chatsBtn_Click"/>
 
         <TextBox Name="LocalhostBox" Grid.Column="1" HorizontalAlignment="Left" Margin="10,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" Height="39" FontSize="15"/>
         <TextBox Name="PortBox" Grid.Column="1" HorizontalAlignment="Left" Margin="185,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" Height="39" FontSize="15"/>
+        <Label Grid.Column="1" Content="Patient:" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Height="33" Width="83" FontSize="20"/>
+        <ComboBox Name="patientComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="93,130,0,0" VerticalAlignment="Top" Width="183" FontSize="20"/>
 
     </Grid>
 </Window>

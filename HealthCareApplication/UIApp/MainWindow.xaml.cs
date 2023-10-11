@@ -13,7 +13,7 @@ namespace UIApp
 
         private void loginBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (wwBox.Password.ToString() == "sexy" && gbBox.Text.ToString() == "super")
+            if (gbBox.Text.ToString() == "super" && wwBox.Password.ToString() == "sexy")
             {
                 SessionSetting sessionSetting = new SessionSetting();
                 Close();
