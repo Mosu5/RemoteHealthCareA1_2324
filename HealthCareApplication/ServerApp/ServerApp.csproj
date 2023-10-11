@@ -55,6 +55,7 @@
     <Compile Include="ServerContext.cs" />
     <Compile Include="States\CreateAccountState.cs" />
     <Compile Include="States\IState.cs" />
+    <Compile Include="States\JsonUtil.cs" />
     <Compile Include="States\SessionActiveState.cs" />
     <Compile Include="States\SessionPausedState.cs" />
     <Compile Include="States\LoginState.cs" />

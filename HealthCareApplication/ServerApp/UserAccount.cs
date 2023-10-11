@@ -16,12 +16,14 @@ namespace ServerApp
         private string _username { get; set; }
         private string _password { get; set; }
         public bool hasActiveSession { get; set; }
+        public bool isPaused { get; set; }
 
         public UserAccount(string username, string password) 
         {
             this._username = username;
             this._password = password;
             this.hasActiveSession = false;
+            this.isPaused = false;
         }
 
 
