@@ -17,6 +17,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities", "Utilities\Util
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIApp", "UIApp\UIApp.csproj", "{CED67010-5975-43B8-A85F-96E8452F5FB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeVRConnection", "BikeVRConnection\BikeVRConnection.csproj", "{C048A3CF-F757-4BCF-B162-41D47793B5D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C048A3CF-F757-4BCF-B162-41D47793B5D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C048A3CF-F757-4BCF-B162-41D47793B5D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C048A3CF-F757-4BCF-B162-41D47793B5D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C048A3CF-F757-4BCF-B162-41D47793B5D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
