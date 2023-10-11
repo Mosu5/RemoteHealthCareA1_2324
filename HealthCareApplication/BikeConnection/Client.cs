@@ -51,7 +51,7 @@ namespace BikeConnection
                 Value = speed
             });
             
-            WriteDataToFile(jsonData);
+            //WriteDataToFile(jsonData);
         }
 
         private void OnReceiveDistance(object sender, int distance)
@@ -64,7 +64,7 @@ namespace BikeConnection
                 Value = distance
             });
             
-            WriteDataToFile(jsonData);
+            //WriteDataToFile(jsonData);
         }
 
         private void OnReceiveHeartRate(object sender, int heartRate)
@@ -77,7 +77,7 @@ namespace BikeConnection
                 Value = heartRate
             });
             
-            WriteDataToFile(jsonData);
+            //WriteDataToFile(jsonData);
         }
 
         private void OnReceiveRrIntervals(object sender, int[] rrIntervals)
@@ -90,7 +90,7 @@ namespace BikeConnection
                 Value = rrIntervals
             });
             
-            WriteDataToFile(jsonData);
+            //WriteDataToFile(jsonData);
         }
 
         private void WriteDataToFile(string jsonData)

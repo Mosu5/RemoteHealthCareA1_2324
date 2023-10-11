@@ -23,43 +23,42 @@ namespace ServerApp.States
 
             if (packet.ContainsKey("data"))
             {
+
+                //checking if the packet has a valid format
+                if (!packet.ContainsKey("command") || !packet.ContainsKey("data"))
+                {
+                    throw new FormatException("Json packet format corrupted!");
+                }
+
+                //extracting the needed part of the JsonObject from the packet
+                JsonObject command = packet["command"] as JsonObject;
                 JsonObject data = packet["data"] as JsonObject;
-                Console.WriteLine("Recieved data: " + data);
 
-                // Save data to file
+                //extracting the command from the command JsonObject
+                string commandString = (string)command["command"];
 
-
-                //if (this._context.)
-                //{
-
-                //}
-
-                //if (data.ContainsKey("username") && data.ContainsKey("password"))
-                //{
-                //    if (username == _username && password == _password)
-                //    {
-                //        // Update response to the client so the server can retrieve response and send to client
-                //        context.ResponseToClient = ApproveLogin();
-                //        context.SetNextState(new SessionActiveState(context));
-                //    }
-                //    else
-                //    {
-                //        context.ResponseToClient = RefuseLogin();
-                //    }
-
-                //}
-                //else
-                //{
-                //    throw new FormatException("Converting data field to JsonObject failed");
-                //}
+                if (commandString = "")
+                {
+                    // Save data to file
+                    // Data will be saved so client/doctor can recieve a stats summary later
+                    this._context.SaveUserData();
+                    return this;
+                }
+                if(data.ContainsKey("stats/summary"))
+                { 
+                    return new SessionIdle();
+                }
 
             }
             else
             {
                 throw new FormatException("Json packet format corrupted!");
             }
-            return this;
+            return new SessionIdle();
         }
+
+
+
 
 
     }
