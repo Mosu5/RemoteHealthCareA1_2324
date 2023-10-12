@@ -26,14 +26,14 @@ namespace ServerApp.States
             if (command == "session/start")
             {
                 // Mark user as active in session
-                context.GetUserAccount().hasActiveSession = true;
-                context.isSessionActive = true;
-                context.ResponseToClient = ResponseClientData.GenerateResponse("session/start", null, "ok"); 
-                return new SessionActiveState(context);
+                _context.GetUserAccount().hasActiveSession = true;
+                _context.isSessionActive = true;
+                _context.ResponseToClient = ResponseClientData.GenerateResponse("session/start", null, "ok"); 
+                return new SessionActiveState(_context);
             }
             if (command == "stats/summary")
             {
-                context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(context.userStatsBuffer); ;
+                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(_context.userStatsBuffer); ;
             }
             return this;
 

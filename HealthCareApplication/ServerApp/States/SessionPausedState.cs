@@ -33,7 +33,7 @@ namespace ServerApp.States
                     {
                         Console.WriteLine("session/pause for account");
                         account.isPaused = true;
-                        context.ResponseToClient = ResponseClientData.GenerateResponse("session/pause", null, "ok"); ;
+                        _context.ResponseToClient = ResponseClientData.GenerateResponse("session/pause", null, "ok"); ;
                         return this;
                     }
                     else
@@ -49,7 +49,7 @@ namespace ServerApp.States
                     if (username.Equals(account.GetUserName()))
                     {
                         account.isPaused = false;
-                        context.ResponseToClient = ResponseClientData.GenerateResponse("session/resume", null, "ok"); ;
+                        _context.ResponseToClient = ResponseClientData.GenerateResponse("session/resume", null, "ok"); ;
                         return this;
                     }
                     else

@@ -41,7 +41,7 @@ namespace ServerApp.States
 
         private void BufferUserData(double speed, int distance, byte heartrate)
         {
-            this._context.userStats.Add(new UserStat(speed, distance, heartrate));
+            this._context.userStatsBuffer.Add(new UserStat(speed, distance, heartrate));
         }
     }
 }
