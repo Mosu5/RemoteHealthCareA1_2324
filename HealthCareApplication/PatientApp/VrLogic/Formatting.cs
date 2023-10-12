@@ -383,6 +383,19 @@ namespace PatientApp.VrLogic
             };
         }
 
+        public static object RouteSpeed(string node, double speed)
+        {
+            return new
+            {
+                id = "route/follow/speed",
+                data = new
+                {
+                    node,
+                    speed
+                }
+            };
+        }
+
         public static object PanelAdd(string name, string parentID, Vector3 position, Vector3 rotation, double sizeX, double sizeY, int resolutionX, int resolutionY, bool castShadow)
         {
             return new

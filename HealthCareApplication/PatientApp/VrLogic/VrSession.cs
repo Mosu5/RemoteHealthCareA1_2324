@@ -393,6 +393,16 @@ namespace PatientApp.VrLogic
             await VrCommunication.SendAsJson(tunnelMessage);
             return await VrCommunication.ReceiveJsonObject();
         }
+
+        public async Task<JsonObject> UpdateSpeed(string node, double speed)
+        {
+            object updateSpeedCommand = Formatting.RouteSpeed(node, speed);
+            object tunnelMessage = Formatting.TunnelSend(_tunnelId, updateSpeedCommand);
+
+            await VrCommunication.SendAsJson(tunnelMessage);
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
         #endregion
 
         #region Roads

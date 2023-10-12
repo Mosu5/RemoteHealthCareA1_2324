@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Communication;
 
@@ -56,6 +57,9 @@ namespace PatientApp.VrLogic
                 String ft = @"data\NetworkEngine\textures\SkyBoxes\clouds\bluecloud_ft.jpg";
                 JsonObject skyboxUpdate = await session.UpdateSkybox(rt, lf, up, dn, bk, ft);
                 Console.WriteLine(skyboxUpdate);
+
+
+                
 
                 // Opgave 3d voeg een aantal 3d modellen toe aan de scene, op verschillende posities
 
@@ -298,6 +302,39 @@ namespace PatientApp.VrLogic
                 //
                 //
                 // Not strictly necessary, but looks clean
+
+                Boolean boolean = true;
+                while (true)
+                {
+                    Thread.Sleep(500);
+                    if (boolean)
+                    {
+                        speed += 0.1;
+                        if(speed > 20)
+                        {
+                            boolean = false;
+                        }
+                    }
+                    else
+                    {
+                        speed -= 0.1;
+                        if(speed < 1)
+                        {
+                            boolean = true;
+                        }
+                    }
+                    // Cleart Panel
+                    JsonObject clear2 = await session.ClearPanel();
+                    Console.WriteLine(clear2);
+                                        
+                    //Voeg text aan Panel toe
+                    JsonObject text = await session.AddText(speed+"");
+                    JsonObject swap = await session.SwapPanel();
+
+                    JsonObject updateSpeed = await session.UpdateSpeed(bikeID, speed);
+                }
+
+
                 session.Close();
             }
             catch (CommunicationException ex)
