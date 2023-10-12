@@ -1,7 +1,9 @@
 ﻿using PatientApp.DeviceConnection;
 using PatientApp.PatientLogic;
 using PatientApp.PatientLogic.Commands;
+using PatientApp.VrLogic;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Communication;
 using Utilities.Logging;
@@ -14,6 +16,7 @@ namespace PatientApp
         {
             try
             {
+                Task.Run(VrProgram.Run);
                 Task.Run(ReceiveConsoleInput);
 
                 await RequestHandler.Listen();

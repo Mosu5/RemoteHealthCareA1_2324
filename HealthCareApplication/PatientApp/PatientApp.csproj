@@ -83,6 +83,7 @@
     <Compile Include="VrLogic\Graphics\PosVector.cs" />
     <Compile Include="VrLogic\Graphics\Transform.cs" />
     <Compile Include="VrLogic\VrCommunication.cs" />
+    <Compile Include="VrLogic\VrProgram.cs" />
     <Compile Include="VrLogic\VrSession.cs" />
   </ItemGroup>
   <ItemGroup>
