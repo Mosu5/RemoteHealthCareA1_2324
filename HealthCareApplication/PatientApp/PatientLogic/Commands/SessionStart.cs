@@ -29,7 +29,7 @@ namespace PatientApp.PatientLogic.Commands
             if (!response["status"].ToString().Equals("ok"))
                 return false;
 
-            DeviceManager.OnReceiveData += _onReceiveData;
+            DeviceManager.OnReceiveData += RequestHandler.OnReceiveData;
 
             return true;
         }
