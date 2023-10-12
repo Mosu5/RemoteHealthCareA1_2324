@@ -20,13 +20,14 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
-            string command = (string)JsonUtil.GetValueFromPacket(packet, "command");
+            string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
 
             if (command == "session/start")
             {
                 // Mark user as active in session
                 context.GetUserAccount().hasActiveSession = true;
                 context.isSessionActive = true;
+                context.ResponseToClient = SessionStartOk(); 
                 return new SessionActiveState(context);
             }
             if (command == "stats/summary")
@@ -35,6 +36,18 @@ namespace ServerApp.States
             }
             return this;
 
+        }
+
+        JsonObject SessionStartOk()
+        {
+            return new JsonObject
+            {
+                 {"command", "session/start" },
+                {"data", new JsonObject{
+                    { "status", "ok" }
+                }
+                }
+            };
         }
 
         JsonObject SendSummary()

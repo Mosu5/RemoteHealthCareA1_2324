@@ -66,14 +66,7 @@ namespace ServerApp.States
 
         public UserAccount GetUserAccount() { return this._userAccount; }
 
-        private void ApplyNewState()
-        {
-            if (this.nextState != null)
-            {
-                this.currentState = this.nextState;
-            }
-            this.nextState = null;
-        }
+     
 
        
     }

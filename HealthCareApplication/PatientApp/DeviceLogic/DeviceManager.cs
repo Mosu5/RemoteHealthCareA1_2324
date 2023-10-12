@@ -10,7 +10,7 @@ namespace PatientApp.DeviceConnection
         public static EventHandler<Statistic> OnReceiveData; // changed to static for hooking and unhooking delegates from events
 
 
-        public readonly IReceiver Receiver;
+        public static IReceiver Receiver;
 
         /// <summary>
         /// Connects to either the regular BLE devices or uses a built-in emulator to generate random bytes.
@@ -20,9 +20,10 @@ namespace PatientApp.DeviceConnection
         /// to any of the devices, it will automatically switch to the emulated environment. Both classes implement
         /// the IReceiver interface, as to ensure abstraction.
         /// </summary>
-        public DeviceManager()
+        public static void Initialize()
         {
-            Receiver = new BLEReceiver();
+            // Change to BLEReceiver in production
+            Receiver = new EmulatedReceiver();
 
             // Subscribe to the receiver's events.
             Receiver.ReceivedSpeed += OnReceiveSpeed;
@@ -34,7 +35,7 @@ namespace PatientApp.DeviceConnection
             Receiver.ConnectToHrm();
         }
 
-        private void OnReceiveSpeed(object sender, double speed)
+        private static void OnReceiveSpeed(object sender, double speed)
         {
             Logger.Log($"Speed: {speed} m/s", LogType.DeviceInfo);
 
@@ -45,7 +46,7 @@ namespace PatientApp.DeviceConnection
             }
         }
 
-        private void OnReceiveDistance(object sender, int distance)
+        private static void OnReceiveDistance(object sender, int distance)
         {
             Logger.Log($"Distance: {distance} meters", LogType.DeviceInfo);
 
@@ -56,7 +57,7 @@ namespace PatientApp.DeviceConnection
             }
         }
 
-        private void OnReceiveHeartRate(object sender, int heartRate)
+        private static void OnReceiveHeartRate(object sender, int heartRate)
         {
             Logger.Log($"Heart rate: {heartRate} bpm", LogType.DeviceInfo);
 
@@ -67,7 +68,7 @@ namespace PatientApp.DeviceConnection
             }
         }
 
-        private void OnReceiveRrIntervals(object sender, int[] rrIntervals)
+        private static void OnReceiveRrIntervals(object sender, int[] rrIntervals)
         {
             Logger.Log($"R-R intervals: {string.Join(", ", rrIntervals)}", LogType.DeviceInfo);
 
@@ -78,9 +79,9 @@ namespace PatientApp.DeviceConnection
             }
         }
 
-        /// <summary>
-        /// Check if stats have been filled with data and calls eventhandler to pass data 
-        /// </summary>
+    /// <summary>
+    /// Check if stats have been filled with data and calls eventhandler to pass data 
+    /// </summary>
         private static void CheckStatComplete() // changed to static for hooking and unhooking delegates from events
         {
             if (currentStat.IsComplete())

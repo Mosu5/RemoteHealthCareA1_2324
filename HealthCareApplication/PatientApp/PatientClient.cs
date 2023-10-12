@@ -14,6 +14,10 @@ namespace PatientApp
     {
         static async Task Main(string[] args)
         {
+            Logger.SetTypesToLogFor(LogType.GeneralInfo, LogType.Warning, LogType.Error, LogType.CommunicationExceptionInfo, LogType.Debug);
+
+            DeviceManager.Initialize();
+
             try
             {
                 Task.Run(VrProgram.Run);
@@ -49,30 +53,21 @@ namespace PatientApp
                         if (await new Login(username, password).Execute())
                             Logger.Log($"User {username} has logged on to the server.", LogType.GeneralInfo);
                         else
-                        {
                             Logger.Log($"User {username} has entered incorrect credentials.", LogType.Error);
-                            return;
-                        }
                         break;
                     case "logout":
                         // Attempt logging out of the server
                         if (await new Logout().Execute())
                             Logger.Log($"The user has logged out of the server.", LogType.GeneralInfo);
                         else
-                        {
                             Logger.Log($"The user could not be logged out.", LogType.Error);
-                            return;
-                        }
                         break;
                     case "stats/summary":
                         var summaryCommand = new StatsSummary();
                         if (await summaryCommand.Execute())
                             Logger.Log($"Received summary response", LogType.GeneralInfo);
                         else
-                        {
                             Logger.Log("A summary of this session could not be retrieved.", LogType.Error);
-                            return;
-                        }
                         break;
                     case "chats/send":
                         // Receive chat message

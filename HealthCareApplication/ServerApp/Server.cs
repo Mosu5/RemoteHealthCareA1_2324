@@ -36,10 +36,11 @@ namespace ServerApp
         // Session of an active user
         public static async void HandleClientAsync(object connectingClient)
         {
-            //UserAccount userAccount = new UserAccount("bob", "bob");
-            //users.Add(userAccount);
+            UserAccount userAccount = new UserAccount("bob", "bob");
+            users.Add(userAccount);
             TcpClient client = connectingClient as TcpClient;
             ServerContext serverContext = new ServerContext(serverConn);
+            serverContext.SetNewUser(userAccount); // TODO: This is just for testing purposes, this has to be implemented later!
             while (client.Connected)
             {
                 Console.Out.WriteLineAsync("Looking for data: ");
