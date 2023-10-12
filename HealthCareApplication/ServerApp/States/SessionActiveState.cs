@@ -25,6 +25,7 @@ namespace ServerApp.States
                 int distance = Int32.Parse(JsonUtil.GetValueFromPacket(packet, "data", "distance").ToString());
                 byte heartRate = Byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
 
+
                 // Save data in server
                 BufferUserData(speed, distance, heartRate);
                 return this; // Stay in this state to recieve more data
@@ -32,8 +33,10 @@ namespace ServerApp.States
             }
             else if (packet.ContainsKey("session/stop"))
             {
+
                 _context.ResponseToClient = ResponseDataForClient.GenerateResponse("session/stop",null,"ok");
                 return new SessionStoppedState(this._context);
+
             }
             //Login Failed so it stays in LoginState
             return this;
@@ -41,7 +44,13 @@ namespace ServerApp.States
 
         private void BufferUserData(double speed, int distance, byte heartrate)
         {
-            this._context.userStats.Add(new UserStat(speed, distance, heartrate));
+
+            this._context.userStatsBuffer.Add(new UserStat(speed, distance, heartrate));
+
+            foreach (UserStat stat in this._context.userStatsBuffer)
+            {
+                Console.WriteLine(stat.ToString());
+            }
         }
     }
 }

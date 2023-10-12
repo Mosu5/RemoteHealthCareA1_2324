@@ -24,14 +24,14 @@ namespace ServerApp.States
         private IState nextState { get; set; }
         private ServerConn _serverConn { get; set; }
         public JsonObject ResponseToClient { get; set; }
-        public List<UserStat> userStats;
+        public List<UserStat> userStatsBuffer;
 
         public ServerContext(ServerConn serverConn)
         {
             this._serverConn = serverConn;
             this.isSessionActive = false;
             currentState = new LoginState(this);
-            this.userStats = new List<UserStat>();
+            this.userStatsBuffer = new List<UserStat>();
             
         }
 
@@ -54,7 +54,7 @@ namespace ServerApp.States
 
         public void SaveUserData()
         {
-            JsonObject userData = (JsonObject)JsonSerializer.Serialize(userStats);
+            JsonObject userData = (JsonObject)JsonSerializer.Serialize(userStatsBuffer);
 
             this._userAccount.SaveUserStats(userData);
         }
