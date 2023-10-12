@@ -417,7 +417,7 @@ namespace PatientApp.VrLogic
                         {
                             size = new double[] { sizeX, sizeY },
                             resolution = new int[] { resolutionX, resolutionY },
-                            background = new int[] { 0, 0, 0, 0 },
+                            background = new int[] { 10, 0, 0, 0 },
                             castShadow = true
                         }
                     }
@@ -436,7 +436,7 @@ namespace PatientApp.VrLogic
                     text,
                     position = new int[] { 50, 75 },
                     size = 16.0,
-                    color = new int[] { 1, 1, 1, 1 },
+                    color = new int[] { 255, 0, 0, 5 },
                     font = "segoeui"
                 }
             };

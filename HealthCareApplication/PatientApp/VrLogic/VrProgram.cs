@@ -254,7 +254,7 @@ namespace PatientApp.VrLogic
                 Console.WriteLine(getScene);
 
                 // Voegt een Panel toe
-                JsonObject panel = await VrSession.AddPanel();
+                JsonObject panel = await VrSession.AddPanel(bikeID);
                 Console.WriteLine(panel);
 
                 // Cleart Panel
@@ -264,6 +264,11 @@ namespace PatientApp.VrLogic
                 // Set clear color Panel
                 JsonObject setcolor = await VrSession.setColorPanel();
                 Console.WriteLine(setcolor);
+               
+
+                //Voeg text aan Panel toe
+                JsonObject text = await VrSession.AddText("Speed: " + Math.Round(speed * 3.6, 1) + "km/h");
+                JsonObject swap = await VrSession.SwapPanel();
 
 
                 //using (StreamReader streamReader = new StreamReader(@"mytest1.json"))
@@ -326,7 +331,7 @@ namespace PatientApp.VrLogic
                 //    // Cleart Panel
                 //    JsonObject clear2 = await VrSession.ClearPanel();
                 //    Console.WriteLine(clear2);
-                                        
+
                 //    //Voeg text aan Panel toe
                 //    JsonObject text = await VrSession.AddText(speed+"");
                 //    JsonObject swap = await VrSession.SwapPanel();
@@ -347,7 +352,7 @@ namespace PatientApp.VrLogic
             Console.WriteLine(clear2);
 
             //Voeg text aan Panel toe
-            JsonObject text = await VrSession.AddText(speed + "");
+            JsonObject text = await VrSession.AddText("Speed: " + Math.Round(speed*3.6, 1) + "km/h");
             JsonObject swap = await VrSession.SwapPanel();
 
             string bikeId = await VrSession.GetNodeId("bike");

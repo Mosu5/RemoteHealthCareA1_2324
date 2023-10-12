@@ -424,21 +424,21 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public static async Task<JsonObject> AddPanel()
+        public static async Task<JsonObject> AddPanel(String bikeId)
         {
             String name = "panel1";
             //Color color = Color.FromArgb(1, 0, 0, 1);
             //Transform transform = new Transform(1, new double[] { 0, 0, 0}, new double[] { 0, 0, 0 });
-            Vector3 position = new Vector3(1, 0, -3);
-            Vector3 rotation = new Vector3(0, 0, 0);
-            double sizeX = 3;
-            double sizeY = 3;
+            Vector3 position = new Vector3(-0.1f, 1f, -0.22f);
+            Vector3 rotation = new Vector3(-45, 90, 0);
+            double sizeX = 0.8f;
+            double sizeY = 0.8f;
             int resolutionX = 512;
             int resolutionY = 512;
             bool castShadow = true;
-            string parentID = await GetNodeId("Head");
+          
 
-            object panelAddCommand = Formatting.PanelAdd(name, parentID, position, rotation, sizeX, sizeY, resolutionX, resolutionY, castShadow);
+            object panelAddCommand = Formatting.PanelAdd(name, bikeId, position, rotation, sizeX, sizeY, resolutionX, resolutionY, castShadow);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, panelAddCommand);
 
             await VrCommunication.SendAsJson(tunnelMessage);
