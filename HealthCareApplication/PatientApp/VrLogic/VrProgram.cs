@@ -234,7 +234,7 @@ namespace PatientApp.VrLogic
                 // Opgave 3h Laat een 3D opbject de route volgen met een gegeven snelheid
                 string bikeID = await VrSession.GetNodeId("bike");
                 string routeID = VrSession.GetRouteId(route);
-                double speed = 0.0;
+                double speed = 7.0;
                 JsonObject bikeFollowingRoute = await VrSession.FollowRoute(routeID, bikeID, speed);
                 Console.WriteLine(bike);
 
@@ -333,9 +333,6 @@ namespace PatientApp.VrLogic
 
                 //    JsonObject updateSpeed = await VrSession.UpdateSpeed(bikeID, speed);
                 //}
-
-
-                VrSession.Close();
             }
             catch (CommunicationException ex)
             {
