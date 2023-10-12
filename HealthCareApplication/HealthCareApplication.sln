@@ -15,7 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorApp", "DoctorApp\Doct
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities", "Utilities\Utilities.shproj", "{4043F5E6-1029-4579-847F-717671096DE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIApp", "UIApp\UIApp.csproj", "{CED67010-5975-43B8-A85F-96E8452F5FB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoctorWPFApp", "DoctorWPFApp\DoctorWPFApp.csproj", "{CED67010-5975-43B8-A85F-96E8452F5FB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientWPFApp", "PatientWPFApp\PatientWPFApp.csproj", "{F6465F4F-3F50-4DE6-AAD1-080572F15DD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6465F4F-3F50-4DE6-AAD1-080572F15DD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6465F4F-3F50-4DE6-AAD1-080572F15DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6465F4F-3F50-4DE6-AAD1-080572F15DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6465F4F-3F50-4DE6-AAD1-080572F15DD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
