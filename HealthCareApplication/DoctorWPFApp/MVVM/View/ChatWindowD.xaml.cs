@@ -1,19 +1,19 @@
 ﻿using System.Windows;
 
-namespace DoctorWPFApp.View
+namespace DoctorWPFApp.MVVM.View
 {
-    public partial class ChatsD : Window
+    public partial class ChatWindowD : Window
     {
-        public ChatsD()
+        public ChatWindowD()
         {
             InitializeComponent();
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            SessionSettingD sessionSetting = new SessionSettingD();
+            SessionWindowD sessionWindow = new SessionWindowD();
             Close();
-            sessionSetting.Show();
+            sessionWindow.Show();
         }
 
         private void sendBtn_Click(object sender, RoutedEventArgs e)

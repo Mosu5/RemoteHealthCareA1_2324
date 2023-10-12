@@ -1,9 +1,8 @@
 ﻿using System.Windows;
-using DoctorWPFApp.View;
 
-namespace DoctorWPFApp
+namespace DoctorWPFApp.MVVM.View
 {
-   
+
     public partial class MainWindowD : Window
     {
         public MainWindowD()
@@ -15,9 +14,9 @@ namespace DoctorWPFApp
         {
             if (gbBox.Text.ToString() == "super" && wwBox.Password.ToString() == "sexy")
             {
-                SessionSettingD sessionSetting = new SessionSettingD();
+                SessionWindowD sessionWindow = new SessionWindowD();
                 Close();
-                sessionSetting.Show();
+                sessionWindow.Show();
             }
             else
             {

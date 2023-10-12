@@ -1,18 +1,18 @@
 ﻿using System.Windows;
 
-namespace DoctorWPFApp.View
+namespace DoctorWPFApp.MVVM.View
 {
-    public partial class SessionSettingD : Window
+    public partial class SessionWindowD : Window
     {
         public bool isRunning = false;
-        public SessionSettingD()
+        public SessionWindowD()
         {
             InitializeComponent();
         }
 
         private void chatsBtn_Click(object sender, RoutedEventArgs e)
         {
-            ChatsD chats = new ChatsD();
+            ChatWindowD chats = new ChatWindowD();
             Close();
             chats.Show();
         }
