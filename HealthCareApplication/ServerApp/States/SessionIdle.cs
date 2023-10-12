@@ -56,7 +56,7 @@ namespace ServerApp.States
             {
                  {"command", "stats/summary" },
                 {"data", new JsonArray{
-                    context.userStats
+                    context.userStatsBuffer
                 }
                 }
             };
