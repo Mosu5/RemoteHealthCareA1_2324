@@ -39,73 +39,26 @@ namespace ServerApp.States
                     if (account.GetUserName() == username && account.GetPassword() == password)
                     {
                         Console.WriteLine("We are actually logging in!");
-                        //context.ResponseToClient = ApproveLogin();
-                        _context.ResponseToClient = ResponseDataForClient.GenerateResponse("login",null,"ok");
-                        Console.WriteLine(_context.ResponseToClient.ToString());
-                        return new SessionIdle(_context);
+                        context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+                        return new SessionIdle(context);
                     }
                     else
                     {
                         Console.WriteLine("Currently going into account creation state.");
-                        return new CreateAccountState(_context);
+                        context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+                        return new CreateAccountState(context);
                     }
                 }
             }
             else
             {
-                _context.ResponseToClient = ResponseDataForClient.GenerateResponse("login",null,"ok");//Approvelogin();
-                return new CreateAccountState(_context);
+                context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+                return new CreateAccountState(context);
             }
             _context.ResponseToClient = ResponseDataForClient.GenerateResponse("login", null, "error");
             //Login Failed so it stays in LoginState
             return this;
         }
 
-        /// <summary>
-        /// Method to send status of login
-        /// </summary>
-        /// <returns></returns>
-        private JsonObject RefuseLogin()
-        {
-            return new JsonObject
-            {
-                {"command", "login" },
-                {"data", new JsonObject
-                    {
-                        {"status", "error"}
-                    }
-                }
-            };
-        }
-
-        private JsonObject CreateNewAccountMSG()
-        {
-            return new JsonObject
-            {
-                {"command", "login" },
-                {"data", new JsonObject
-                    {
-                        {"status", "Creating new account with current information!"}
-                    }
-                }
-            };
-        }
-
-        /// <summary>
-        /// Mehtod to send status login
-        /// </summary>
-        /// <returns></returns>
-        private JsonObject ApproveLogin()
-        {
-            return new JsonObject
-            {
-                {"command", "login" },
-                {"data", new JsonObject
-                    {
-                        {"status", "ok"}
-                    }
-                }
-            };
-        }
     }
 }

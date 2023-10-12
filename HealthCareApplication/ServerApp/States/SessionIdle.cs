@@ -26,41 +26,18 @@ namespace ServerApp.States
             if (command == "session/start")
             {
                 // Mark user as active in session
-                _context.GetUserAccount().hasActiveSession = true;
-                _context.isSessionActive = true;
-                _context.ResponseToClient = ResponseDataForClient.GenerateResponse("session/start",null,"ok");
-                return new SessionActiveState(_context);
+                context.GetUserAccount().hasActiveSession = true;
+                context.isSessionActive = true;
+                context.ResponseToClient = ResponseClientData.GenerateResponse("session/start", null, "ok"); 
+                return new SessionActiveState(context);
             }
             if (command == "stats/summary")
             {
-                _context.ResponseToClient = ResponseDataForClient.GenerateSummaryRequest(_context.userStats);
+                context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(context.userStatsBuffer); ;
             }
             return this;
 
         }
 
-        //JsonObject SessionStartOk()
-        //{
-        //    return new JsonObject
-        //    {
-        //        {"command", "session/start" },
-        //        {"data", new JsonObject{
-        //            { "status", "ok" }
-        //        }
-        //        }
-        //    };
-        //}
-
-        //JsonObject SendSummary()
-        //{
-        //    return new JsonObject
-        //    {
-        //         {"command", "stats/summary" },
-        //        {"data", new JsonArray{
-        //            context.userStats
-        //        }
-        //        }
-        //    };
-        //}
     }
 }

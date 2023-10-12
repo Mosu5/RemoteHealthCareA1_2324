@@ -33,7 +33,7 @@ namespace ServerApp.States
                     {
                         Console.WriteLine("session/pause for account");
                         account.isPaused = true;
-                        _context.ResponseToClient = ResponseDataForClient.GenerateResponse("session/pause",null,"ok");
+                        context.ResponseToClient = ResponseClientData.GenerateResponse("session/pause", null, "ok"); ;
                         return this;
                     }
                     else
@@ -49,7 +49,7 @@ namespace ServerApp.States
                     if (username.Equals(account.GetUserName()))
                     {
                         account.isPaused = false;
-                        _context.ResponseToClient = ResponseDataForClient.GenerateResponse("session/resume",null,"ok");
+                        context.ResponseToClient = ResponseClientData.GenerateResponse("session/resume", null, "ok"); ;
                         return this;
                     }
                     else
@@ -64,12 +64,5 @@ namespace ServerApp.States
             return this;
         }
 
-        //private JsonObject TriggerClientPause()
-        //{
-        //    return new JsonObject
-        //    {
-        //        {"command", "session/pause" }
-        //    };
-        //}
     }
 }
