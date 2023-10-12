@@ -123,9 +123,7 @@ namespace PatientApp.PatientLogic
         /// </summary>
         public static void OnReceiveData(object sender, Statistic stat)
         {
-            StatsSend sendStats = new StatsSend(stat, ClientConn);
-            if (sendStats.Execute().Result)
-                Logger.Log("Stats sent", LogType.Debug);
+            new StatsSend(stat, ClientConn).Execute().Wait();
         }
 
         /// <summary>

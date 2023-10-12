@@ -14,6 +14,8 @@ namespace PatientApp.PatientLogic.Commands
         public StatsSend(Statistic statistic, ClientConn clientConn)
         {
             _statistic = statistic;
+            // TODO round speed somewhere else in codebase
+            _statistic.Speed = Math.Round(statistic.Speed, 2);
             _clientConn = clientConn;
         }
 
@@ -22,6 +24,7 @@ namespace PatientApp.PatientLogic.Commands
         /// </summary>
         public async Task<bool> Execute()
         {
+            await Console.Out.WriteLineAsync("Sending stats: " + PatientFormat.StatsSendMessage(_statistic));
             await _clientConn.SendJson(PatientFormat.StatsSendMessage(_statistic));
 
             // Expect no response from the server
