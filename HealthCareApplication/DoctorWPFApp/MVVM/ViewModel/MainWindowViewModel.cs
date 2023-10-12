@@ -24,7 +24,26 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         public MainWindowViewModel()
         {
-            Patients = new ObservableCollection<Patient>();
+            Patients = new ObservableCollection<Patient>
+            {
+                new Patient
+                {
+                    Name = "Bob",
+                    Speed = 1,
+                    Distance = 1,
+                    HeartRate = 1,
+                    ChatMessages = new List<string> {"hi"}
+                },
+
+                new Patient
+                {
+                    Name = "Jan",
+                    Speed = 1,
+                    Distance = 1,
+                    HeartRate = 1,
+                    ChatMessages = new List<string> {"hi"}
+                }
+            };
             ChatMessages = new ObservableCollection<string>();
 
 
