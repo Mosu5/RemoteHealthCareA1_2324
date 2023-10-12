@@ -2,6 +2,7 @@
 
 namespace PatientWPFApp.View
 {
+
     public partial class ChatP : Window
     {
         public ChatP()

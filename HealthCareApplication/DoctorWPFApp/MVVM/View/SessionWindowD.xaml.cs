@@ -17,10 +17,11 @@ namespace DoctorWPFApp.MVVM.View
             chats.Show();
         }
 
-        //todo data required
-        private void summaryBtn_Click(object sender, RoutedEventArgs e)
+        private void statsBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Averege speed: " + "\n" + "Distance: " + "\n" + "Average heartrate: ", "Summary so far!", MessageBoxButton.OK, MessageBoxImage.Information);
+            StatsD stats = new StatsD();
+            Close();
+            stats.Show();
         }
 
         private void stopstartBtn_Click(object sender, RoutedEventArgs e)

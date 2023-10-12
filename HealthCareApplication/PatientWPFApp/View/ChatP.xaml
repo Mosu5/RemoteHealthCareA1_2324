@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PatientWPFApp.View"
         mc:Ignorable="d"
-        Title="Chat" ResizeMode="NoResize" Height="500" Width="400">
+        Title="ChatP" Height="500" Width="400">
     <Grid>
         <Button Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-7.227,0.207" Click="backBtn_Click" Height="35" Width="68"/>
         <Button Name="sendBtn" Content="Send" HorizontalAlignment="Left" Margin="309,0,0,15" VerticalAlignment="Bottom" Height="39" Width="66" Click="sendBtn_Click"/>
