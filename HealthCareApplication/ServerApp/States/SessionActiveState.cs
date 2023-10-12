@@ -18,7 +18,7 @@ namespace ServerApp.States
         public IState Handle(JsonObject packet)
         {
 
-            string command = JsonUtil.GetValueFromPacket(packet, "command") as string;
+            string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
          
             if (command == "stats/send")
             {

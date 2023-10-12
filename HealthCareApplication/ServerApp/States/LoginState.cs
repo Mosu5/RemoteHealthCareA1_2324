@@ -33,15 +33,18 @@ namespace ServerApp.States
 
             if(Server.users.Any())
             {
+    
                 foreach (UserAccount account in Server.users)
                 {
                     if (account.GetUserName() == username && account.GetPassword() == password)
                     {
+                        Console.WriteLine("We are actually logging in!");
                         context.ResponseToClient = ApproveLogin();
-                        return new SessionActiveState(context);
+                        return new SessionIdle(context);
                     }
                     else
                     {
+                        Console.WriteLine("Currently going into account creation state.");
                         context.ResponseToClient = CreateNewAccountMSG();
                         return new CreateAccountState(context);
                     }
