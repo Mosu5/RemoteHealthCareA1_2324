@@ -1,6 +1,7 @@
 ﻿using PatientApp.DeviceConnection;
 using PatientApp.PatientLogic.Commands;
 using PatientApp.PatientLogic.Helpers;
+using PatientApp.VrLogic;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
@@ -123,6 +124,8 @@ namespace PatientApp.PatientLogic
         /// </summary>
         public static void OnReceiveData(object sender, Statistic stat)
         {
+            Logger.Log($"Sent stats {stat.Speed}", LogType.GeneralInfo);
+            VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
             StatsSend sendStats = new StatsSend(stat, ClientConn);
             if (sendStats.Execute().Result)
                 Logger.Log("Stats sent", LogType.Debug);

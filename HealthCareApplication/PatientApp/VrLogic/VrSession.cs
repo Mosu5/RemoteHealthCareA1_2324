@@ -16,8 +16,8 @@ namespace PatientApp.VrLogic
 
     public class VrSession
     {
-        private string _sessionId;
-        private string _tunnelId;
+        private static string _sessionId;
+        private static string _tunnelId;
 
         #region Connectivity
         /// <summary>
@@ -25,7 +25,7 @@ namespace PatientApp.VrLogic
         ///     computer that is running the application, and the tunnel ID
         /// </summary>
         /// <returns>Wether a successful connection was established to the server.</returns>
-        public async Task Initialize(string serverIpAddress, int serverPort)
+        public static async Task Initialize(string serverIpAddress, int serverPort)
         {
             // If the application could not connect to the server
             if (!await VrCommunication.ConnectToServer(serverIpAddress, serverPort))
@@ -52,14 +52,14 @@ namespace PatientApp.VrLogic
         /// <summary>
         /// Close the connection with the VR server
         /// </summary>
-        public void Close() => VrCommunication.CloseConnection();
+        public static void Close() => VrCommunication.CloseConnection();
         #endregion
 
         #region Scene
         /// <summary>
         ///     Send a request to VR server and retrieve the VR scene data
         /// </summary>
-        public async Task<JsonObject> GetScene()
+        public static async Task<JsonObject> GetScene()
         {
             var sceneGetCommand = Formatting.SceneGet();
             var tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneGetCommand);
@@ -71,7 +71,7 @@ namespace PatientApp.VrLogic
         /// <summary>
         ///     Reset the VR scene to default
         /// </summary>
-        public async Task<JsonObject> ResetScene()
+        public static async Task<JsonObject> ResetScene()
         {
             var sceneResetCommand = Formatting.SceneReset();
             var tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneResetCommand);
@@ -87,7 +87,7 @@ namespace PatientApp.VrLogic
         /// </summary>
         /// <param name="name">name of the requested node</param>
         /// <returns>uuid as string</returns>
-        public async Task<string> GetNodeId(string name)
+        public static async Task<string> GetNodeId(string name)
         {
             JsonObject response = await RequestNodesWithName(name);
             var responseAsArray = response?["data"]?["data"]?["data"];
@@ -112,7 +112,7 @@ namespace PatientApp.VrLogic
         /// Queries the VR server to find all nodes with a specific name.
         /// </summary>
         /// <returns>The VR server's response</returns>
-        private async Task<JsonObject> RequestNodesWithName(string name)
+        private static async Task<JsonObject> RequestNodesWithName(string name)
         {
             object sceneFindNodeCommand = Formatting.SceneNodeFind(name);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, sceneFindNodeCommand);
@@ -139,7 +139,7 @@ namespace PatientApp.VrLogic
         /// <summary>
         /// Removes a node from the VR environment.
         /// </summary>
-        public async Task<JsonObject> RemoveNode(string nodeName)
+        public static async Task<JsonObject> RemoveNode(string nodeName)
         {
             string uuid = await GetNodeId(nodeName);
 
@@ -155,7 +155,7 @@ namespace PatientApp.VrLogic
         /// <summary>
         /// Sets the time of the skybox, to be able to simulate day/night cycle
         /// </summary>
-        public async Task<JsonObject> SetSkyTime(double time)
+        public static async Task<JsonObject> SetSkyTime(double time)
         {
             object setSkyCommand = Formatting.SetSkyboxTime(time);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, setSkyCommand);
@@ -163,7 +163,7 @@ namespace PatientApp.VrLogic
             await VrCommunication.SendAsJson(tunnelMessage);
             return await VrCommunication.ReceiveJsonObject();
         }
-        public async Task<JsonObject> UpdateSkybox(String rt, String lf, String up, String dn, String bk, String ft)
+        public static async Task<JsonObject> UpdateSkybox(String rt, String lf, String up, String dn, String bk, String ft)
         {
             object setSkyCommand = Formatting.SkyboxUpdate(rt, lf, up, dn, bk, ft);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, setSkyCommand);
@@ -180,7 +180,7 @@ namespace PatientApp.VrLogic
         /// with the height map generated using Perlin noise.
         /// </summary>
         /// <returns>A string concatenation of all responses sent by the server while creating the terrain.</returns>
-        public async Task<string> AddHillTerrain(int length, int width, Vector3 position, Vector3 rotation, int height)
+        public static async Task<string> AddHillTerrain(int length, int width, Vector3 position, Vector3 rotation, int height)
         {
             float[] heightMap = PerlinNoiseGenerator.GenerateHeightMap(height);
 
@@ -196,7 +196,7 @@ namespace PatientApp.VrLogic
         ///     Since its only positional data, no visual component is rendered in the scene
         /// </summary>
         /// <param name="heightMap">Height data of the terrain</param>
-        private async Task<JsonObject> AddTerrainData(int length, int width, float[] heightMap)
+        private static async Task<JsonObject> AddTerrainData(int length, int width, float[] heightMap)
         {
             var terrainAddCommand = Formatting.TerrainAdd(length, width, heightMap);
             var tunnelMessage = Formatting.TunnelSend(_tunnelId, terrainAddCommand);
@@ -209,7 +209,7 @@ namespace PatientApp.VrLogic
         ///     Add terrain node to VR scene
         ///     Visual component (layers) can be added after this
         /// </summary>
-        private async Task<JsonObject> AddTerrainNode(Vector3 position, Vector3 rotation)
+        private static async Task<JsonObject> AddTerrainNode(Vector3 position, Vector3 rotation)
         {
             var addTerrainNodeCommand = Formatting.TerrainAddNode(position, rotation);
             var tunnelMessage = Formatting.TunnelSend(_tunnelId, addTerrainNodeCommand);
@@ -222,7 +222,7 @@ namespace PatientApp.VrLogic
         ///     Add visual component to terrain
         ///     Requires actual node to add visual component
         /// </summary>
-        private async Task<JsonObject> AddTerrainGrassLayer()
+        private static async Task<JsonObject> AddTerrainGrassLayer()
         {
             // Get the node ID of the terrain
             var terrainId = await GetNodeId("terrain");
@@ -242,7 +242,7 @@ namespace PatientApp.VrLogic
         ///     Get height of terrain at position
         /// </summary>
         /// <param name="position"> contains x, y, z position of model </param>
-        private async Task<float> GetTerrainHeight(Vector3 position)
+        private static async Task<float> GetTerrainHeight(Vector3 position)
         {
             var heightGetCommand = Formatting.GetHeight(position);
             var tunnelMessage = Formatting.TunnelSend(_tunnelId, heightGetCommand);
@@ -263,7 +263,7 @@ namespace PatientApp.VrLogic
         /// <param name="position">position array containing x, y, z</param>
         /// <param name="scale">ses scaling of model</param>
         /// <param name="fileName"> filepath of the obj file of the model</param>
-        public async Task<JsonObject> AddModelOnTerrain(string name, Vector3 position, double scale, string fileName, int rotation)
+        public static async Task<JsonObject> AddModelOnTerrain(string name, Vector3 position, double scale, string fileName, int rotation)
         {
             // Get height of terrain at position
             var heightJson = await GetTerrainHeight(position);
@@ -285,7 +285,7 @@ namespace PatientApp.VrLogic
         /// <param name="rotation"> rotates model in x-, y-, z-ax </param>
         /// <param name="fileName"> filepath of the obj file of the model</param>
         /// <param name="animationName"> filepath of the animation file</param>
-        public async Task<JsonObject> AddAnimatedModel(string name, Vector3 position, double scale, Vector3 rotation,
+        public static async Task<JsonObject> AddAnimatedModel(string name, Vector3 position, double scale, Vector3 rotation,
             string fileName, string animationName)
         {
             var modelAddCommand = Formatting.AddAnimatedObject(
@@ -302,7 +302,7 @@ namespace PatientApp.VrLogic
         /// </summary>
         /// <param name="amount">amount of spawned trees</param>
         /// <returns>json responses of the tree placements</returns>
-        public async Task<JsonObject[]> RandomlyPlaceTrees(int amount)
+        public static async Task<JsonObject[]> RandomlyPlaceTrees(int amount)
         {
             var jsonResponses = new JsonObject[amount]; // array to save json responses
             var random = new Random();
@@ -339,7 +339,7 @@ namespace PatientApp.VrLogic
         /// <param name="cameraID"> ID of camera</param> 
         /// <param name="bikeID"> ID of bike </param>
         /// <returns> Response from server </returns>
-        public async Task<JsonObject> HeadOnBike(string cameraID, string bikeID)
+        public static async Task<JsonObject> HeadOnBike(string cameraID, string bikeID)
         {
             object headOnBike = Formatting.SceneNodeUpdate(cameraID, bikeID);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, headOnBike);
@@ -363,7 +363,7 @@ namespace PatientApp.VrLogic
         /// Add route to VR scene
         /// Nodes are added in the order they are given
         /// </summary>
-        public async Task<JsonObject> AddRoute(PosVector[] nodes)
+        public static async Task<JsonObject> AddRoute(PosVector[] nodes)
         {
             object routeAddCommand = Formatting.RouteAdd(nodes);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeAddCommand);
@@ -372,7 +372,7 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public string GetRouteId(JsonObject routeResponse)
+        public static string GetRouteId(JsonObject routeResponse)
         {
             string routeId = routeResponse?["data"]?["data"]?["data"]?["uuid"]?.GetValue<String>();
             if (routeId == null)
@@ -385,7 +385,7 @@ namespace PatientApp.VrLogic
         /// <summary>
         /// Let an object follow the route
         /// </summary>
-        public async Task<JsonObject> FollowRoute(string route, string node, double speed)
+        public static async Task<JsonObject> FollowRoute(string route, string node, double speed)
         {
             object routeFollowCommand = Formatting.RouteFollow(route, node, speed);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, routeFollowCommand);
@@ -394,7 +394,7 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public async Task<JsonObject> UpdateSpeed(string node, double speed)
+        public static async Task<JsonObject> UpdateSpeed(string node, double speed)
         {
             object updateSpeedCommand = Formatting.RouteSpeed(node, speed);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, updateSpeedCommand);
@@ -411,7 +411,7 @@ namespace PatientApp.VrLogic
         /// Road follows route
         /// The diffuse, normal and specular are textures used for the road
         /// </summary>
-        public async Task<JsonObject> AddRoad(string routeId)
+        public static async Task<JsonObject> AddRoad(string routeId)
         {
             // command data
             string normal = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
@@ -424,7 +424,7 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public async Task<JsonObject> AddPanel()
+        public static async Task<JsonObject> AddPanel()
         {
             String name = "panel1";
             //Color color = Color.FromArgb(1, 0, 0, 1);
@@ -445,7 +445,7 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public async Task<JsonObject> AddText(string text)
+        public static async Task<JsonObject> AddText(string text)
         {
             string panelID = await GetNodeId("panel1");
 
@@ -463,7 +463,7 @@ namespace PatientApp.VrLogic
             //  return await VrCommunication.ReceiveJsonObject();
         }
 
-        public async Task<JsonObject> ClearPanel()
+        public static async Task<JsonObject> ClearPanel()
         {
             string panelID = await GetNodeId("panel1");
 
@@ -474,7 +474,7 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public async Task<JsonObject> SwapPanel()
+        public static async Task<JsonObject> SwapPanel()
         {
             string panelID = await GetNodeId("panel1");
 
@@ -485,7 +485,7 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public async Task<JsonObject> setColorPanel()
+        public static async Task<JsonObject> setColorPanel()
         {
             string panelID = await GetNodeId("panel1");
 
