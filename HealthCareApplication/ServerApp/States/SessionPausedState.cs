@@ -33,7 +33,7 @@ namespace ServerApp.States
                     if (username.Equals(account.GetUserName()))
                     {
                         account.isPaused = true;
-                        context.ResponseToClient = TriggerClientPause();
+                        context.ResponseToClient = ResponseClientData.GenerateResponse("session/pause", null, "ok"); ;
                         return this;
                     }
                     else
@@ -48,7 +48,7 @@ namespace ServerApp.States
                     if (username.Equals(account.GetUserName()))
                     {
                         account.isPaused = false;
-                        context.ResponseToClient = TriggerClientPause();
+                        context.ResponseToClient = ResponseClientData.GenerateResponse("session/resume", null, "ok"); ;
                         return this;
                     }
                     else
@@ -61,12 +61,5 @@ namespace ServerApp.States
             return this;
         }
 
-        private JsonObject TriggerClientPause()
-        {
-            return new JsonObject
-            {
-                {"command", "session/pause" }
-            };
-        }
     }
 }

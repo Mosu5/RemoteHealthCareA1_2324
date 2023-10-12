@@ -64,6 +64,7 @@
     <Compile Include="UserAccount.cs" />
     <Compile Include="UserStat.cs" />
     <Compile Include="States\SessionIdle.cs" />
+    <Compile Include="ResponseClientData.cs"/>
   </ItemGroup>
   <ItemGroup />
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />

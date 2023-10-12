@@ -34,7 +34,7 @@ namespace ServerApp.States
             }
             else if (packet.ContainsKey("session/stop"))
             {
-                
+                this.context.ResponseToClient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
                 return new SessionStoppedState(this.context);
             }
             //Login Failed so it stays in LoginState
