@@ -20,7 +20,7 @@ namespace PatientApp.DeviceConnection
         /// to any of the devices, it will automatically switch to the emulated environment. Both classes implement
         /// the IReceiver interface, as to ensure abstraction.
         /// </summary>
-        public static async Task Initialize()
+        public static void Initialize()
         {
             // Change to BLEReceiver in production
             Receiver = new EmulatedReceiver();
@@ -31,10 +31,8 @@ namespace PatientApp.DeviceConnection
             Receiver.ReceivedHeartRate += OnReceiveHeartRate;
             Receiver.ReceivedRrIntervals += OnReceiveRrIntervals;
 
-            _currentStat.OnStatisticComplete += OnStatisticComplete;
-
-            await Receiver.ConnectToTrainer();
-            await Receiver.ConnectToHrm();
+            Receiver.ConnectToTrainer();
+            Receiver.ConnectToHrm();
 
             Logger.Log("Device connection initialized", LogType.GeneralInfo);
         }
@@ -43,37 +41,58 @@ namespace PatientApp.DeviceConnection
         {
             Logger.Log($"Speed: {speed} m/s", LogType.DeviceInfo);
 
-            _currentStat.SetSpeed(speed);
+            if (_currentStat.Speed == -1)
+            {
+                _currentStat.Speed = speed;
+                CheckStatComplete();
+            }
+
         }
 
         private static void OnReceiveDistance(object sender, int distance)
         {
             Logger.Log($"Distance: {distance} meters", LogType.DeviceInfo);
 
-            _currentStat.SetDistance(distance);
+            if (_currentStat.Distance == -1)
+            {
+                _currentStat.Distance = distance;
+                CheckStatComplete();
+            }
+
         }
 
         private static void OnReceiveHeartRate(object sender, int heartRate)
         {
             Logger.Log($"Heart rate: {heartRate} bpm", LogType.DeviceInfo);
 
-            _currentStat.SetHeartRate(heartRate);
+            if (_currentStat.HeartRate == -1)
+            {
+                _currentStat.HeartRate = heartRate;
+                CheckStatComplete();
+            }
+
         }
 
         private static void OnReceiveRrIntervals(object sender, int[] rrIntervals)
         {
             Logger.Log($"R-R intervals: {string.Join(", ", rrIntervals)}", LogType.DeviceInfo);
 
-            _currentStat.SetRrIntervals(rrIntervals);
+            if (_currentStat.RrIntervals == new int[0])
+            {
+                _currentStat.RrIntervals = rrIntervals;
+                CheckStatComplete();
+            }
+
         }
 
-        /// <summary>
-        /// Once the Statistic has signaled that all its values are set (speed, distance, etc.),
-        /// DeviceManager will invoke the OnReceiveData event.
-        /// </summary>
-        private static void OnStatisticComplete(object sender, Statistic statistic)
+        private static void CheckStatComplete()
         {
-            OnReceiveData?.Invoke(sender, statistic);
+            if (_currentStat.IsComplete())
+            {
+                OnReceiveData?.Invoke(typeof(DeviceManager), _currentStat);
+                _currentStat = new Statistic();
+            }
+
         }
     }
 }

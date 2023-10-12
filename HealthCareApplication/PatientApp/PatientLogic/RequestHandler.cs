@@ -51,7 +51,7 @@ namespace PatientApp.PatientLogic
                 }
 
                 // TODO here goes code for anything that was not a response, e.g. the chat listener
-                Logger.Log($"Was not response, but was {command}", LogType.GeneralInfo);
+                Logger.Log($"Was not response, but was {command}", LogType.Debug);
 
                 switch (command)
                 {
@@ -62,6 +62,8 @@ namespace PatientApp.PatientLogic
                         break;
                     // If any session/... has been sent and the code reaches this place,
                     // then assume that the doctor did not send the command, but that the patient did.
+
+                    // TODO run corresponding commands when doctor alters the session
                     case "session/start":
                         Logger.Log("Doctor has started the session", LogType.GeneralInfo);
                         break;
@@ -127,7 +129,7 @@ namespace PatientApp.PatientLogic
         {
             new StatsSend(stat, ClientConn).Execute().Wait();
 
-            VrProgram.UpdateBikeSpeed(stat.GetSpeed()).Wait();
+            VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
         }
 
         /// <summary>

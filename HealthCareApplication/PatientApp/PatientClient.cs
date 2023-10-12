@@ -28,13 +28,10 @@ namespace PatientApp
             try
             {
                 // Initialize BLE connection
-                await DeviceManager.Initialize();
+                DeviceManager.Initialize();
 
                 // Initialize VR environment
                 await Task.Run(VrProgram.Initialize);
-
-                // Run commands for the healthcare server which you don't want to manually type
-                Task.Run(AutoExecuteCommands);
 
                 // Initialize console commands, but don't wait for completion
                 Task.Run(ReceiveConsoleInput);
@@ -49,22 +46,16 @@ namespace PatientApp
         }
 
         /// <summary>
-        /// Any commands that you would want to send to the server but don't want to manually type, go here!
-        /// </summary>
-        private static async Task AutoExecuteCommands()
-        {
-            // To make sure the request listener had time to listen for responses
-            await Task.Delay(1000);
-
-            //await new Login("bob", "bob").Execute();
-            //await new SessionStart().Execute();
-        }
-
-        /// <summary>
         /// Read console commands to be sent to the healthcare server.
         /// </summary>
         private static async Task ReceiveConsoleInput()
         {
+            // To make sure the request listener had time to listen for responses
+            await Task.Delay(1000);
+
+            await new Login("bob", "bob").Execute();
+            await new SessionStart().Execute();
+
             Logger.Log("Enter commands in the console to execute them.", LogType.GeneralInfo);
 
             while (true)

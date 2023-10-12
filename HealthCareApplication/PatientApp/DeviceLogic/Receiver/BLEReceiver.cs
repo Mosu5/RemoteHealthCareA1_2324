@@ -28,7 +28,7 @@ namespace PatientApp.DeviceConnection.Receiver
         /// Attempts connection to both the trainer. Upon successful connection, events are fired to signal to other classes.
         /// Otherwise, after some amount of connection attempts, it will automatically use the simulated environment.
         /// </summary>
-        public async Task ConnectToTrainer()
+        public async void ConnectToTrainer()
         {
             Thread.Sleep(1000);
 
@@ -50,7 +50,7 @@ namespace PatientApp.DeviceConnection.Receiver
                 _emulatedReceiver.ReceivedSpeed += (sender, speed) => ReceivedSpeed?.Invoke(sender, speed);
                 _emulatedReceiver.ReceivedDistance += (sender, distance) => ReceivedDistance?.Invoke(sender, distance);
 
-                await _emulatedReceiver.ConnectToTrainer();
+                _emulatedReceiver.ConnectToTrainer();
                 _trainerConnected = true;
                 return;
             }
@@ -67,7 +67,7 @@ namespace PatientApp.DeviceConnection.Receiver
         /// Attempts connection to both the heart rate monitor. Upon successful connection, events are fired to signal to other classes.
         /// Otherwise, after some amount of connection attempts, it will automatically use the simulated environment.
         /// </summary>
-        public async Task ConnectToHrm()
+        public async void ConnectToHrm()
         {
             BLE bleHrm = new BLE();
 
@@ -91,7 +91,7 @@ namespace PatientApp.DeviceConnection.Receiver
                 _emulatedReceiver.ReceivedHeartRate += (sender, heartRate) => ReceivedHeartRate?.Invoke(sender, heartRate);
                 _emulatedReceiver.ReceivedRrIntervals += (sender, rrInterval) => ReceivedRrIntervals?.Invoke(sender, rrInterval);
 
-                await _emulatedReceiver.ConnectToHrm();
+                _emulatedReceiver.ConnectToHrm();
                 return;
             }
 

@@ -15,8 +15,8 @@ namespace PatientApp.DeviceConnection.Receiver
         event EventHandler<int> ReceivedHeartRate;
         event EventHandler<int[]> ReceivedRrIntervals;
 
-        Task ConnectToTrainer();
-        Task ConnectToHrm();
+        void ConnectToTrainer();
+        void ConnectToHrm();
         Task SetResistance(int percentage);
     }
 }
