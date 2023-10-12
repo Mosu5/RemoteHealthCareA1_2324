@@ -33,10 +33,34 @@ namespace ServerApp.States
             }
             if (command == "stats/summary")
             {
-                _context.ResponseToClient = ResponseDataForClient.GenerateSummaryRequest(_context.userStatsBuffer);
+                _context.ResponseToClient = ResponseDataForClient.GenerateSummaryRequest(_context.userStats);
             }
             return this;
 
         }
+
+        //JsonObject SessionStartOk()
+        //{
+        //    return new JsonObject
+        //    {
+        //        {"command", "session/start" },
+        //        {"data", new JsonObject{
+        //            { "status", "ok" }
+        //        }
+        //        }
+        //    };
+        //}
+
+        //JsonObject SendSummary()
+        //{
+        //    return new JsonObject
+        //    {
+        //         {"command", "stats/summary" },
+        //        {"data", new JsonArray{
+        //            context.userStats
+        //        }
+        //        }
+        //    };
+        //}
     }
 }
