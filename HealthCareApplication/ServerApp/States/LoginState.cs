@@ -16,10 +16,10 @@ namespace ServerApp.States
     {
         //TODO current username and password are for 
 
-        private ServerContext context;
+        private ServerContext _context;
         public LoginState(ServerContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public IState Handle(JsonObject packet)
@@ -31,31 +31,32 @@ namespace ServerApp.States
             Console.WriteLine("Login recieved data: " + username + "    " + password);
 
 
-            if(Server.users.Any())
+            if (Server.users.Any())
             {
-    
+
                 foreach (UserAccount account in Server.users)
                 {
                     if (account.GetUserName() == username && account.GetPassword() == password)
                     {
                         Console.WriteLine("We are actually logging in!");
-                        context.ResponseToClient = ApproveLogin();
-                        return new SessionIdle(context);
+                        //context.ResponseToClient = ApproveLogin();
+                        _context.ResponseToClient = ResponseDataForClient.GenerateResponse("login",null,"ok");
+                        Console.WriteLine(_context.ResponseToClient.ToString());
+                        return new SessionIdle(_context);
                     }
                     else
                     {
                         Console.WriteLine("Currently going into account creation state.");
-                        context.ResponseToClient = CreateNewAccountMSG();
-                        return new CreateAccountState(context);
+                        return new CreateAccountState(_context);
                     }
                 }
             }
             else
             {
-                context.ResponseToClient = ApproveLogin();
-                return new CreateAccountState(context);
+                _context.ResponseToClient = ResponseDataForClient.GenerateResponse("login",null,"ok");//Approvelogin();
+                return new CreateAccountState(_context);
             }
-         
+            _context.ResponseToClient = ResponseDataForClient.GenerateResponse("login", null, "error");
             //Login Failed so it stays in LoginState
             return this;
         }

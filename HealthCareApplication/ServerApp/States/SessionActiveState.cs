@@ -9,15 +9,14 @@ namespace ServerApp.States
 {
     internal class SessionActiveState : IState
     {
-        private ServerContext context;
+        private ServerContext _context;
         public SessionActiveState(ServerContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public IState Handle(JsonObject packet)
         {
-
             string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
          
             if (command == "stats/send")
@@ -33,18 +32,16 @@ namespace ServerApp.States
             }
             else if (packet.ContainsKey("session/stop"))
             {
-                return new SessionStoppedState(this.context);
+                _context.ResponseToClient = ResponseDataForClient.GenerateResponse("session/stop",null,"ok");
+                return new SessionStoppedState(this._context);
             }
             //Login Failed so it stays in LoginState
             return this;
-
         }
 
         private void BufferUserData(double speed, int distance, byte heartrate)
         {
-            this.context.userStats.Add(new UserStat(speed, distance, heartrate));
+            this._context.userStats.Add(new UserStat(speed, distance, heartrate));
         }
-
-
     }
 }

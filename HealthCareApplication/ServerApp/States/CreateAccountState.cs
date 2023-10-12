@@ -9,11 +9,11 @@ namespace ServerApp.States
 {
     internal class CreateAccountState : IState
     {
-        private ServerContext context;
+        private ServerContext _context;
 
         public CreateAccountState(ServerContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public IState Handle(JsonObject packet)
@@ -32,18 +32,21 @@ namespace ServerApp.States
             {
                 if (account.GetUserName() == username)
                 {
-                    context.ResponseToClient = AccCreationFailed("Username is already being used by an account. Please Login or use another username to create an account");
-                    return new LoginState(context);
+                    //context.ResponseToClient = AccCreationFailed("Username is already being used by an account. Please Login or use another username to create an account");
+                    _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "error");
+                    return new LoginState(_context);
                 }
                 else
                 {
-                    context.ResponseToClient = AccSuccesfullCreated();
+                    //context.ResponseToClient = AccSuccesfullCreated();
+                    _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "ok");
                     Server.users.Add(new UserAccount(username, password));
-                    return new SessionActiveState(context);
+                    return new SessionActiveState(_context);
                 }
             }
             //Account Creation Failed so it stays in CreateAccountState
-            context.ResponseToClient = AccCreationFailed("Account creation Failed because");
+            //context.ResponseToClient = AccCreationFailed("Account creation Failed because");
+            _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "error");
             return this;
         }
 
@@ -51,35 +54,35 @@ namespace ServerApp.States
         /// Method returns status of account creation.
         /// </summary>
         /// <returns></returns>
-        private JsonObject AccSuccesfullCreated()
-        {
-            return new JsonObject
-            {
-                {"command", "create account" },
-                {"data", new JsonObject
-                    {
-                        {"status", "ok"}
-                    }
-                }
-            };
-        }
+        //private JsonObject AccSuccesfullCreated()
+        //{
+        //    return new JsonObject
+        //    {
+        //        {"command", "create account" },
+        //        {"data", new JsonObject
+        //            {
+        //                {"status", "ok"}
+        //            }
+        //        }
+        //    };
+        //}
 
         /// <summary>
         /// Method returns status of account creation.
         /// </summary>
         /// <returns></returns>
-        private JsonObject AccCreationFailed(string message)
-        {
-            return new JsonObject
-            {
-                {"command", "create account" },
-                {"data", new JsonObject
-                    {
-                        {"status", "error"},
-                        {"description", message}
-                    }
-                }
-            };
-        }
+        //private JsonObject AccCreationFailed(string message)
+        //{
+        //    return new JsonObject
+        //    {
+        //        {"command", "create account" },
+        //        {"data", new JsonObject
+        //            {
+        //                {"status", "error"},
+        //                {"description", message}
+        //            }
+        //        }
+        //    };
+        //}
     }
 }

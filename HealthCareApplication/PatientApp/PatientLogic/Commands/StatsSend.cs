@@ -3,6 +3,7 @@ using PatientApp.PatientLogic.Helpers;
 using System;
 using System.Threading.Tasks;
 using Utilities.Communication;
+using Utilities.Logging;
 
 namespace PatientApp.PatientLogic.Commands
 {
@@ -24,7 +25,7 @@ namespace PatientApp.PatientLogic.Commands
         /// </summary>
         public async Task<bool> Execute()
         {
-            await Console.Out.WriteLineAsync("Sending stats: " + PatientFormat.StatsSendMessage(_statistic));
+            //await Console.Out.WriteLineAsync("Sending stats: " + PatientFormat.StatsSendMessage(_statistic));
             await _clientConn.SendJson(PatientFormat.StatsSendMessage(_statistic));
 
             // Expect no response from the server

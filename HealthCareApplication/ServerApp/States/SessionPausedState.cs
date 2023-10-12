@@ -11,34 +11,35 @@ namespace ServerApp.States
 {
     internal class SessionPausedState : IState
     {
-        private ServerContext context;
+        private ServerContext _context;
 
         public SessionPausedState(ServerContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public IState Handle(JsonObject packet)
         {
             //Getting needed values from the packet
-            string command = (string) JsonUtil.GetValueFromPacket(packet, "command");
+            string command = (string)JsonUtil.GetValueFromPacket(packet, "command");
             string username = (string)JsonUtil.GetValueFromPacket(packet, "data", "username");
 
             //checking if the command equals session/pause
             if (command == "session/pause")
             {
-                //extracting the username after check;
                 foreach (UserAccount account in Server.users)
                 {
                     if (username.Equals(account.GetUserName()))
                     {
+                        Console.WriteLine("session/pause for account");
                         account.isPaused = true;
-                        context.ResponseToClient = TriggerClientPause();
+                        _context.ResponseToClient = ResponseDataForClient.GenerateResponse("session/pause",null,"ok");
                         return this;
                     }
                     else
+                    {
                         throw new Exception("User account not found");
-                    
+                    }
                 }
             }
             else if (command == "session/resume")
@@ -48,25 +49,27 @@ namespace ServerApp.States
                     if (username.Equals(account.GetUserName()))
                     {
                         account.isPaused = false;
-                        context.ResponseToClient = TriggerClientPause();
+                        _context.ResponseToClient = ResponseDataForClient.GenerateResponse("session/resume",null,"ok");
                         return this;
                     }
                     else
+                    {
                         throw new Exception("User account not found");
-                    
+                        
+                    }
                 }
 
-                return new SessionActiveState(context);
+                return new SessionActiveState(_context);
             }
             return this;
         }
 
-        private JsonObject TriggerClientPause()
-        {
-            return new JsonObject
-            {
-                {"command", "session/pause" }
-            };
-        }
+        //private JsonObject TriggerClientPause()
+        //{
+        //    return new JsonObject
+        //    {
+        //        {"command", "session/pause" }
+        //    };
+        //}
     }
 }

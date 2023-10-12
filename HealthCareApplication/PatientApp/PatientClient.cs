@@ -12,9 +12,8 @@ namespace PatientApp
     {
         static async Task Main(string[] args)
         {
-            Logger.SetTypesToLogFor(LogType.GeneralInfo, LogType.Warning, LogType.Error, LogType.CommunicationExceptionInfo, LogType.Debug);
-
-            DeviceManager.Initialize();
+            Logger.SetTypesToLogFor(LogType.GeneralInfo, LogType.Warning, LogType.Error, LogType.CommunicationExceptionInfo);
+            Task.Run(() => new DeviceManager());
 
             try
             {
