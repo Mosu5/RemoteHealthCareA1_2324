@@ -49,11 +49,8 @@ namespace PatientApp.DeviceConnection.Receiver
         /// <summary>
         /// Emulates successful connection to the trainer and sends emulated messages in a new thread.
         /// </summary>
-        public void ConnectToTrainer()
+        public async Task ConnectToTrainer()
         {
-            // Signaling successful connection
-            ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
-
             // Emulate the trainer on a new thread
             var thread = new Thread(() =>
             {
@@ -65,16 +62,16 @@ namespace PatientApp.DeviceConnection.Receiver
                 }
             });
             thread.Start();
+
+            // Emulate a successful connection
+            ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
         /// Emulates successful connection to the heart rate monitor and sends emulated messages in a new thread.
         /// </summary>
-        public void ConnectToHrm()
+        public async Task ConnectToHrm()
         {
-            // Signaling successful connection
-            ConnectedToHrm?.Invoke(this, EventArgs.Empty);
-
             // Emulate the trainer on a new thread
             var thread = new Thread(() =>
             {
@@ -86,6 +83,9 @@ namespace PatientApp.DeviceConnection.Receiver
                 }
             });
             thread.Start();
+
+            // Signaling successful connection
+            ConnectedToHrm?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

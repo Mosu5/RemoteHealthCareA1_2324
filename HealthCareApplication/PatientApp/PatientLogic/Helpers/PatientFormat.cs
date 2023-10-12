@@ -62,10 +62,10 @@ namespace PatientApp.PatientLogic.Helpers
         {
             return BaseMessage("stats/send", new JsonObject()
             {
-                { "speed", statistic.Speed },
-                { "distance", statistic.Distance },
-                { "heartrate", statistic.HeartRate },
-                { "rrInterval", statistic.RrIntervals.ToString() }
+                { "speed", statistic.GetSpeed() },
+                { "distance", statistic.GetDistance() },
+                { "heartrate", statistic.GetHeartRate() },
+                { "rrInterval", statistic.GetRrIntervals().ToString() }
             });
         }
 

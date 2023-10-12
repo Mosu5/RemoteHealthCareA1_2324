@@ -485,7 +485,7 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
-        public static async Task<JsonObject> setColorPanel()
+        public static async Task<JsonObject> SetColorPanel()
         {
             string panelID = await GetNodeId("panel1");
 

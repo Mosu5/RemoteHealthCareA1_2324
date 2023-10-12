@@ -14,8 +14,6 @@ namespace PatientApp.PatientLogic.Commands
         public StatsSend(Statistic statistic, ClientConn clientConn)
         {
             _statistic = statistic;
-            // TODO round speed somewhere else in codebase
-            _statistic.Speed = Math.Round(statistic.Speed, 2);
             _clientConn = clientConn;
         }
 

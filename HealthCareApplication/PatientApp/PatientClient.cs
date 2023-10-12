@@ -14,15 +14,32 @@ namespace PatientApp
     {
         static async Task Main(string[] args)
         {
-            Logger.SetTypesToLogFor(LogType.GeneralInfo, LogType.Warning, LogType.Error, LogType.CommunicationExceptionInfo, LogType.Debug);
-
-            DeviceManager.Initialize();
+            // Logger will log if LogType is present
+            Logger.SetTypesToLogFor(
+                LogType.GeneralInfo,
+                //LogType.DeviceInfo,
+                LogType.VrInfo,
+                LogType.CommunicationExceptionInfo,
+                LogType.Warning,
+                LogType.Error,
+                LogType.Debug
+            );
 
             try
             {
-                Task.Run(VrProgram.Run);
+                // Initialize BLE connection
+                await DeviceManager.Initialize();
+
+                // Initialize VR environment
+                await Task.Run(VrProgram.Initialize);
+
+                // Run commands for the healthcare server which you don't want to manually type
+                Task.Run(AutoExecuteCommands);
+
+                // Initialize console commands, but don't wait for completion
                 Task.Run(ReceiveConsoleInput);
 
+                // Listen for requests
                 await RequestHandler.Listen();
             }
             catch (CommunicationException ex)
@@ -31,6 +48,21 @@ namespace PatientApp
             }
         }
 
+        /// <summary>
+        /// Any commands that you would want to send to the server but don't want to manually type, go here!
+        /// </summary>
+        private static async Task AutoExecuteCommands()
+        {
+            // To make sure the request listener had time to listen for responses
+            await Task.Delay(1000);
+
+            //await new Login("bob", "bob").Execute();
+            //await new SessionStart().Execute();
+        }
+
+        /// <summary>
+        /// Read console commands to be sent to the healthcare server.
+        /// </summary>
         private static async Task ReceiveConsoleInput()
         {
             Logger.Log("Enter commands in the console to execute them.", LogType.GeneralInfo);
@@ -79,34 +111,34 @@ namespace PatientApp
                         break;
                     case "session/start":
                         // Attempt starting the session
-                        if (await new SessionStart(RequestHandler.OnReceiveData).Execute())
+                        if (await new SessionStart().Execute())
                             Logger.Log($"A new session has started.", LogType.GeneralInfo);
                         else
                             Logger.Log("A new session could not be started.", LogType.Error);
                         break;
                     case "session/stop":
                         // Attempt stopping the session
-                        if (await new SessionStop(RequestHandler.OnReceiveData).Execute())
+                        if (await new SessionStop().Execute())
                             Logger.Log($"The current session has been stopped.", LogType.GeneralInfo);
                         else
                             Logger.Log("The current session could not be stopped.", LogType.Error);
                         break;
                     case "session/pause":
                         // Attempt pausing the session
-                        if (await new SessionPause(RequestHandler.OnReceiveData).Execute())
+                        if (await new SessionPause().Execute())
                             Logger.Log($"The current session has been paused.", LogType.GeneralInfo);
                         else
                             Logger.Log("The current session could not be paused.", LogType.Error);
                         break;
                     case "session/resume":
                         // Attempt resuming the session
-                        if (await new SessionResume(RequestHandler.OnReceiveData).Execute())
+                        if (await new SessionResume().Execute())
                             Logger.Log($"The current session has been resumed.", LogType.GeneralInfo);
                         else
                             Logger.Log("The current session could not be resumed.", LogType.Error);
                         break;
                     default:
-                        Logger.Log($"Unknown command: {input}", LogType.Error);
+                        Logger.Log($"Unknown command: {input}", LogType.Warning);
                         break;
                 }
             }

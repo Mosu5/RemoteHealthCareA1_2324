@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using PatientApp.DeviceConnection.Receiver;
 using Utilities.Logging;
 
@@ -6,9 +7,8 @@ namespace PatientApp.DeviceConnection
 {
     public class DeviceManager
     {
-        private static Statistic currentStat = new Statistic(); // changed to static for hooking and unhooking delegates from events
+        private static Statistic _currentStat = new Statistic(); // changed to static for hooking and unhooking delegates from events
         public static EventHandler<Statistic> OnReceiveData; // changed to static for hooking and unhooking delegates from events
-
 
         public static IReceiver Receiver;
 
@@ -20,7 +20,7 @@ namespace PatientApp.DeviceConnection
         /// to any of the devices, it will automatically switch to the emulated environment. Both classes implement
         /// the IReceiver interface, as to ensure abstraction.
         /// </summary>
-        public static void Initialize()
+        public static async Task Initialize()
         {
             // Change to BLEReceiver in production
             Receiver = new EmulatedReceiver();
@@ -31,64 +31,49 @@ namespace PatientApp.DeviceConnection
             Receiver.ReceivedHeartRate += OnReceiveHeartRate;
             Receiver.ReceivedRrIntervals += OnReceiveRrIntervals;
 
-            Receiver.ConnectToTrainer();
-            Receiver.ConnectToHrm();
+            _currentStat.OnStatisticComplete += OnStatisticComplete;
+
+            await Receiver.ConnectToTrainer();
+            await Receiver.ConnectToHrm();
+
+            Logger.Log("Device connection initialized", LogType.GeneralInfo);
         }
 
         private static void OnReceiveSpeed(object sender, double speed)
         {
             Logger.Log($"Speed: {speed} m/s", LogType.DeviceInfo);
 
-            if (currentStat.Speed == -1)
-            {
-                currentStat.Speed = speed;
-                CheckStatComplete();
-            }
+            _currentStat.SetSpeed(speed);
         }
 
         private static void OnReceiveDistance(object sender, int distance)
         {
             Logger.Log($"Distance: {distance} meters", LogType.DeviceInfo);
 
-            if (currentStat.Distance == -1)
-            {
-                currentStat.Distance = distance;
-                CheckStatComplete();
-            }
+            _currentStat.SetDistance(distance);
         }
 
         private static void OnReceiveHeartRate(object sender, int heartRate)
         {
             Logger.Log($"Heart rate: {heartRate} bpm", LogType.DeviceInfo);
 
-            if (currentStat.HeartRate == -1)
-            {
-                currentStat.HeartRate = heartRate;
-                CheckStatComplete();
-            }
+            _currentStat.SetHeartRate(heartRate);
         }
 
         private static void OnReceiveRrIntervals(object sender, int[] rrIntervals)
         {
             Logger.Log($"R-R intervals: {string.Join(", ", rrIntervals)}", LogType.DeviceInfo);
 
-            if (currentStat.RrIntervals == new int[0])
-            {
-                currentStat.RrIntervals = rrIntervals;
-                CheckStatComplete();
-            }
+            _currentStat.SetRrIntervals(rrIntervals);
         }
 
-    /// <summary>
-    /// Check if stats have been filled with data and calls eventhandler to pass data 
-    /// </summary>
-        private static void CheckStatComplete() // changed to static for hooking and unhooking delegates from events
+        /// <summary>
+        /// Once the Statistic has signaled that all its values are set (speed, distance, etc.),
+        /// DeviceManager will invoke the OnReceiveData event.
+        /// </summary>
+        private static void OnStatisticComplete(object sender, Statistic statistic)
         {
-            if (currentStat.IsComplete())
-            {
-                OnReceiveData?.Invoke(typeof(DeviceManager), currentStat);
-                currentStat = new Statistic();
-            }
+            OnReceiveData?.Invoke(sender, statistic);
         }
     }
 }

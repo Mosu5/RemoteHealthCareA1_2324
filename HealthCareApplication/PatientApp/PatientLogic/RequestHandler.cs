@@ -2,7 +2,6 @@ using PatientApp.DeviceConnection;
 using PatientApp.PatientLogic.Commands;
 using PatientApp.PatientLogic.Helpers;
 using PatientApp.VrLogic;
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -24,6 +23,7 @@ namespace PatientApp.PatientLogic
         /// </summary>
         public static async Task Listen()
         {
+            // Handle healthcare server connectivity
             if (!await ClientConn.ConnectToServer())
                 throw new CommunicationException("Could not connect to the server.");
 
@@ -116,19 +116,18 @@ namespace PatientApp.PatientLogic
             lock (_pendingRequests)
                 _pendingRequests.Add(request);
 
+            // Wait for response of request
             return await request.AwaitResponse();
         }
 
         /// <summary>
         /// Handles the received trainer data and sends it to the server
         /// </summary>
-        public static void OnReceiveData(object sender, Statistic stat)
+        public static void OnReceiveData(object _, Statistic stat)
         {
-            Logger.Log($"Sent stats {stat.Speed}", LogType.GeneralInfo);
-            VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
-            StatsSend sendStats = new StatsSend(stat, ClientConn);
-            if (sendStats.Execute().Result)
-                Logger.Log("Stats sent", LogType.Debug);
+            new StatsSend(stat, ClientConn).Execute().Wait();
+
+            VrProgram.UpdateBikeSpeed(stat.GetSpeed()).Wait();
         }
 
         /// <summary>

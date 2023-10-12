@@ -1,5 +1,3 @@
-using PatientApp.PatientLogic;
-using PatientApp.PatientLogic.Commands;
 using PatientApp.PatientLogic.Helpers;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
