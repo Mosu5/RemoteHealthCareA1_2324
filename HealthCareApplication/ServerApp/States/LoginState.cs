@@ -42,14 +42,14 @@ namespace ServerApp.States
                     }
                     else
                     {
-                        context.ResponseToClient = RefuseLogin();
+                        context.ResponseToClient = CreateNewAccountMSG();
                         return new CreateAccountState(context);
                     }
                 }
             }
             else
             {
-                context.ResponseToClient = RefuseLogin();
+                context.ResponseToClient = ApproveLogin();
                 return new CreateAccountState(context);
             }
          
@@ -69,6 +69,19 @@ namespace ServerApp.States
                 {"data", new JsonObject
                     {
                         {"status", "error"}
+                    }
+                }
+            };
+        }
+
+        private JsonObject CreateNewAccountMSG()
+        {
+            return new JsonObject
+            {
+                {"command", "login" },
+                {"data", new JsonObject
+                    {
+                        {"status", "Creating new account with current information!"}
                     }
                 }
             };
