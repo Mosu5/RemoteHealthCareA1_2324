@@ -1,18 +1,18 @@
 ﻿using System.Windows;
 
-namespace DoctorWPFApp.View
+namespace DoctorWPFApp.MVVM.View
 {
-  
-    public partial class StatsD : Window
+
+    public partial class StatsWindowD : Window
     {
-        public StatsD()
+        public StatsWindowD()
         {
             InitializeComponent();
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            SessionSettingD sessionSetting = new SessionSettingD();
+            SessionWindowD sessionSetting = new SessionWindowD();
             Close();
             sessionSetting.Show();
         }

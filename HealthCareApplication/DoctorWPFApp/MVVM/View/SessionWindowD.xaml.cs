@@ -19,7 +19,7 @@ namespace DoctorWPFApp.MVVM.View
 
         private void statsBtn_Click(object sender, RoutedEventArgs e)
         {
-            StatsD stats = new StatsD();
+            StatsWindowD stats = new StatsWindowD();
             Close();
             stats.Show();
         }
