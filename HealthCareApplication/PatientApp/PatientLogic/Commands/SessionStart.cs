@@ -11,13 +11,6 @@ namespace PatientApp.PatientLogic.Commands
 {
     internal class SessionStart : IPatientCommand
     {
-        private readonly EventHandler<Statistic> _onReceiveData;
-
-        public SessionStart(EventHandler<Statistic> onReceiveData)
-        {
-            _onReceiveData = onReceiveData;
-        }
-
         public async Task<bool> Execute()
         {
             Request request = new Request(PatientFormat.SessionStartMessage());

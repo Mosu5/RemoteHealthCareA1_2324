@@ -12,8 +12,8 @@ namespace PatientApp
     {
         static async Task Main(string[] args)
         {
-            Logger.SetTypesToLogFor(LogType.GeneralInfo, LogType.Warning, LogType.Error, LogType.CommunicationExceptionInfo);
-            Task.Run(() => new DeviceManager());
+            Logger.SetTypesToLogFor(LogType.GeneralInfo, LogType.Warning, LogType.Error, LogType.CommunicationExceptionInfo, LogType.Debug);
+            DeviceManager.Initialize();
 
             try
             {
@@ -30,6 +30,9 @@ namespace PatientApp
         private static async Task ReceiveConsoleInput()
         {
             Logger.Log("Enter commands in the console to execute them.", LogType.GeneralInfo);
+
+            await new Login("bob", "bob").Execute();
+            await new SessionStart().Execute();
 
             while (true)
             {
@@ -75,7 +78,7 @@ namespace PatientApp
                         break;
                     case "session/start":
                         // Attempt starting the session
-                        if (await new SessionStart(RequestHandler.OnReceiveData).Execute())
+                        if (await new SessionStart().Execute())
                             Logger.Log($"A new session has started.", LogType.GeneralInfo);
                         else
                             Logger.Log("A new session could not be started.", LogType.Error);

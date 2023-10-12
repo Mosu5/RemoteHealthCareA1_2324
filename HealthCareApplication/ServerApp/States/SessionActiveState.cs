@@ -32,8 +32,8 @@ namespace ServerApp.States
             }
             else if (packet.ContainsKey("session/stop"))
             {
-                this.context.ResponseToClient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
-                return new SessionStoppedState(this.context);
+                this._context.ResponseToClient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
+                return new SessionStoppedState(this._context);
             }
             //Login Failed so it stays in LoginState
             return this;
@@ -41,7 +41,12 @@ namespace ServerApp.States
 
         private void BufferUserData(double speed, int distance, byte heartrate)
         {
+          
             this._context.userStatsBuffer.Add(new UserStat(speed, distance, heartrate));
+            foreach (UserStat stat in _context.userStatsBuffer)
+            {
+               stat.ToString();
+            }
         }
     }
 }
