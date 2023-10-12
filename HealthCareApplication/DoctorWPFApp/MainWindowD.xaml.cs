@@ -4,9 +4,9 @@ using DoctorWPFApp.View;
 namespace DoctorWPFApp
 {
    
-    public partial class MainWindow : Window
+    public partial class MainWindowD : Window
     {
-        public MainWindow()
+        public MainWindowD()
         {
             InitializeComponent();
         }
@@ -15,7 +15,7 @@ namespace DoctorWPFApp
         {
             if (gbBox.Text.ToString() == "super" && wwBox.Password.ToString() == "sexy")
             {
-                SessionSetting sessionSetting = new SessionSetting();
+                SessionSettingD sessionSetting = new SessionSettingD();
                 Close();
                 sessionSetting.Show();
             }
