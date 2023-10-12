@@ -22,9 +22,9 @@ namespace ServerApp.States
          
             if (command == "stats/send")
             {
-                double speed = (double)JsonUtil.GetValueFromPacket(packet, "data", "speed");
-                int distance = (int)JsonUtil.GetValueFromPacket(packet, "data", "distance");
-                byte heartRate = (byte)JsonUtil.GetValueFromPacket(packet, "data", "heartrate");
+                double speed = Double.Parse(JsonUtil.GetValueFromPacket(packet, "data", "speed").ToString());
+                int distance = Int32.Parse(JsonUtil.GetValueFromPacket(packet, "data", "distance").ToString());
+                byte heartRate = Byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
 
                 // Save data in server
                 BufferUserData(speed, distance, heartRate);
