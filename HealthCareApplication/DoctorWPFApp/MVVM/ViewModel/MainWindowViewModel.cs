@@ -15,8 +15,46 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
 
         /* Data */
+        private Patient _selectedPatient;
         public ObservableCollection<Patient> Patients { get; set; }
         public ObservableCollection<string> ChatMessages { get; set; }
+
+        public Patient SelectedPatient
+        {
+            get { return _selectedPatient; }
+            set
+            {
+                //if (_origin.CountryCode != value)
+                //{
+                //    _origin.CountryCode = value;
+                //    RaisePropertyChanged(nameof(OriginCountryCode));
+                //}
+
+                if (_selectedPatient != value)
+                {
+                    _selectedPatient = value;
+                    OnPropertyChanged(nameof(SelectedPatient));
+                    OnPropertyChanged(nameof(SelectedPatientSpeed));
+                    OnPropertyChanged(nameof(SelectedPatientDistance));
+                    OnPropertyChanged(nameof(SelectedPatientHeartRate));
+                }
+            }
+        }
+
+        public double SelectedPatientSpeed
+        {
+            get { return SelectedPatient.Speed; }
+        }
+
+        public double SelectedPatientDistance
+        {
+            get { return SelectedPatient.Distance; }
+        }
+
+        public double SelectedPatientHeartRate
+        {
+            get { return SelectedPatient.HeartRate; }
+        }
 
 
 
@@ -38,9 +76,9 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 new Patient
                 {
                     Name = "Jan",
-                    Speed = 1,
-                    Distance = 1,
-                    HeartRate = 1,
+                    Speed = 2,
+                    Distance = 5,
+                    HeartRate = 3,
                     ChatMessages = new List<string> {"hi"}
                 }
             };

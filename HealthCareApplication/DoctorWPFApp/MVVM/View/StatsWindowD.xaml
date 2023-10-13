@@ -3,9 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.View"
-        mc:Ignorable="d"
+        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.ViewModel"        mc:Ignorable="d"
         Title="StatsD" Height="450" Width="435">
+    
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+
     <Grid>
         <Button Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="41" Width="74" Click="backBtn_Click"/>
         <Button Name="summaryBtn" Content="Summary" HorizontalAlignment="Left" Margin="335,10,0,0" VerticalAlignment="Top" Height="41" Width="74" Click="summaryBtn_Click"/>
@@ -16,10 +20,10 @@
         <Label Content="Heartrate:" HorizontalAlignment="Left" Margin="35,153,0,0" VerticalAlignment="Top"/>
         <Label Content="RrIntervals:" HorizontalAlignment="Left" Margin="35,184,0,0" VerticalAlignment="Top"/>
         <Label Content="Value" HorizontalAlignment="Center" Margin="0,60,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
-        <Label Name="speedLabel" Content="speed" HorizontalAlignment="Center" Margin="0,91,0,0" VerticalAlignment="Top"/>
-        <Label Name="distanceLabel" Content="distance" HorizontalAlignment="Center" Margin="0,122,0,0" VerticalAlignment="Top"/>
-        <Label Name="heartrateLabel" Content="heartrate" HorizontalAlignment="Center" Margin="0,153,0,0" VerticalAlignment="Top"/>
-        <Label Name="intervalLabel" Content="intervals" HorizontalAlignment="Center" Margin="0,184,0,0" VerticalAlignment="Top"/>
+        <Label Name="speedLabel" Content="{Binding SelectedPatient.Speed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,91,0,0" VerticalAlignment="Top"/>
+        <Label Name="distanceLabel" Content="{Binding SelectedPatient.Distance, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,122,0,0" VerticalAlignment="Top"/>
+        <Label Name="heartrateLabel" Content="{Binding SelectedPatient.HeartRate, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,153,0,0" VerticalAlignment="Top"/>
+        <Label Name="intervalLabel" Content="{Binding SelectedPatient.RrIntervals, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,184,0,0" VerticalAlignment="Top"/>
 
 
 

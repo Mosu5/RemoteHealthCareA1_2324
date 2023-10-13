@@ -34,7 +34,7 @@
         <TextBox Name="LocalhostBox" Grid.Column="1" HorizontalAlignment="Left" Margin="11,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" Height="38" FontSize="15"/>
         <TextBox Name="PortBox" Grid.Column="1" HorizontalAlignment="Left" Margin="184,349,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" Height="39" FontSize="15"/>
 
-        <ComboBox Name="patientComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="93,130,0,0" VerticalAlignment="Top" Width="183" FontSize="20" ItemsSource="{Binding Patients}">
+        <ComboBox Name="patientComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="93,130,0,0" VerticalAlignment="Top" Width="183" FontSize="20" ItemsSource="{Binding Patients}" SelectedItem="{Binding SelectedPatient, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>

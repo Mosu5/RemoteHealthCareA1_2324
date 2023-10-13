@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using DoctorWPFApp.MVVM.ViewModel;
+using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View
 {
@@ -8,6 +9,7 @@ namespace DoctorWPFApp.MVVM.View
         public MainWindowD()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
 
         private void loginBtn_Click(object sender, RoutedEventArgs e)
@@ -15,7 +17,7 @@ namespace DoctorWPFApp.MVVM.View
             if (gbBox.Text.ToString() == "super" && wwBox.Password.ToString() == "sexy")
             {
                 SessionWindowD sessionWindow = new SessionWindowD();
-                Close();
+                Hide();
                 sessionWindow.Show();
             }
             else

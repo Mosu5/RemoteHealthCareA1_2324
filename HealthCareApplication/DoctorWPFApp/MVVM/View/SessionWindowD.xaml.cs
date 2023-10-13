@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using DoctorWPFApp.MVVM.ViewModel;
+using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View
 {
@@ -8,19 +9,20 @@ namespace DoctorWPFApp.MVVM.View
         public SessionWindowD()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
 
         private void chatsBtn_Click(object sender, RoutedEventArgs e)
         {
             ChatWindowD chats = new ChatWindowD();
-            Close();
+            Hide();
             chats.Show();
         }
 
         private void statsBtn_Click(object sender, RoutedEventArgs e)
         {
             StatsWindowD stats = new StatsWindowD();
-            Close();
+            Hide();
             stats.Show();
         }
 

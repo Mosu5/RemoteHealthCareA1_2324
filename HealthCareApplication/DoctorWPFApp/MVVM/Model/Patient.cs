@@ -14,6 +14,8 @@ namespace DoctorWPFApp.MVVM.Model
 
         public double HeartRate {  get; set; }
 
+        public double RrIntervals { get; set; }
+
         public List<String> ChatMessages { get; set; }
 
         // TODO add data for graphs - look up how
