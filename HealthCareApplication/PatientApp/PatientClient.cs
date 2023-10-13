@@ -28,7 +28,7 @@ namespace PatientApp
             try
             {
                 // Initialize BLE connection
-                DeviceManager.Initialize();
+                await DeviceManager.Initialize();
 
                 // Initialize VR environment
                 await Task.Run(VrProgram.Initialize);

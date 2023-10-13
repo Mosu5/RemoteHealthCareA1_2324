@@ -20,7 +20,7 @@ namespace PatientApp.DeviceConnection
         /// to any of the devices, it will automatically switch to the emulated environment. Both classes implement
         /// the IReceiver interface, as to ensure abstraction.
         /// </summary>
-        public static void Initialize()
+        public static async Task Initialize()
         {
             // Change to BLEReceiver in production
             Receiver = new EmulatedReceiver();
@@ -31,8 +31,8 @@ namespace PatientApp.DeviceConnection
             Receiver.ReceivedHeartRate += OnReceiveHeartRate;
             Receiver.ReceivedRrIntervals += OnReceiveRrIntervals;
 
-            Receiver.ConnectToTrainer();
-            Receiver.ConnectToHrm();
+            await Receiver.ConnectToTrainer();
+            await Receiver.ConnectToHrm();
 
             Logger.Log("Device connection initialized", LogType.GeneralInfo);
         }
