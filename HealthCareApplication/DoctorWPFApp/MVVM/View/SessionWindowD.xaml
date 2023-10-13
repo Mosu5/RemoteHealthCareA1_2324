@@ -9,8 +9,8 @@
 
     <Window.DataContext>
         <local:MainWindowViewModel/>
-    </Window.DataContext> 
-    
+    </Window.DataContext>
+
     <Grid Margin="-35,0,59,-117">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="31*"/>
@@ -41,6 +41,7 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-                  
+        <Label Grid.Column="1" Content="{Binding SelectedPatient.HeartRate}" HorizontalAlignment="Left" Margin="21,419,0,0" VerticalAlignment="Top" Height="34" Width="119" FontSize="20"/>
+
     </Grid>
 </Window>

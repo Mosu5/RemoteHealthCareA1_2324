@@ -34,28 +34,12 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 {
                     _selectedPatient = value;
                     OnPropertyChanged(nameof(SelectedPatient));
-                    OnPropertyChanged(nameof(SelectedPatientSpeed));
-                    OnPropertyChanged(nameof(SelectedPatientDistance));
-                    OnPropertyChanged(nameof(SelectedPatientHeartRate));
+                   
                 }
             }
         }
 
-        public double SelectedPatientSpeed
-        {
-            get { return SelectedPatient.Speed; }
-        }
-
-        public double SelectedPatientDistance
-        {
-            get { return SelectedPatient.Distance; }
-        }
-
-        public double SelectedPatientHeartRate
-        {
-            get { return SelectedPatient.HeartRate; }
-        }
-
+       
 
 
         // TODO add doctor code
