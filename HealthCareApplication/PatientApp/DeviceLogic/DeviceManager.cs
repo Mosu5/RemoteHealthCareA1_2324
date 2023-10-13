@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using PatientApp.DeviceConnection.Receiver;
 using Utilities.Logging;
@@ -34,13 +35,11 @@ namespace PatientApp.DeviceConnection
             await Receiver.ConnectToTrainer();
             await Receiver.ConnectToHrm();
 
-            Logger.Log("Device connection initialized", LogType.GeneralInfo);
+            Logger.Log("Trainer and heart rate monitor have been initialized.", LogType.GeneralInfo);
         }
 
         private static void OnReceiveSpeed(object sender, double speed)
         {
-            Logger.Log($"Speed: {speed} m/s", LogType.DeviceInfo);
-
             if (_currentStat.Speed == -1)
             {
                 _currentStat.Speed = speed;
@@ -51,8 +50,6 @@ namespace PatientApp.DeviceConnection
 
         private static void OnReceiveDistance(object sender, int distance)
         {
-            Logger.Log($"Distance: {distance} meters", LogType.DeviceInfo);
-
             if (_currentStat.Distance == -1)
             {
                 _currentStat.Distance = distance;
@@ -63,8 +60,6 @@ namespace PatientApp.DeviceConnection
 
         private static void OnReceiveHeartRate(object sender, int heartRate)
         {
-            Logger.Log($"Heart rate: {heartRate} bpm", LogType.DeviceInfo);
-
             if (_currentStat.HeartRate == -1)
             {
                 _currentStat.HeartRate = heartRate;
@@ -75,8 +70,6 @@ namespace PatientApp.DeviceConnection
 
         private static void OnReceiveRrIntervals(object sender, int[] rrIntervals)
         {
-            Logger.Log($"R-R intervals: {string.Join(", ", rrIntervals)}", LogType.DeviceInfo);
-
             if (_currentStat.RrIntervals == new int[0])
             {
                 _currentStat.RrIntervals = rrIntervals;
@@ -87,6 +80,7 @@ namespace PatientApp.DeviceConnection
 
         private static void CheckStatComplete()
         {
+            Logger.Log($"Speed:\t{_currentStat.Speed}\tDist:\t{_currentStat.Distance}\tHeart rate:\t{_currentStat.HeartRate}\tR-R intervals:\t[{string.Join(", ", _currentStat.RrIntervals)}]\t", LogType.DeviceInfo);
             if (_currentStat.IsComplete())
             {
                 OnReceiveData?.Invoke(typeof(DeviceManager), _currentStat);

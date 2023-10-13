@@ -17,7 +17,7 @@ namespace PatientApp
             // Logger will log if LogType is present
             Logger.SetTypesToLogFor(
                 LogType.GeneralInfo,
-                //LogType.DeviceInfo,
+                LogType.DeviceInfo,
                 LogType.VrInfo,
                 LogType.CommunicationExceptionInfo,
                 LogType.Warning,
@@ -30,14 +30,14 @@ namespace PatientApp
                 // Initialize BLE connection
                 await DeviceManager.Initialize();
 
-                // Initialize VR environment
-                await Task.Run(VrProgram.Initialize);
+                //// Initialize VR environment
+                //await Task.Run(VrProgram.Initialize);
 
-                // Initialize console commands, but don't wait for completion
-                Task.Run(ReceiveConsoleInput);
+                //// Initialize console commands, but don't wait for completion
+                //Task.Run(ReceiveConsoleInput);
 
-                // Listen for requests
-                await RequestHandler.Listen();
+                //// Listen for requests
+                //await RequestHandler.Listen();
             }
             catch (CommunicationException ex)
             {
