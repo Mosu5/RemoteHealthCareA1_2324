@@ -2,7 +2,9 @@
 
 namespace DoctorWPFApp.MVVM.View
 {
-
+    /// <summary>
+    /// Window showcasing data of the selected patient
+    /// </summary>
     public partial class StatsWindowD : Window
     {
         public StatsWindowD()
@@ -13,7 +15,7 @@ namespace DoctorWPFApp.MVVM.View
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-           Navigator.navToSessionWindow(this);            
+            Navigator.navToSessionWindow(this);
         }
 
         private void summaryBtn_Click(object sender, RoutedEventArgs e)

@@ -2,6 +2,9 @@
 
 namespace DoctorWPFApp.MVVM.View
 {
+    /// <summary>
+    /// Window containing messages between patient and doctor
+    /// </summary>
     public partial class ChatWindowD : Window
     {
         public ChatWindowD()

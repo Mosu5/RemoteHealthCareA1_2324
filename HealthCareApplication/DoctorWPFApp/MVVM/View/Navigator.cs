@@ -2,6 +2,9 @@
 
 namespace DoctorWPFApp.MVVM.View
 {
+    /// <summary>
+    /// Handles the navigation between views
+    /// </summary>
     public static class Navigator
     {
    

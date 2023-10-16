@@ -2,6 +2,10 @@
 
 namespace DoctorWPFApp.MVVM.View
 {
+    /// <summary>
+    /// Main window of the application 
+    /// After connecting to server, user can select patients and go to the respective views to see their data during the session
+    /// </summary>
     public partial class SessionWindowD : Window
     {
         public bool isRunning = false;

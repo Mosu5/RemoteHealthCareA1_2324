@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 
 namespace DoctorWPFApp.MVVM.ViewModel
 {
+    /// <summary>
+    /// Handles the data between the views and the server-client logic
+    /// </summary>
     internal class MainWindowViewModel : ObservableObject
     {
         /* Commands */
@@ -13,14 +16,14 @@ namespace DoctorWPFApp.MVVM.ViewModel
         /* Data */
         private Patient _selectedPatient;
         public ObservableCollection<Patient> Patients { get; set; }
-        public ObservableCollection<string> ChatMessages { get; set; }
+
 
         public Patient SelectedPatient
         {
             get { return _selectedPatient; }
             set
             {
-              
+
                 if (_selectedPatient != value)
                 {
                     _selectedPatient = value;
@@ -29,10 +32,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
         }
 
-       
-
-
-        // TODO add doctor code
+        // TODO connect relayCommands and events to doctor code
 
         public MainWindowViewModel()
         {
@@ -44,7 +44,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     Speed = 1,
                     Distance = 1,
                     HeartRate = 1,
-                    ChatMessages = new List<string> {"hi bob is mijn naam"}
+                    ChatMessages = new List<string> {"hi bob is mijn naam", "fdsfdsfdsf", "dfsdffdfsdf"}
                 },
 
                 new Patient
@@ -56,9 +56,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     ChatMessages = new List<string> {"jo dit is jan"}
                 }
             };
-            ChatMessages = new ObservableCollection<string>();
-
-
         }
 
     }
