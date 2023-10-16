@@ -92,134 +92,134 @@ namespace PatientApp.VrLogic
 
             //==== Add 3d models like trees and houses
 
-            //// Add road
-            //JsonObject road = await VrSession.AddRoad(routeID);
-            //Logger.Log($"Added a road: {road}", LogType.VrInfo);
+            // Add road
+            JsonObject road = await VrSession.AddRoad(routeID);
+            Logger.Log($"Added a road: {road}", LogType.VrInfo);
 
-            //// Add trees
-            //await VrSession.AddModelOnTerrain(
-            //     "tree",
-            //     new Vector3(-30, 0, -1),
-            //     1.9,
-            //     @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
-            //     0
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "tree",
-            //     new Vector3(-27, 0, -8),
-            //     1.5,
-            //     @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
-            //     0
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "tree",
-            //     new Vector3(-31, 0, -19),
-            //     2,
-            //     @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
-            //     0
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "tree",
-            //     new Vector3(-25, 0, -26),
-            //     2.1,
-            //     @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
-            //     0
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "tree",
-            //     new Vector3(-30, 0, -34),
-            //     1.7,
-            //     @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
-            //     0
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "tree",
-            //     new Vector3(-45, 0, 16),
-            //     1.7,
-            //     @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
-            //     0
-            //);
+            // Add trees
+            await VrSession.AddModelOnTerrain(
+                 "tree",
+                 new Vector3(-30, 0, -1),
+                 1.9,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+            );
+            await VrSession.AddModelOnTerrain(
+                 "tree",
+                 new Vector3(-27, 0, -8),
+                 1.5,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+            );
+            await VrSession.AddModelOnTerrain(
+                 "tree",
+                 new Vector3(-31, 0, -19),
+                 2,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+            );
+            await VrSession.AddModelOnTerrain(
+                 "tree",
+                 new Vector3(-25, 0, -26),
+                 2.1,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+            );
+            await VrSession.AddModelOnTerrain(
+                 "tree",
+                 new Vector3(-30, 0, -34),
+                 1.7,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+            );
+            await VrSession.AddModelOnTerrain(
+                 "tree",
+                 new Vector3(-45, 0, 16),
+                 1.7,
+                 @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                 0
+            );
 
-            //// Add houses
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(-52, 0, 25),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house6.obj",
-            //     90
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(-49, 0, -5),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house7.obj",
-            //     90
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(-52, 0, -35),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house6.obj",
-            //     90
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(0, 0, 50),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house6.obj",
-            //     180
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(30, 0, 50),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house7.obj",
-            //     180
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(20, 0, 28),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house7.obj",
-            //     0
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(-30, 0, 28),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house6.obj",
-            //     0
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(-10, 0, 28),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house6.obj",
-            //     0
-            //);
-            //await VrSession.AddModelOnTerrain(
-            //     "house",
-            //     new Vector3(-28, 0, 10),
-            //     9,
-            //     @"data\NetworkEngine\models\houses\set1\house6.obj",
-            //     -90
-            //);
+            // Add houses
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(-52, 0, 25),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 90
+            );
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(-49, 0, -5),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house7.obj",
+                 90
+            );
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(-52, 0, -35),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 90
+            );
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(0, 0, 50),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 180
+            );
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(30, 0, 50),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house7.obj",
+                 180
+            );
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(20, 0, 28),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house7.obj",
+                 0
+            );
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(-30, 0, 28),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 0
+            );
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(-10, 0, 28),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 0
+            );
+            await VrSession.AddModelOnTerrain(
+                 "house",
+                 new Vector3(-28, 0, 10),
+                 9,
+                 @"data\NetworkEngine\models\houses\set1\house6.obj",
+                 -90
+            );
 
-            //// Add cars
-            //await VrSession.AddModelOnTerrain(
-            //     "car",
-            //     new Vector3(-35, 0, -11),
-            //     1.4,
-            //     @"data\NetworkEngine\models\cars\generic\black.obj",
-            //     0
-            // );
-            //await VrSession.AddModelOnTerrain(
-            //     "car",
-            //     new Vector3(-12, 0, 45),
-            //     1.4,
-            //     @"data\NetworkEngine\models\cars\generic\white.obj",
-            //     90
-            // );
+            // Add cars
+            await VrSession.AddModelOnTerrain(
+                 "car",
+                 new Vector3(-35, 0, -11),
+                 1.4,
+                 @"data\NetworkEngine\models\cars\generic\black.obj",
+                 0
+             );
+            await VrSession.AddModelOnTerrain(
+                 "car",
+                 new Vector3(-12, 0, 45),
+                 1.4,
+                 @"data\NetworkEngine\models\cars\generic\white.obj",
+                 90
+             );
 
             Logger.Log("VR environment initialized", LogType.GeneralInfo);
         }

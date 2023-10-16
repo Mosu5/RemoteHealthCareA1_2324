@@ -31,13 +31,13 @@ namespace PatientApp
                 await DeviceManager.Initialize();
 
                 //// Initialize VR environment
-                //await Task.Run(VrProgram.Initialize);
+                await Task.Run(VrProgram.Initialize);
 
                 //// Initialize console commands, but don't wait for completion
-                //Task.Run(ReceiveConsoleInput);
+                Task.Run(ReceiveConsoleInput);
 
                 //// Listen for requests
-                //await RequestHandler.Listen();
+                await RequestHandler.Listen();
             }
             catch (CommunicationException ex)
             {
