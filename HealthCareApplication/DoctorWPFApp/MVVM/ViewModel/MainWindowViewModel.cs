@@ -24,17 +24,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
             get { return _selectedPatient; }
             set
             {
-                //if (_origin.CountryCode != value)
-                //{
-                //    _origin.CountryCode = value;
-                //    RaisePropertyChanged(nameof(OriginCountryCode));
-                //}
-
+              
                 if (_selectedPatient != value)
                 {
                     _selectedPatient = value;
                     OnPropertyChanged(nameof(SelectedPatient));
-                   
                 }
             }
         }
@@ -54,7 +48,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     Speed = 1,
                     Distance = 1,
                     HeartRate = 1,
-                    ChatMessages = new List<string> {"hi"}
+                    ChatMessages = new List<string> {"hi bob is mijn naam"}
                 },
 
                 new Patient
@@ -63,7 +57,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     Speed = 2,
                     Distance = 5,
                     HeartRate = 3,
-                    ChatMessages = new List<string> {"hi"}
+                    ChatMessages = new List<string> {"jo dit is jan"}
                 }
             };
             ChatMessages = new ObservableCollection<string>();

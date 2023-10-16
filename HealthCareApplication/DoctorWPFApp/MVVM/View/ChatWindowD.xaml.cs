@@ -8,14 +8,12 @@ namespace DoctorWPFApp.MVVM.View
         public ChatWindowD()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            SessionWindowD sessionWindow = new SessionWindowD();
-            Hide();
-            sessionWindow.Show();
+            Navigator.navToSessionWindow(this);
         }
 
         private void sendBtn_Click(object sender, RoutedEventArgs e)

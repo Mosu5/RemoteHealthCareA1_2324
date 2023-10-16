@@ -9,14 +9,12 @@ namespace DoctorWPFApp.MVVM.View
         public StatsWindowD()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            SessionWindowD sessionSetting = new SessionWindowD();
-            Hide();
-            sessionSetting.Show();
+           Navigator.navToSessionWindow(this);            
         }
 
         private void summaryBtn_Click(object sender, RoutedEventArgs e)

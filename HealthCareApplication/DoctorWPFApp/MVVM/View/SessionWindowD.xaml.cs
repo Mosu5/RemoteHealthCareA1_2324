@@ -9,27 +9,23 @@ namespace DoctorWPFApp.MVVM.View
         public SessionWindowD()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void chatsBtn_Click(object sender, RoutedEventArgs e)
         {
-            ChatWindowD chats = new ChatWindowD();
-            Hide();
-            chats.Show();
+            Navigator.navToChatWindow(this);
         }
 
         private void statsBtn_Click(object sender, RoutedEventArgs e)
         {
-            StatsWindowD stats = new StatsWindowD();
-            Hide();
-            stats.Show();
+            Navigator.navToStatWindow(this);
         }
 
         private void stopstartBtn_Click(object sender, RoutedEventArgs e)
         {
-            
-            if(isRunning == true)
+
+            if (isRunning == true)
             {
                 isRunning = false;
                 stopstartBtn.Content = "Start";
@@ -41,7 +37,7 @@ namespace DoctorWPFApp.MVVM.View
                 stopstartBtn.Content = "Stop";
                 stopstartBtn.Background = System.Windows.Media.Brushes.Red;
             }
-            
+
         }
     }
 }

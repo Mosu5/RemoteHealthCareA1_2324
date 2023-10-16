@@ -9,6 +9,8 @@ namespace DoctorWPFApp.MVVM.View
         public MainWindowD()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
             DataContext = new MainWindowViewModel();
         }
 
@@ -16,9 +18,7 @@ namespace DoctorWPFApp.MVVM.View
         {
             if (gbBox.Text.ToString() == "super" && wwBox.Password.ToString() == "sexy")
             {
-                SessionWindowD sessionWindow = new SessionWindowD();
-                Hide();
-                sessionWindow.Show();
+                Navigator.navToSessionWindow(this);
             }
             else
             {
@@ -27,6 +27,6 @@ namespace DoctorWPFApp.MVVM.View
 
         }
 
-        
+
     }
 }
