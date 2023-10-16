@@ -3,10 +3,12 @@ using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View
 {
-
-    public partial class MainWindowD : Window
+    /// <summary>
+    /// Create a 
+    /// </summary>
+    public partial class LoginWindowD : Window
     {
-        public MainWindowD()
+        public LoginWindowD()
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
