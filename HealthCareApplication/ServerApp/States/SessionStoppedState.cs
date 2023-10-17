@@ -22,10 +22,11 @@ namespace ServerApp.States
         {
             // Save data to file
             // Data will be saved so client/doctor can recieve a stats summary later
+            Console.WriteLine("State = Session/stop");
             this._context.SaveUserData();
             _context.GetUserAccount().hasActiveSession = false;
             _context.isSessionActive = false;
-            ResponseClientData.GenerateResponse("session/stop", null, "ok");
+            //ResponseClientData.GenerateResponse("session/stop", null, "ok");
             return new SessionIdle(_context);
         }
 

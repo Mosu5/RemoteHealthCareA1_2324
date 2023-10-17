@@ -28,14 +28,14 @@ namespace ServerApp.States
                 // Save data in server
                 BufferUserData(speed, distance, heartRate);
                 return this; // Stay in this state to recieve more data
-
             }
-            else if (packet.ContainsKey("session/stop"))
+            else if (command == "session/stop")
             {
                 this._context.ResponseToClient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
                 return new SessionStoppedState(this._context);
             }
-            //Login Failed so it stays in LoginState
+            // To DO:
+            // Implement pause and resume into this state.
             return this;
         }
 

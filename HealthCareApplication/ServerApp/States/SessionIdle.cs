@@ -33,7 +33,7 @@ namespace ServerApp.States
             }
             if (command == "stats/summary")
             {
-                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(_context.userStatsBuffer); ;
+                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(_context.GetUserAccount().GetUserStats());
             }
             return this;
 

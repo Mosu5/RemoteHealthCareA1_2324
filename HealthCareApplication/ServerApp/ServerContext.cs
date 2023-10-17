@@ -54,7 +54,7 @@ namespace ServerApp.States
 
         public void SaveUserData()
         {
-            JsonObject userData = (JsonObject)JsonSerializer.Serialize(userStatsBuffer);
+            string userData = JsonSerializer.Serialize(userStatsBuffer);
 
             this._userAccount.SaveUserStats(userData);
         }

@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Utilities.Logging;
+using System.Text.Json;
 
 namespace ServerApp
 {
@@ -28,21 +32,40 @@ namespace ServerApp
 
 
         // To Do: In the future we want to check duplicate files, and add data if file already exist, rather than overwriting
-        public void SaveUserStats(JsonObject jsonData)
+        public void SaveUserStats(string jsonData)
         {
-            StreamWriter writer = new StreamWriter($"@{Environment.CurrentDirectory}/{this._username}-stats.json");
+
+            // NOTE: The following path will point to the bin/debug folder of the project serverapp.
+            string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
+
+            StreamWriter writer = new StreamWriter(correctPath);
             if (jsonData != null )
             {
+                
                 writer.Write(jsonData);
+                writer.Flush();
+                writer.Close();
+                Console.WriteLine("Userdata has been saved into file!");
+            }
+            else
+            {
+                Logger.Log("JSONdata has not been saved into file. Check filepath or payload!", LogType.Warning);
+                Console.WriteLine("Data has not been saved!");
             }
         }
 
-        public string GetUserStats()
+        public List<UserStat> GetUserStats()
         {
-            StreamReader reader = new StreamReader($"@{Environment.CurrentDirectory}/{this._username}-stats.json");
-            
+            string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
+
+            StreamReader reader = new StreamReader(correctPath);
+
+
             string jsonData = reader.ReadToEnd();
-            return jsonData;
+            List<UserStat> retrievedUserStats = JsonSerializer.Deserialize<List<UserStat>>(jsonData);
+            return retrievedUserStats;
         }
 
         public string GetUserName() 
