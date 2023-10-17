@@ -53,12 +53,17 @@
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerContext.cs" />
+    <Compile Include="States\CreateAccountState.cs" />
     <Compile Include="States\IState.cs" />
+    <Compile Include="States\JsonUtil.cs" />
     <Compile Include="States\SessionActiveState.cs" />
     <Compile Include="States\SessionPausedState.cs" />
     <Compile Include="States\LoginState.cs" />
     <Compile Include="States\SessionStoppedState.cs" />
-    <Compile Include="ServerConn.cs"/>
+    <Compile Include="ServerConn.cs" />
+    <Compile Include="UserAccount.cs" />
+    <Compile Include="UserStat.cs" />
+    <Compile Include="States\SessionIdle.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />

@@ -15,9 +15,36 @@ namespace ServerApp.States
             this.context = context;
         }
 
-        public void Handle(JsonObject packet)
+        public IState Handle(JsonObject packet)
         {
-            throw new NotImplementedException();
+
+            string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
+         
+            if (command == "stats/send")
+            {
+                double speed = double.Parse(JsonUtil.GetValueFromPacket(packet, "data", "speed").ToString());
+                int distance = int.Parse(JsonUtil.GetValueFromPacket(packet, "data", "distance").ToString());
+                byte heartRate = byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
+
+                // Save data in server
+                BufferUserData(speed, distance, heartRate);
+                return this; // Stay in this state to recieve more data
+
+            }
+            else if (packet.ContainsKey("session/stop"))
+            {
+                return new SessionStoppedState(this.context);
+            }
+            //Login Failed so it stays in LoginState
+            return this;
+
         }
+
+        private void BufferUserData(double speed, int distance, byte heartrate)
+        {
+            this.context.userStats.Add(new UserStat(speed, distance, heartrate));
+        }
+
+
     }
 }

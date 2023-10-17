@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avans.TI.BLE;
+using Utilities.Logging;
 
 namespace PatientApp.DeviceConnection.Receiver
 {
@@ -27,7 +28,7 @@ namespace PatientApp.DeviceConnection.Receiver
         /// Attempts connection to both the trainer. Upon successful connection, events are fired to signal to other classes.
         /// Otherwise, after some amount of connection attempts, it will automatically use the simulated environment.
         /// </summary>
-        public async void ConnectToTrainer()
+        public async Task ConnectToTrainer()
         {
             Thread.Sleep(1000);
 
@@ -49,7 +50,7 @@ namespace PatientApp.DeviceConnection.Receiver
                 _emulatedReceiver.ReceivedSpeed += (sender, speed) => ReceivedSpeed?.Invoke(sender, speed);
                 _emulatedReceiver.ReceivedDistance += (sender, distance) => ReceivedDistance?.Invoke(sender, distance);
 
-                _emulatedReceiver.ConnectToTrainer();
+                await _emulatedReceiver.ConnectToTrainer();
                 _trainerConnected = true;
                 return;
             }
@@ -66,7 +67,7 @@ namespace PatientApp.DeviceConnection.Receiver
         /// Attempts connection to both the heart rate monitor. Upon successful connection, events are fired to signal to other classes.
         /// Otherwise, after some amount of connection attempts, it will automatically use the simulated environment.
         /// </summary>
-        public async void ConnectToHrm()
+        public async Task ConnectToHrm()
         {
             BLE bleHrm = new BLE();
 
@@ -80,7 +81,7 @@ namespace PatientApp.DeviceConnection.Receiver
             );
             if (!connected)
             {
-                Console.WriteLine("Could not connect to heart rate monitor, switching to emulated heart rate monitor environment.");
+                Logger.Log("Could not connect to heart rate monitor, switching to emulated heart rate monitor environment.", LogType.DeviceInfo);
                 if (_emulatedReceiver == null) _emulatedReceiver = new EmulatedReceiver(this);
 
                 // Subscribe to heart rate monitor events from the EmulatedReceiver class, so that whenever the EmulatedReceiver's
@@ -90,7 +91,7 @@ namespace PatientApp.DeviceConnection.Receiver
                 _emulatedReceiver.ReceivedHeartRate += (sender, heartRate) => ReceivedHeartRate?.Invoke(sender, heartRate);
                 _emulatedReceiver.ReceivedRrIntervals += (sender, rrInterval) => ReceivedRrIntervals?.Invoke(sender, rrInterval);
 
-                _emulatedReceiver.ConnectToHrm();
+                await _emulatedReceiver.ConnectToHrm();
                 return;
             }
 
@@ -140,14 +141,14 @@ namespace PatientApp.DeviceConnection.Receiver
 
             if (message.Length != 13)
             {
-                Console.WriteLine("Error: invalid message length from trainer message.");
+                Logger.Log("Error: invalid message length from trainer message.", LogType.DeviceInfo);
                 return;
             }
 
             // Checks if checksums are equal to each other
             if (CalculateChecksum(message) != message[message.Length - 1])
             {
-                Console.WriteLine("Error: invalid checksum from trainer message.");
+                Logger.Log("Error: invalid checksum from trainer message.", LogType.DeviceInfo);
                 return;
             }
 
@@ -156,10 +157,10 @@ namespace PatientApp.DeviceConnection.Receiver
 
             // TODO fix floating point precision
             if (speed != -1d) ReceivedSpeed?.Invoke(this, speed);
-            else Console.WriteLine("Error: invalid speed value from trainer message.");
+            else Logger.Log("Error: invalid speed value from trainer message.", LogType.DeviceInfo);
 
             if (distance != -1) ReceivedDistance?.Invoke(this, distance);
-            else Console.WriteLine("Error: invalid distance value from trainer message.");
+            else Logger.Log("Error: invalid distance value from trainer message.", LogType.DeviceInfo);
         }
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
             if (message.Length < 3)
             {
-                Console.WriteLine("Error: invalid message length from HRM message.");
+                Logger.Log("Error: invalid message length from HRM message.", LogType.DeviceInfo);
                 return;
             }
 
@@ -184,7 +185,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
             if (!isUint8)
             {
-                Console.WriteLine("Warning: skipping message, cannot read heart rate in uint16 format.");
+                Logger.Log("Warning: skipping message, cannot read heart rate in uint16 format.", LogType.DeviceInfo);
                 return;
             }
             
@@ -192,10 +193,10 @@ namespace PatientApp.DeviceConnection.Receiver
             int[] rrIntervals = DecodeRrIntervals(message);
 
             if (heartRate != -1) ReceivedHeartRate?.Invoke(this, heartRate);
-            else Console.WriteLine("Error: invalid heart rate value from HRM message.");
+            else Logger.Log("Error: invalid heart rate value from HRM message.", LogType.DeviceInfo);
 
             if (rrIntervals != new int[0]) ReceivedRrIntervals?.Invoke(this, rrIntervals);
-            else Console.WriteLine("Error: invalid R-R interval value from HRM message.");
+            else Logger.Log("Error: invalid R-R interval value from HRM message.", LogType.DeviceInfo);
         }
 
         /// <summary>
@@ -209,13 +210,13 @@ namespace PatientApp.DeviceConnection.Receiver
         {
             if (!_trainerConnected)
             {
-                Console.WriteLine("Error: trainer is not yet connected. Call the connect method first.");
+                Logger.Log("Error: trainer is not yet connected. Call the connect method first.", LogType.DeviceInfo);
                 return;
             }
 
             if (resistance < 0 || resistance > 100)
             {
-                Console.WriteLine("Error: resistance must be between 0 and 100 percent.");
+                Logger.Log("Error: resistance must be between 0 and 100 percent.", LogType.DeviceInfo);
                 return;
             }
 
@@ -227,7 +228,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
             // Attempt to send the message and check if there are errors
             int errorCode = await _bleTrainer.WriteCharacteristic("6e40fec3-b5a3-f393-e0a9-e50e24dcca9e", data);
-            if (errorCode != 0) Console.WriteLine("Could not send resistance message.");
+            if (errorCode != 0) Logger.Log("Error: could not send resistance message.", LogType.DeviceInfo);
         }
 
         /// <summary>

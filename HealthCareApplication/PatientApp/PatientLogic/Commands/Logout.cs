@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace ServerApp.Commands
+namespace PatientApp.PatientLogic.Commands
 {
-    internal class SendStats : ISessionCommand
+    internal class Logout : IPatientCommand
     {
-        public void Execute(JsonObject data)
+        public Task<bool> Execute()
         {
-
             throw new NotImplementedException();
         }
     }

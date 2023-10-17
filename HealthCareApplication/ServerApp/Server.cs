@@ -1,5 +1,7 @@
 using ServerApp.States;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -9,49 +11,46 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Communication;
+using Utilities.Logging;
 
 namespace ServerApp
 {
     internal class Server
     {
         private static ServerConn serverConn = new ServerConn("127.0.0.1", 8888);
+        public static List<UserAccount> users = new List<UserAccount>();//List of users
 
         public static async Task Main(string[] args)
         {
+            
             serverConn.StartListener();
-
+            
             while (serverConn.AcceptClient() is var client)
             {
-                await Console.Out.WriteLineAsync("A client has connected");
+                Console.Out.WriteLineAsync("A client has connected");
                 Thread clientThread = new Thread(HandleClientAsync);
                 clientThread.Start(client);
             }
         }
 
+        // Session of an active user
         public static async void HandleClientAsync(object connectingClient)
         {
+            UserAccount userAccount = new UserAccount("bob", "bob");
+            users.Add(userAccount);
             TcpClient client = connectingClient as TcpClient;
-
-            await serverConn.SendJson(client, new JsonObject
+            ServerContext serverContext = new ServerContext(serverConn);
+            serverContext.SetNewUser(userAccount); // TODO: This is just for testing purposes, this has to be implemented later!
+            while (client.Connected)
             {
-                { "command", "session/start" },
-                {"data", new JsonObject()}
-            });
-
-            Thread.Sleep(5000);
-
-            await serverConn.SendJson(client, new JsonObject
-            {
-                { "command", "session/stop" },
-                {"data", new JsonObject()}
-            });
-
-           while (client.Connected)
-           {
-               JsonObject data = await serverConn.ReceiveJson(client);
-               await Console.Out.WriteLineAsync("received " + data.ToString());
-           }
+                Console.Out.WriteLineAsync("Looking for data: ");
+                JsonObject data = await serverConn.ReceiveJson(client);
+                await Console.Out.WriteLineAsync("received " + data.ToString());
+                serverContext.Update(data);
+                await serverConn.SendJson(client, serverContext.ResponseToClient);
+                
+            }
         }
-    }
-
+    }   
 }
+    

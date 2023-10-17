@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -9,9 +10,23 @@ namespace ServerApp.States
 {
     internal class SessionStoppedState : IState
     {
-        public void Handle(JsonObject packet)
+        private ServerContext _context;
+
+        public SessionStoppedState(ServerContext serverContext) 
         {
-            throw new NotImplementedException();
+        this._context = serverContext;
         }
+
+
+        public IState Handle(JsonObject packet)
+        {
+            // Save data to file
+            // Data will be saved so client/doctor can recieve a stats summary later
+            this._context.SaveUserData();
+            _context.GetUserAccount().hasActiveSession = false;
+            _context.isSessionActive = false;
+            return new SessionIdle(_context);
+        }
+
     }
 }
