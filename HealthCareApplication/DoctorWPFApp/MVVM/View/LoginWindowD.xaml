@@ -3,21 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.ViewModel"
+        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.View.Components" 
+        xmlns:local1="clr-namespace:DoctorWPFApp.MVVM.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" ResizeMode="NoResize" Height="450" Width="800">
 
     <Window.DataContext>
-        <local:MainWindowViewModel/>
+        <local1:MainWindowViewModel/>
     </Window.DataContext>
     
     <Grid>
-        <Button Name="loginBtn" Content="Login" HorizontalAlignment="Left" Margin="214,295,0,0" VerticalAlignment="Top" Height="37" Width="148" Background="#FFABF98C" Click="loginBtn_Click" Command="{Binding GetPatientData}"/>
-        <PasswordBox Name="wwBox" HorizontalAlignment="Center" Margin="0,217,0,0" VerticalAlignment="Top" Width="373" Height="40" FontSize="20"/>
+        <Button Name="loginBtn" Content="Login" HorizontalAlignment="Left" Margin="214,295,0,0" VerticalAlignment="Top" Height="37" Width="148" Background="#FFABF98C" Command="{Binding LoginCommand}"/>
+        <local:BindablePasswordBox x:Name="passwordBox" Password="{Binding Password}"/>
 
         <Label Content="Wachtwoord" HorizontalAlignment="Left" Margin="214,186,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label Content="Gebruikersnaam" HorizontalAlignment="Left" Margin="214,86,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.264,0.472" Background="White" FontWeight="Bold"/>
-        <TextBox Name="gbBox" HorizontalAlignment="Center" Margin="0,117,0,0" VerticalAlignment="Top" Width="372" Height="40" FontSize="20"/>
+        <TextBox Name="gbBox" Text="{Binding Username}" HorizontalAlignment="Center" Margin="0,117,0,0" VerticalAlignment="Top" Width="372" Height="40" FontSize="20"/>
 
     </Grid>
 </Window>

@@ -15,7 +15,7 @@ namespace DoctorWPFApp.MVVM.View
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            Navigator.navToSessionWindow(this);
+            Navigator.NavToSessionWindow();
         }
 
         private void summaryBtn_Click(object sender, RoutedEventArgs e)

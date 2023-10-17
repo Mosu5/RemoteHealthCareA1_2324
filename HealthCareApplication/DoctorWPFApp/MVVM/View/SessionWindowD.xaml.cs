@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View
 {
@@ -17,12 +18,12 @@ namespace DoctorWPFApp.MVVM.View
 
         private void chatsBtn_Click(object sender, RoutedEventArgs e)
         {
-            Navigator.navToChatWindow(this);
+            Navigator.NavToChatWindow();
         }
 
         private void statsBtn_Click(object sender, RoutedEventArgs e)
         {
-            Navigator.navToStatWindow(this);
+            Navigator.NavToStatWindow();
         }
 
         private void stopstartBtn_Click(object sender, RoutedEventArgs e)
@@ -40,7 +41,6 @@ namespace DoctorWPFApp.MVVM.View
                 stopstartBtn.Content = "Stop";
                 stopstartBtn.Background = System.Windows.Media.Brushes.Red;
             }
-
         }
     }
 }

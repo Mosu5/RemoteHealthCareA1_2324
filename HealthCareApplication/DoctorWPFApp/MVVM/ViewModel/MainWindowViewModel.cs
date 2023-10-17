@@ -1,6 +1,10 @@
 ﻿using DoctorWPFApp.MVVM.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Security;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace DoctorWPFApp.MVVM.ViewModel
 {
@@ -9,17 +13,70 @@ namespace DoctorWPFApp.MVVM.ViewModel
     /// </summary>
     internal class MainWindowViewModel : ViewModelBase
     {
+
         /* Commands */
-        public RelayCommand GetPatientData => new RelayCommand(execute => InitPlaceHolderData());
+        public RelayCommand LoginCommand => new RelayCommand(execute =>
+        {
+            TestLogin();
+            InitPlaceHolderData();
+        }, canExecute => ValidateUser());
 
-        // TODO
 
 
-        /* Data */
+
+
+
+        #region Login
+        private string _username;
+        public string Username
+        {
+            get { return _username; }
+            set
+            {
+
+                _username = value;
+                OnPropertyChanged(nameof(Username));
+
+            }
+        }
+
+        private string _password;
+        public string Password
+        {
+            get
+            {
+                return _password;
+            }
+            set
+            {
+                _password = value;
+                OnPropertyChanged(nameof(Password));
+            }
+        }
+        private void TestLogin()
+        {
+            if (_username != "super" || _password != "sexy") // TODO change 
+            {
+                MessageBox.Show("Wrong username or password.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Navigator.NavToSessionWindow();
+        }
+
+        private bool ValidateUser()
+        {
+            if (_username == null || _password == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
         private Patient _selectedPatient = new Patient(); // start with empty patient
-        public ObservableCollection<Patient> Patients { get; set; } = new ObservableCollection<Patient>();
-
-
         public Patient SelectedPatient
         {
             get { return _selectedPatient; }
@@ -33,38 +90,32 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 }
             }
         }
+        public ObservableCollection<Patient> Patients { get; set; } = new ObservableCollection<Patient>();
+
+
+
 
         // TODO connect relayCommands and events to doctor code
 
         public MainWindowViewModel()
         {
-            //try
-            //{
-            //    // Start listening for messages 
-            //   // doesnt work
-            //    DoctorProxy.Listen().Wait();
+            // start up connection
 
-            //    // Get placeholder data
-            //    Patients = InitPlaceHolderData();
-            //}
-            //catch (CommunicationException ex)
-            //{
-            //    Logger.Log($"CommunicationException: {ex.Message}\n{ex.StackTrace}", LogType.CommunicationExceptionInfo);
-            //}
         }
 
         private void InitPlaceHolderData()
         {
-            Patients.Add(new Patient
-            {
-                Name = "Bob",
-                Speed = 1,
-                Distance = 1,
-                HeartRate = 1,
-                ChatMessages = new List<string> { "hi bob is mijn naam", "fdsfdsfdsf", "dfsdffdfsdf" }
-            });
 
-            Patients.Add(
+            Patients = new ObservableCollection<Patient>
+            {
+                new Patient
+                {
+                    Name = "Bob",
+                    Speed = 1,
+                    Distance = 1,
+                    HeartRate = 1,
+                    ChatMessages = new List<string> { "hi bob is mijn naam", "fdsfdsfdsf", "dfsdffdfsdf" }
+                },
 
                 new Patient
                 {
@@ -73,8 +124,14 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     Distance = 5,
                     HeartRate = 3,
                     ChatMessages = new List<string> { "jo dit is jan" }
-                });
+                }
+            };
+
+            OnPropertyChanged(nameof(Patients));
         }
+
+
+
 
 
     }

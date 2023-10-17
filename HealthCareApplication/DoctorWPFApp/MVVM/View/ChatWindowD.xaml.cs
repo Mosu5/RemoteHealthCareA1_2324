@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View
 {
@@ -15,14 +16,12 @@ namespace DoctorWPFApp.MVVM.View
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            Navigator.navToSessionWindow(this);
+            Navigator.NavToSessionWindow();
         }
 
         private void sendBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            // todo change to command in viewmodel
         }
-
-        
     }
 }

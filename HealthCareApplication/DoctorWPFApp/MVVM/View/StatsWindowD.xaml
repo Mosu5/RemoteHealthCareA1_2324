@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoctorWPFApp.MVVM.ViewModel"        mc:Ignorable="d"
         Title="StatsD" Height="450" Width="435">
-    
+
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>

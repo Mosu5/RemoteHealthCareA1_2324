@@ -8,29 +8,36 @@ namespace DoctorWPFApp.MVVM
     /// </summary>
     public static class Navigator
     {
+        public static Window CurrentWindow = null!;
 
-        public static void navToSessionWindow(Window view)
+        private static void NavToWindow(Window window)
+        {
+            if (CurrentWindow != null)
+            {
+               
+                window.DataContext = CurrentWindow.DataContext;
+                CurrentWindow.Close();
+                CurrentWindow = window;
+                CurrentWindow.Show();
+            }
+        }
+
+        public static void NavToSessionWindow()
         {
             SessionWindowD sessionWindow = new SessionWindowD();
-            sessionWindow.DataContext = view.DataContext;
-            view.Close();
-            sessionWindow.Show();
+            NavToWindow(sessionWindow);
         }
 
-        public static void navToStatWindow(Window view)
+        public static void NavToStatWindow()
         {
             StatsWindowD statsWindow = new StatsWindowD();
-            statsWindow.DataContext = view.DataContext;
-            view.Close();
-            statsWindow.Show();
+            NavToWindow(statsWindow);
         }
 
-        public static void navToChatWindow(Window view)
+        public static void NavToChatWindow()
         {
             ChatWindowD chatWindow = new ChatWindowD();
-            chatWindow.DataContext = view.DataContext;
-            view.Close();
-            chatWindow.Show();
+            NavToWindow(chatWindow);
         }
     }
 }
