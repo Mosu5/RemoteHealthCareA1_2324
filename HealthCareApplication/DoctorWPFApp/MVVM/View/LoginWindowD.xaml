@@ -3,12 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.View"
+        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" ResizeMode="NoResize" Height="450" Width="800">
-        
+
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+    
     <Grid>
-        <Button Name="loginBtn" Content="Login" HorizontalAlignment="Left" Margin="214,295,0,0" VerticalAlignment="Top" Height="37" Width="148" Background="#FFABF98C" Click="loginBtn_Click"/>
+        <Button Name="loginBtn" Content="Login" HorizontalAlignment="Left" Margin="214,295,0,0" VerticalAlignment="Top" Height="37" Width="148" Background="#FFABF98C" Click="loginBtn_Click" Command="{Binding GetPatientData}"/>
         <PasswordBox Name="wwBox" HorizontalAlignment="Center" Margin="0,217,0,0" VerticalAlignment="Top" Width="373" Height="40" FontSize="20"/>
 
         <Label Content="Wachtwoord" HorizontalAlignment="Left" Margin="214,186,0,0" VerticalAlignment="Top" FontWeight="Bold"/>

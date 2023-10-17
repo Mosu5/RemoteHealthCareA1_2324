@@ -10,12 +10,14 @@ namespace DoctorWPFApp.MVVM.ViewModel
     internal class MainWindowViewModel : ObservableObject
     {
         /* Commands */
+        public RelayCommand GetPatientData => new RelayCommand(execute => InitPlaceHolderData());
+
         // TODO
 
 
         /* Data */
-        private Patient _selectedPatient;
-        public ObservableCollection<Patient> Patients { get; set; }
+        private Patient _selectedPatient = new Patient(); // start with empty patient
+        public ObservableCollection<Patient> Patients { get; set; } = new ObservableCollection<Patient>();
 
 
         public Patient SelectedPatient
@@ -36,16 +38,33 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         public MainWindowViewModel()
         {
-            Patients = new ObservableCollection<Patient>
+            //try
+            //{
+            //    // Start listening for messages 
+            //   // doesnt work
+            //    DoctorProxy.Listen().Wait();
+
+            //    // Get placeholder data
+            //    Patients = InitPlaceHolderData();
+            //}
+            //catch (CommunicationException ex)
+            //{
+            //    Logger.Log($"CommunicationException: {ex.Message}\n{ex.StackTrace}", LogType.CommunicationExceptionInfo);
+            //}
+        }
+
+        private void InitPlaceHolderData()
+        {
+            Patients.Add(new Patient
             {
-                new Patient
-                {
-                    Name = "Bob",
-                    Speed = 1,
-                    Distance = 1,
-                    HeartRate = 1,
-                    ChatMessages = new List<string> {"hi bob is mijn naam", "fdsfdsfdsf", "dfsdffdfsdf"}
-                },
+                Name = "Bob",
+                Speed = 1,
+                Distance = 1,
+                HeartRate = 1,
+                ChatMessages = new List<string> { "hi bob is mijn naam", "fdsfdsfdsf", "dfsdffdfsdf" }
+            });
+
+            Patients.Add(
 
                 new Patient
                 {
@@ -53,10 +72,10 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     Speed = 2,
                     Distance = 5,
                     HeartRate = 3,
-                    ChatMessages = new List<string> {"jo dit is jan"}
-                }
-            };
+                    ChatMessages = new List<string> { "jo dit is jan" }
+                });
         }
+
 
     }
 }

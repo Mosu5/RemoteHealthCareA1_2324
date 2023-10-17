@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ChatApplication.Core;
+namespace DoctorWPFApp.MVVM;
 
 public class RelayCommand : ICommand
 {
     private Action<object> _execute;
     private Func<object, bool> _canExecute;
 
-    public event EventHandler CanExecuteChanged
+    public event EventHandler? CanExecuteChanged
     {
         add => CommandManager.RequerySuggested += value;
         remove => CommandManager.RequerySuggested -= value;
@@ -20,12 +20,12 @@ public class RelayCommand : ICommand
         _canExecute = canExecute;
     }
     
-    public bool CanExecute(object parameter)
+    public bool CanExecute(object? parameter)
     {
         return this._canExecute == null || this._canExecute(parameter);
     }
     
-    public void Execute(object parameter)
+    public void Execute(object? parameter)
     {
         this._execute(parameter);
     }

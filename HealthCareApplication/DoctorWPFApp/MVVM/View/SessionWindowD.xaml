@@ -24,8 +24,7 @@
         <Label Grid.Column="1" Content="LocalHost" HorizontalAlignment="Left" Margin="11,324,0,0" VerticalAlignment="Top" Width="65"/>
         <Label Grid.Column="1" Content="Port" HorizontalAlignment="Left" Margin="184,324,0,0" VerticalAlignment="Top" Width="65"/>
 
-        <Button Name="stopstartBtn" Grid.Column="1" Content="Start" HorizontalAlignment="Left" Margin="12,177,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="#FFADFE86" FontSize="15" 
-                Click="stopstartBtn_Click"/>
+        <Button Name="stopstartBtn" Grid.Column="1" Content="Start" HorizontalAlignment="Left" Margin="12,177,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="#FFADFE86" FontSize="15"/>
         <Button Name="statsBtn" Grid.Column="1" Content="Stats" Margin="113,177,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="39" Width="81" FontSize="15" 
                 Click="statsBtn_Click"/>
         <Button Name="chatsBtn" Grid.Column="1" Content="Chats" HorizontalAlignment="Left" Margin="215,177,0,0" VerticalAlignment="Top" Height="39" Width="81" FontSize="15" 
