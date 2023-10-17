@@ -1,13 +1,14 @@
 ﻿using System.Windows;
+using DoctorWPFApp.MVVM.View;
 
-namespace DoctorWPFApp.MVVM.View
+namespace DoctorWPFApp.MVVM
 {
     /// <summary>
-    /// Handles the navigation between views
+    /// Handles the navigation and datacontext sharing between views
     /// </summary>
     public static class Navigator
     {
-   
+
         public static void navToSessionWindow(Window view)
         {
             SessionWindowD sessionWindow = new SessionWindowD();

@@ -7,7 +7,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
     /// <summary>
     /// Handles the data between the views and the server-client logic
     /// </summary>
-    internal class MainWindowViewModel : ObservableObject
+    internal class MainWindowViewModel : ViewModelBase
     {
         /* Commands */
         public RelayCommand GetPatientData => new RelayCommand(execute => InitPlaceHolderData());
