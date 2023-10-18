@@ -11,18 +11,20 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Communication;
+using Utilities.Logging;
 
 namespace ServerApp
 {
     internal class Server
     {
         private static ServerConn serverConn = new ServerConn("127.0.0.1", 8888);
-        public List<UserAccount> users = new List<UserAccount>();//List of users
+        public static List<UserAccount> users = new List<UserAccount>();//List of users
 
         public static async Task Main(string[] args)
         {
+            
             serverConn.StartListener();
-
+            
             while (serverConn.AcceptClient() is var client)
             {
                 Console.Out.WriteLineAsync("A client has connected");
@@ -34,8 +36,11 @@ namespace ServerApp
         // Session of an active user
         public static async void HandleClientAsync(object connectingClient)
         {
+            UserAccount userAccount = new UserAccount("bob", "bob");
+            users.Add(userAccount);
             TcpClient client = connectingClient as TcpClient;
             ServerContext serverContext = new ServerContext(serverConn);
+            serverContext.SetNewUser(userAccount); // TODO: This is just for testing purposes, this has to be implemented later!
             while (client.Connected)
             {
                 Console.Out.WriteLineAsync("Looking for data: ");
@@ -45,13 +50,6 @@ namespace ServerApp
                 await serverConn.SendJson(client, serverContext.ResponseToClient);
                 
             }
-
-           while (client.Connected)
-           {
-               JsonObject data = await serverConn.ReceiveJson(client);
-               await Console.Out.WriteLineAsync("received " + data.ToString());
-           
-           }
         }
     }   
 }

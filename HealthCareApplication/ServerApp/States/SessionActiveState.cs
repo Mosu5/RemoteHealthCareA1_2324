@@ -9,52 +9,44 @@ namespace ServerApp.States
 {
     internal class SessionActiveState : IState
     {
-        private ServerContext context;
+        private ServerContext _context;
         public SessionActiveState(ServerContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public IState Handle(JsonObject packet)
         {
-            if (packet.ContainsKey("session/start")) 
+            string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
+         
+            if (command == "stats/send")
             {
-                // Mark user as active in session
-                context.GetUserAccount().hasActiveSession = true;
-                context.isSessionActive = true;
-                return this;
+                double speed = Double.Parse(JsonUtil.GetValueFromPacket(packet, "data", "speed").ToString());
+                int distance = Int32.Parse(JsonUtil.GetValueFromPacket(packet, "data", "distance").ToString());
+                byte heartRate = Byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
+
+                // Save data in server
+                BufferUserData(speed, distance, heartRate);
+                return this; // Stay in this state to recieve more data
             }
-            else if (packet.ContainsKey("stats/send"))
+            else if (command == "session/stop")
             {
-                if (packet.ContainsKey("data"))
-                {
-                    JsonObject data = packet["data"] as JsonObject;
-                    Console.WriteLine("Login recieved data: " + data);
-
-                    double speed = (double)data["speed"];
-                    int distance = (int)data["distance"];
-                    byte heartRate = (byte)data["heartrate"];
-
-                    // Save data in server buffer
-                    BufferUserData(speed, distance, heartRate);
-
-                    return this;
-                }
+                this._context.ResponseToClient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
+                return new SessionStoppedState(this._context);
             }
-            else if(packet.ContainsKey("session/stop"))
-            {
-                return new SessionStoppedState(this.context);
-            }
-            //Login Failed so it stays in LoginState
+            // To DO:
+            // Implement pause and resume into this state.
             return this;
-
         }
 
         private void BufferUserData(double speed, int distance, byte heartrate)
         {
-            this.context.userStats.Add(new UserStat(speed, distance, heartrate));
+          
+            this._context.userStatsBuffer.Add(new UserStat(speed, distance, heartrate));
+            foreach (UserStat stat in _context.userStatsBuffer)
+            {
+               stat.ToString();
+            }
         }
-
-
     }
 }

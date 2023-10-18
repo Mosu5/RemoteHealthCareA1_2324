@@ -14,92 +14,51 @@ namespace ServerApp.States
     /// </summary>
     internal class LoginState : IState
     {
-        //TODO current username and password are for testing
-        private Server server;
+        //TODO current username and password are for 
 
-        private ServerContext context;
+        private ServerContext _context;
         public LoginState(ServerContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         public IState Handle(JsonObject packet)
         {
-            //checks if the packet is contains the correct data
-            if (packet.ContainsKey("data"))
+            //extracting the needed values from packet
+            string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
+            string password = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();
+
+            Console.WriteLine("Login recieved data: " + username + "    " + password);
+
+
+            if (Server.users.Any())
             {
-                //extracting the needed part of the JsonObject
-                JsonObject data = packet["data"] as JsonObject;
-                Console.WriteLine("Login recieved data: " + data);
 
-                //extracting username and password
-                string username = (string)data["username"];
-                string password = (string)data["password"];
-
-                //checks if the packet is contains the correct data
-                if (data.ContainsKey("username") && data.ContainsKey("password"))
+                foreach (UserAccount account in Server.users)
                 {
-                    foreach (UserAccount account in server.users)
+                    if (account.GetUserName() == username && account.GetPassword() == password)
                     {
-                        if (account.GetUserName() == username && account.GetPassword() == password)
-                        {
-                            context.ResponseToClient = ApproveLogin();
-                            //context.SetNextState(new SessionActiveState(context));
-                            return new SessionActiveState(context);
-                        }
-                        else
-                        {
-                            context.ResponseToClient = RefuseLogin();
-                            //context.SetNextState(new SessionActiveState(context));
-                            return this;
-                        }
+                        Console.WriteLine("We are actually logging in!");
+                        _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+                        return new SessionIdle(_context);
                     }
-                }
-                else
-                {
-                    throw new FormatException("Converting data field to JsonObject failed");
+                    else
+                    {
+                        Console.WriteLine("Currently going into account creation state.");
+                        _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+                        return new CreateAccountState(_context);
+                    }
                 }
             }
             else
             {
-                throw new FormatException("Json packet format corrupted!");
+                _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+                return new CreateAccountState(_context);
             }
+            _context.ResponseToClient = ResponseDataForClient.GenerateResponse("login", null, "error");
             //Login Failed so it stays in LoginState
             return this;
         }
 
-        /// <summary>
-        /// Method to send status of login
-        /// </summary>
-        /// <returns></returns>
-        private JsonObject RefuseLogin()
-        {
-            return new JsonObject
-            {
-                {"command", "login" },
-                {"data", new JsonObject
-                    {
-                        {"status", "error"}
-                    }
-                }
-            };
-        }
-
-        /// <summary>
-        /// Mehtod to send status login
-        /// </summary>
-        /// <returns></returns>
-        private JsonObject ApproveLogin()
-        {
-            return new JsonObject
-            {
-                {"command", "login" },
-                {"data", new JsonObject
-                    {
-                        {"status", "ok"}
-                    }
-                }
-            };
-        }
     }
 }

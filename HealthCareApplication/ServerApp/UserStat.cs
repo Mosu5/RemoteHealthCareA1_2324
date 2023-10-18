@@ -20,5 +20,11 @@ namespace ServerApp
             this.heartrate = heartrate;
         }
 
+        public string ToString()
+        {
+            return $"Speed: {speed}, --- Distance: {distance}, --- Heartrate: {heartrate}";
+   
+        }
+
     }
 }

@@ -74,8 +74,6 @@ namespace Utilities.Communication
             // Concatenate payload to length data for the final message
             byte[] message = lengthData.Concat(payloadAsBytes).ToArray();
 
-            await Console.Out.WriteLineAsync("Sent: " + _encoding.GetString(message));
-
             await _stream.WriteAsync(message, 0, message.Length);
         }
 

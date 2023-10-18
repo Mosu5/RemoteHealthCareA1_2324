@@ -20,19 +20,19 @@ namespace ServerApp.States
     {
         public bool isSessionActive { get; set; }
         private UserAccount _userAccount { get; set; }
-        private IState currentState {  get; set; }
-        private IState nextState { get; set;}
+        private IState currentState { get; set; }
+        private IState nextState { get; set; }
         private ServerConn _serverConn { get; set; }
         public JsonObject ResponseToClient { get; set; }
-        public List<UserStat> userStats;
-        
-        public ServerContext(ServerConn serverConn) 
+        public List<UserStat> userStatsBuffer;
+
+        public ServerContext(ServerConn serverConn)
         {
             this._serverConn = serverConn;
             this.isSessionActive = false;
             currentState = new LoginState(this);
-            this.userStats = new List<UserStat>();
-            currentState = new SessionActiveState(this);
+            this.userStatsBuffer = new List<UserStat>();
+            
         }
 
         public void SetNextState(IState newState)
@@ -46,39 +46,15 @@ namespace ServerApp.States
             {
                 throw new NullReferenceException("Error while receiving JsonObject");
             }
-            if (receivedData.ContainsKey("command"))
-            {
-                string commando = (string)receivedData["commando"];
-                Console.WriteLine("Recieved command from client: " + commando);
-                currentState = currentState.Handle(receivedData);
-
-                //switch (commando)
-                //{
-                //    case "create account":
-                //        this.nextState = new CreateAccountState(this);
-                //        break;
-                //    case "login":
-                //        this.nextState = new LoginState(this);
-                //        break;
-                //    case "session stop":
-                //        this.nextState = new SessionStoppedState(this);
-                //        break;
-                //    case "session pause":
-                //        this.nextState = new SessionPausedState();
-                //        break;
-                //    case "session start":
-                //        this.nextState = new SessionActiveState(this);
-                //        break;
-                //}
-
-            }
-            //ApplyNewState();
+ 
+            currentState = currentState.Handle(receivedData);
+            
+            
         }
 
-        private void SaveUserData()
+        public void SaveUserData()
         {
-            JsonObject userData = (JsonObject)JsonSerializer.Serialize(userStats);
-
+            string userData = JsonSerializer.Serialize(userStatsBuffer);
 
             this._userAccount.SaveUserStats(userData);
         }
@@ -90,53 +66,8 @@ namespace ServerApp.States
 
         public UserAccount GetUserAccount() { return this._userAccount; }
 
-        
-        //public void Run()
-        //{
-        //    while (this.stream.DataAvailable)
-        //    {
-        //        StreamReader streamReader = new StreamReader(stream);
-        //        JsonObject receivedData = (JsonObject)streamReader.Read();
+     
 
-        //        if (receivedData != null)
-        //        {
-        //            throw new NullReferenceException("Error while receiving JsonObject");
-        //        }
-        //        if (receivedData.ContainsKey("command"))
-        //        {
-        //            string commando = (string)receivedData["commando"];
-        //            Console.WriteLine("Recieved command from client: " + commando);
-
-        //            switch (commando)
-        //            {
-        //                case "login":
-        //                    this.nextState = new LoginState(this);
-        //                    break;
-        //                case "session stop":
-        //                    this.nextState = new SessionStoppedState();
-        //                    break;
-        //                case "session pause":
-        //                    this.nextState = new SessionPausedState();
-        //                    break;
-        //                case "session start":
-        //                    this.nextState = new SessionActiveState(this);
-        //                    break;
-        //            }
-                        
-        //        }
-
-        //        ApplyNewState();
-        //        currentState.Handle(receivedData);
-        //    }
-        //}
-
-        private void ApplyNewState()
-        {
-            if (this.nextState != null)
-            {
-                this.currentState = this.nextState;
-            }
-            this.nextState = null;
-        }
+       
     }
 }

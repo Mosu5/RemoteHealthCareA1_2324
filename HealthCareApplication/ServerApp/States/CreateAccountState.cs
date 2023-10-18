@@ -9,54 +9,44 @@ namespace ServerApp.States
 {
     internal class CreateAccountState : IState
     {
-        private ServerContext context;
-        private Server server;
+        private ServerContext _context;
 
         public CreateAccountState(ServerContext context)
         {
-            this.context = context;
+            this._context = context;
         }
-       
+
         public IState Handle(JsonObject packet)
         {
-            //checks if the packet is contains the correct data
-            if (packet.ContainsKey("data"))
-            {
-                //extracting the needed part of the JsonObject
-                JsonObject data = packet["data"] as JsonObject;
-                Console.WriteLine("Create account recieved data: " + data);
-                
-                //extracting username and password
-                string username = (string)data["username"];
-                string password = (string)data["password"];
+            Console.WriteLine(packet.ToJsonString());
+            //extracting username and password
+            string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
+            string password = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();
 
-                //checks if the packet is contains the correct data
-                if (data.ContainsKey("username") && data.ContainsKey("password"))
+            //extracting the needed part of the JsonObject
+            Console.WriteLine("Create account recieved data: " + username + "   " + password);
+
+            //checks if the packet is contains the correct data
+
+            foreach (UserAccount account in Server.users)
+            {
+                if (account.GetUserName() == username)
                 {
-                    foreach (UserAccount account in server.users)
-                    {
-                        if (account.GetUserName() == username)
-                        {
-                            context.ResponseToClient = AccCreationFailed();
-                            return new LoginState(context);
-                        }else 
-                        {
-                            server.users.Add(new UserAccount(username,password));
-                            return new SessionActiveState(context);
-                        }
-                    }
+                    //context.ResponseToClient = AccCreationFailed("Username is already being used by an account. Please Login or use another username to create an account");
+                    _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "error");
+                    return new LoginState(_context);
                 }
                 else
                 {
-                    throw new FormatException("Converting data field to JsonObject failed");
+                    //context.ResponseToClient = AccSuccesfullCreated();
+                    _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "ok");
+                    Server.users.Add(new UserAccount(username, password));
+                    return new SessionActiveState(_context);
                 }
-
-            }
-            else
-            {
-                throw new FormatException("Json packet format corrupted!");
             }
             //Account Creation Failed so it stays in CreateAccountState
+            //context.ResponseToClient = AccCreationFailed("Account creation Failed because");
+            _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "error");
             return this;
         }
 
@@ -64,35 +54,35 @@ namespace ServerApp.States
         /// Method returns status of account creation.
         /// </summary>
         /// <returns></returns>
-        private JsonObject AccSuccesfullCreated()
-        {
-            return new JsonObject
-            {
-                {"command", "create account" },
-                {"data", new JsonObject
-                    {
-                        {"status", "ok"}
-                    }
-                }
-            };
-        }
+        //private JsonObject AccSuccesfullCreated()
+        //{
+        //    return new JsonObject
+        //    {
+        //        {"command", "create account" },
+        //        {"data", new JsonObject
+        //            {
+        //                {"status", "ok"}
+        //            }
+        //        }
+        //    };
+        //}
 
         /// <summary>
         /// Method returns status of account creation.
         /// </summary>
         /// <returns></returns>
-        private JsonObject AccCreationFailed()
-        {
-            return new JsonObject
-            {
-                {"command", "create account" },
-                {"data", new JsonObject
-                    {
-                        {"status", "error"},
-                        {"description", "username and password are the same" }
-                    }
-                }
-            };
-        }
+        //private JsonObject AccCreationFailed(string message)
+        //{
+        //    return new JsonObject
+        //    {
+        //        {"command", "create account" },
+        //        {"data", new JsonObject
+        //            {
+        //                {"status", "error"},
+        //                {"description", message}
+        //            }
+        //        }
+        //    };
+        //}
     }
 }

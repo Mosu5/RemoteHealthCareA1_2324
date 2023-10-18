@@ -20,47 +20,15 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
-
-            if (packet.ContainsKey("data"))
-            {
-                JsonObject data = packet["data"] as JsonObject;
-                Console.WriteLine("Recieved data: " + data);
-
-                // Save data to file
-
-
-                //if (this._context.)
-                //{
-
-                //}
-
-                //if (data.ContainsKey("username") && data.ContainsKey("password"))
-                //{
-                //    if (username == _username && password == _password)
-                //    {
-                //        // Update response to the client so the server can retrieve response and send to client
-                //        context.ResponseToClient = ApproveLogin();
-                //        context.SetNextState(new SessionActiveState(context));
-                //    }
-                //    else
-                //    {
-                //        context.ResponseToClient = RefuseLogin();
-                //    }
-
-                //}
-                //else
-                //{
-                //    throw new FormatException("Converting data field to JsonObject failed");
-                //}
-
-            }
-            else
-            {
-                throw new FormatException("Json packet format corrupted!");
-            }
-            return this;
+            // Save data to file
+            // Data will be saved so client/doctor can recieve a stats summary later
+            Console.WriteLine("State = Session/stop");
+            this._context.SaveUserData();
+            _context.GetUserAccount().hasActiveSession = false;
+            _context.isSessionActive = false;
+            //ResponseClientData.GenerateResponse("session/stop", null, "ok");
+            return new SessionIdle(_context);
         }
-
 
     }
 }
