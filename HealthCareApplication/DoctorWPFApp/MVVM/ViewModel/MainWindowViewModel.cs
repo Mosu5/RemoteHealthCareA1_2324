@@ -14,17 +14,14 @@ namespace DoctorWPFApp.MVVM.ViewModel
     internal class MainWindowViewModel : ViewModelBase
     {
 
-        /* Commands */
+
+        #region RelayCommands
         public RelayCommand LoginCommand => new RelayCommand(execute =>
         {
             TestLogin();
             InitPlaceHolderData();
         }, canExecute => ValidateUser());
-
-
-
-
-
+        #endregion
 
         #region Login
         private string _username;
@@ -73,9 +70,9 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             return true;
         }
-
         #endregion
 
+        #region PatientData
         private Patient _selectedPatient = new Patient(); // start with empty patient
         public Patient SelectedPatient
         {
@@ -91,17 +88,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
         }
         public ObservableCollection<Patient> Patients { get; set; } = new ObservableCollection<Patient>();
-
-
-
-
-        // TODO connect relayCommands and events to doctor code
-
-        public MainWindowViewModel()
-        {
-            // start up connection
-
-        }
+        #endregion
 
         private void InitPlaceHolderData()
         {
@@ -129,6 +116,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             OnPropertyChanged(nameof(Patients));
         }
+
+        // TODO connect relayCommands and events to doctor code
+
+
+       
 
 
 
