@@ -39,23 +39,12 @@ namespace ServerApp.States
                     if (account.GetUserName() == username && account.GetPassword() == password)
                     {
                         Console.WriteLine("We are actually logging in!");
+                        _context.SetNewUser(account);
                         _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
                         return new SessionIdle(_context);
                     }
-                    else
-                    {
-                        Console.WriteLine("Currently going into account creation state.");
-                        _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
-                        return new CreateAccountState(_context);
-                    }
                 }
             }
-            else
-            {
-                _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
-                return new CreateAccountState(_context);
-            }
-            _context.ResponseToClient = ResponseDataForClient.GenerateResponse("login", null, "error");
             //Login Failed so it stays in LoginState
             return this;
         }
