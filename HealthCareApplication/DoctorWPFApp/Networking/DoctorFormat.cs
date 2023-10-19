@@ -36,6 +36,31 @@ namespace DoctorWPFApp.Networking
             });
         }
 
+        public static JsonObject SessionStartMessage()
+        {
+            return BaseMessage("session/start");
+        }
+
+        public static JsonObject SessionStopMessage()
+        {
+            return BaseMessage("session/stop");
+        }
+
+        public static JsonObject SessionPauseMessage()
+        {
+            return BaseMessage("session/pause");
+        }
+
+        public static JsonObject SessionResumeMessage()
+        {
+            return BaseMessage("session/resume");
+        }
+
+        public static JsonObject StatsSummaryMessage()
+        {
+            return BaseMessage("stats/summary");
+        }
+
         public static JsonObject ChatsSendMessage(string chatMessage)
         {
             return BaseMessage("chats/send", new JsonObject

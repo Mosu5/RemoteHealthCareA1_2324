@@ -31,14 +31,29 @@ namespace DoctorWPFApp.MVVM.ViewModel
         public RelayCommand LoginCommand => new(async (execute) =>
         {
             // Send the login command
-            await SendLogin();
+            JsonObject loginRequest = DoctorFormat.LoginMessage(_username, _password);
+            await ClientConn.SendJson(loginRequest);
 
             InitPlaceHolderData();
-        }, canExecute => ValidateLoginFields());
+        }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
+
+        private bool _isSessionRunning = false;
+        public RelayCommand StartStopSession => new(async (execute) =>
+        {
+            JsonObject sessionRequest =
+                _isSessionRunning
+                ? DoctorFormat.SessionStartMessage()
+                : DoctorFormat.SessionStopMessage();
+
+            // Toggle boolean
+            _isSessionRunning = !_isSessionRunning;
+
+            await ClientConn.SendJson(sessionRequest);
+        }, canExecute => true);
 
         #endregion
 
-        #region Login properties and methods
+        #region Login properties
 
         private string? _username;
         public string? Username
@@ -63,23 +78,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 _password = value;
                 OnPropertyChanged(nameof(Password));
             }
-        }
-
-        /// <summary>
-        /// Sends the login request message.
-        /// </summary>
-        private async Task SendLogin()
-        {
-            JsonObject loginRequest = DoctorFormat.LoginMessage(_username, _password);
-            await ClientConn.SendJson(loginRequest);
-        }
-
-        /// <summary>
-        /// Checks wether the username and password fields are both not null or empty.
-        /// </summary>
-        private bool ValidateLoginFields()
-        {
-            return !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password);
         }
 
         #endregion
@@ -120,11 +118,10 @@ namespace DoctorWPFApp.MVVM.ViewModel
         #endregion
 
         /// <summary>
-        /// TODO remove; this is a temporary method for sample user data.
+        /// TODO remove when it is not needed anymore; this is a temporary method for sample user data.
         /// </summary>
         private void InitPlaceHolderData()
         {
-
             Patients = new ObservableCollection<Patient>
             {
                 new Patient

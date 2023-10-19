@@ -31,12 +31,18 @@ namespace DoctorWPFApp.MVVM.View
         {
             if (isRunning == true)
             {
+                // Stop the session
+
+
                 isRunning = false;
                 stopstartBtn.Content = "Start";
                 stopstartBtn.Background = System.Windows.Media.Brushes.LightGreen;
             }
             else
             {
+                // Start a new session
+
+
                 isRunning = true;
                 stopstartBtn.Content = "Stop";
                 stopstartBtn.Background = System.Windows.Media.Brushes.Red;
