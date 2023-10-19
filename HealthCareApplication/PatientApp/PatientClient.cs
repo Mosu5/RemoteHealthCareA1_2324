@@ -31,8 +31,6 @@ namespace PatientApp
         {
             Logger.Log("Enter commands in the console to execute them.", LogType.GeneralInfo);
 
-            //await new Login("bob", "bob").Execute();
-            //await new SessionStart().Execute();
 
             while (true)
             {

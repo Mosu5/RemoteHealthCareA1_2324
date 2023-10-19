@@ -34,6 +34,12 @@ namespace ServerApp.States
                 this._context.ResponseToClient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
                 return new SessionStoppedState(this._context);
             }
+            else if(command == "session/pause")
+            {
+                this._context.ResponseToClient = ResponseClientData.GenerateResponse("session/pause", null, "ok");
+                return new SessionPausedState(this._context);
+            }
+            
             // To DO:
             // Implement pause and resume into this state.
             return this;
