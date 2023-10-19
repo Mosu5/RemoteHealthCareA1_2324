@@ -18,6 +18,7 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
+
             Console.WriteLine(packet.ToJsonString());
             //extracting username and password
             string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
@@ -41,7 +42,7 @@ namespace ServerApp.States
                     //context.ResponseToClient = AccSuccesfullCreated();
                     _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "ok");
                     Server.users.Add(new UserAccount(username, password));
-                    return new SessionActiveState(_context);
+                    return new SessionIdle(_context);
                 }
             }
             //Account Creation Failed so it stays in CreateAccountState
@@ -49,40 +50,5 @@ namespace ServerApp.States
             _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "error");
             return this;
         }
-
-        /// <summary>
-        /// Method returns status of account creation.
-        /// </summary>
-        /// <returns></returns>
-        //private JsonObject AccSuccesfullCreated()
-        //{
-        //    return new JsonObject
-        //    {
-        //        {"command", "create account" },
-        //        {"data", new JsonObject
-        //            {
-        //                {"status", "ok"}
-        //            }
-        //        }
-        //    };
-        //}
-
-        /// <summary>
-        /// Method returns status of account creation.
-        /// </summary>
-        /// <returns></returns>
-        //private JsonObject AccCreationFailed(string message)
-        //{
-        //    return new JsonObject
-        //    {
-        //        {"command", "create account" },
-        //        {"data", new JsonObject
-        //            {
-        //                {"status", "error"},
-        //                {"description", message}
-        //            }
-        //        }
-        //    };
-        //}
     }
 }

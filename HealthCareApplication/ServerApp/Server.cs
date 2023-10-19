@@ -22,7 +22,11 @@ namespace ServerApp
 
         public static async Task Main(string[] args)
         {
-            
+            users.Add(new UserAccount("bob","bob"));
+            users.Add(new UserAccount("jan", "jan"));
+            users.Add(new UserAccount("eren", "eren"));
+            users.Add(new UserAccount("abc", "abc"));
+
             serverConn.StartListener();
             
             while (serverConn.AcceptClient() is var client)
@@ -36,11 +40,8 @@ namespace ServerApp
         // Session of an active user
         public static async void HandleClientAsync(object connectingClient)
         {
-            UserAccount userAccount = new UserAccount("bob", "bob");
-            users.Add(userAccount);
             TcpClient client = connectingClient as TcpClient;
             ServerContext serverContext = new ServerContext(serverConn);
-            serverContext.SetNewUser(userAccount); // TODO: This is just for testing purposes, this has to be implemented later!
             while (client.Connected)
             {
                 Console.Out.WriteLineAsync("Looking for data: ");
@@ -48,7 +49,6 @@ namespace ServerApp
                 await Console.Out.WriteLineAsync("received " + data.ToString());
                 serverContext.Update(data);
                 await serverConn.SendJson(client, serverContext.ResponseToClient);
-                
             }
         }
     }   
