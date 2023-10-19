@@ -17,7 +17,7 @@ namespace DoctorWPFApp.MVVM.View
             // Create a new MainWindowViewModel for DataContext. This can
             // only happen in the window which the UI starts up with. In
             // this case, it's the login window.
-            DataContext = new MainWindowViewModel();
+            //DataContext = new MainWindowViewModel();
             Navigator.CurrentWindow = this;
         }
     }

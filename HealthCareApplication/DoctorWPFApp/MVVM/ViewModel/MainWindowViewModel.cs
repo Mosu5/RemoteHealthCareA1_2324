@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Security;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,9 @@ namespace DoctorWPFApp.MVVM.ViewModel
     {
         public MainWindowViewModel()
         {
+            Thread listenerThread = new(async () => await RequestHandler.Listen());
+            listenerThread.Start();
+
             // Subscribe to response event handler
             RequestHandler.LoggedIn += OnLoginResponse;
         }
@@ -87,7 +91,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             get { return _selectedPatient; }
             set
             {
-
                 if (_selectedPatient != value)
                 {
                     _selectedPatient = value;
@@ -107,7 +110,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
         {
             if (successfulLogin)
             {
-                Navigator.NavToSessionWindow();
+                Application.Current.Dispatcher.Invoke(() => Navigator.NavToSessionWindow());
                 return;
             }
 
