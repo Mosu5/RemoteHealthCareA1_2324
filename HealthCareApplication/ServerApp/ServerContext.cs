@@ -66,6 +66,16 @@ namespace ServerApp.States
 
         public UserAccount GetUserAccount() { return this._userAccount; }
 
+        // Gets the userstats from the current session
+        public List<UserStat> GetUserStatsBuffer()
+        {
+            return this.userStatsBuffer;
+        }
+        public void ResetUserStatsBuffer()
+        {
+            this.userStatsBuffer.Clear();
+        }
+
      
 
        

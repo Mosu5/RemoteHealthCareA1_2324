@@ -62,7 +62,6 @@ namespace ServerApp
 
             StreamReader reader = new StreamReader(correctPath);
 
-
             string jsonData = reader.ReadToEnd();
             List<UserStat> retrievedUserStats = JsonSerializer.Deserialize<List<UserStat>>(jsonData);
             return retrievedUserStats;
