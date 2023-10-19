@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:DoctorWPFApp.MVVM.ViewModel"        mc:Ignorable="d"
         Title="StatsD" Height="450" Width="435">
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <local:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <Grid>
         <Button Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="41" Width="74" Click="BackBtn_Click"/>

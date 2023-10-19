@@ -16,17 +16,10 @@ namespace DoctorWPFApp.Networking
         public static event EventHandler<string>? OnReceiveMessage;
         public static event EventHandler<EventArgs>? OnReceiveData;
 
-        // TODO have better method to catch this edge case
-        private static bool _uiHasRun = false;
-
         public static async Task Listen()
         {
-            if (_uiHasRun) return;
-
             if (!await ClientConn.ConnectToServer("127.0.0.1", 8888))
                 throw new CommunicationException("Could not connect to the server.");
-
-            _uiHasRun = true;
 
             while (await ClientConn.ReceiveJson() is var message) // listening for message
             {

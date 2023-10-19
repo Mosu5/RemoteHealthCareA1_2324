@@ -20,7 +20,7 @@ namespace DoctorWPFApp.MVVM
 
             // Close current window
             window.DataContext = CurrentWindow.DataContext;
-            //CurrentWindow.Close();
+            CurrentWindow.Close();
 
             // Open next window
             CurrentWindow = window;

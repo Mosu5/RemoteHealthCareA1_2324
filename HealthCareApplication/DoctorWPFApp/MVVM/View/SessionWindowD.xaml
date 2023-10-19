@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="SessionSetting" ResizeMode="NoResize" Height="490" Width="490">
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <local:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <Grid Margin="-35,0,59,-117">
         <Grid.ColumnDefinitions>

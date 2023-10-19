@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="Chats" ResizeMode="NoResize" Height="500" Width="400">
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <local:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
 
     <Grid>

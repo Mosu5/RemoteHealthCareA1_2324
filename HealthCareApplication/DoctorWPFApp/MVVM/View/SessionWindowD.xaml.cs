@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using DoctorWPFApp.Networking;
+using System.ComponentModel;
 using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View

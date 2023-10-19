@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:DoctorWPFApp"
              StartupUri="MVVM/View/LoginWindowD.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>
