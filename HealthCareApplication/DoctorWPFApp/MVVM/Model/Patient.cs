@@ -9,7 +9,9 @@ namespace DoctorWPFApp.MVVM.Model
     internal class Patient
     {
         public string Name { get; set; }
+
         public double Speed { get; set; }
+
         public double Distance { get; set; }
 
         public double HeartRate {  get; set; }
@@ -17,7 +19,5 @@ namespace DoctorWPFApp.MVVM.Model
         public double RrIntervals { get; set; }
 
         public List<String> ChatMessages { get; set; }
-
-        // TODO add data for graphs - look up how
     }
 }

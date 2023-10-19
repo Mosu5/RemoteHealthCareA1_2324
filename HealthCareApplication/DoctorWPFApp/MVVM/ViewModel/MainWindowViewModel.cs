@@ -1,8 +1,11 @@
 ﻿using DoctorWPFApp.MVVM.Model;
+using DoctorWPFApp.Networking;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Security;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,32 +16,39 @@ namespace DoctorWPFApp.MVVM.ViewModel
     /// </summary>
     internal class MainWindowViewModel : ViewModelBase
     {
-
-
-        #region RelayCommands
-        public RelayCommand LoginCommand => new RelayCommand(execute =>
+        public MainWindowViewModel()
         {
-            TestLogin();
+            // Subscribe to response event handler
+            RequestHandler.LoggedIn += OnLoginResponse;
+        }
+
+        #region Commands called by the UI
+
+        public RelayCommand LoginCommand => new(async (execute) =>
+        {
+            // Send the login command
+            await SendLogin();
+
             InitPlaceHolderData();
-        }, canExecute => ValidateUser());
+        }, canExecute => ValidateLoginFields());
+
         #endregion
 
-        #region Login
-        private string _username;
-        public string Username
+        #region Login properties and methods
+
+        private string? _username;
+        public string? Username
         {
             get { return _username; }
             set
             {
-
                 _username = value;
                 OnPropertyChanged(nameof(Username));
-
             }
         }
 
-        private string _password;
-        public string Password
+        private string? _password;
+        public string? Password
         {
             get
             {
@@ -50,26 +60,24 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(Password));
             }
         }
-        private void TestLogin()
-        {
-            if (_username != "super" || _password != "sexy") // TODO change 
-            {
-                MessageBox.Show("Wrong username or password.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
 
-            Navigator.NavToSessionWindow();
+        /// <summary>
+        /// Sends the login request message.
+        /// </summary>
+        private async Task SendLogin()
+        {
+            JsonObject loginRequest = DoctorFormat.LoginMessage(_username, _password);
+            await ClientConn.SendJson(loginRequest);
         }
 
-        private bool ValidateUser()
+        /// <summary>
+        /// Checks wether the username and password fields are both not null or empty.
+        /// </summary>
+        private bool ValidateLoginFields()
         {
-            if (_username == null || _password == null)
-            {
-                return false;
-            }
-
-            return true;
+            return !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password);
         }
+
         #endregion
 
         #region PatientData
@@ -90,6 +98,27 @@ namespace DoctorWPFApp.MVVM.ViewModel
         public ObservableCollection<Patient> Patients { get; set; } = new ObservableCollection<Patient>();
         #endregion
 
+        #region Response actions
+
+        /// <summary>
+        /// When a response is received from the server, give feedback to the user or switch window.
+        /// </summary>
+        private void OnLoginResponse(object? sender, bool successfulLogin)
+        {
+            if (successfulLogin)
+            {
+                Navigator.NavToSessionWindow();
+                return;
+            }
+
+            MessageBox.Show("Wrong username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// TODO remove; this is a temporary method for sample user data.
+        /// </summary>
         private void InitPlaceHolderData()
         {
 
@@ -116,15 +145,5 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             OnPropertyChanged(nameof(Patients));
         }
-
-        // TODO connect relayCommands and events to doctor code
-
-
-       
-
-
-
-
-
     }
 }

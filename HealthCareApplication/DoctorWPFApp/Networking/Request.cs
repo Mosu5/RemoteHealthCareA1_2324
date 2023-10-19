@@ -10,19 +10,19 @@ namespace DoctorWPFApp.Networking
     public class Request
     {
         // The response sent by the server, or else null.
-        private JsonObject _response;
+        private JsonObject? _response;
 
         // An object that can block execution until its SetResult() method is called.
         // This is used for commands to let them wait for a response.
         private readonly TaskCompletionSource<JsonObject> _waiter;
 
-        public readonly string Command;
-        public readonly JsonObject Message;
+        public readonly string? Command;
+        public readonly JsonObject? Message;
 
         public Request(JsonObject message)
         {
             _waiter = new TaskCompletionSource<JsonObject>();
-            (Command, Message) = DoctorProxy.GetCommandAndData(message);
+            (Command, Message) = RequestHandler.GetCommandAndData(message);
         }
 
         /// <summary>

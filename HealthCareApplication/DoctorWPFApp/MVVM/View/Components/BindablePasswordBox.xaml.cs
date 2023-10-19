@@ -25,8 +25,8 @@ namespace DoctorWPFApp.MVVM.View.Components
 
         public static readonly DependencyProperty PasswordProperty =
             DependencyProperty.Register("Password", typeof(string), typeof(BindablePasswordBox), 
-                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
-                    PasswordPropertyChanged, null, false, UpdateSourceTrigger.PropertyChanged));
+            new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, 
+                PasswordPropertyChanged, null, false, UpdateSourceTrigger.PropertyChanged));
 
         private static void PasswordPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

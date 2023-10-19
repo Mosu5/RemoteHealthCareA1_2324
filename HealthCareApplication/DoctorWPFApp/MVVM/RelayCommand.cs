@@ -3,10 +3,16 @@ using System.Windows.Input;
 
 namespace DoctorWPFApp.MVVM;
 
+/// <summary>
+/// Command that gets called by the UI when the user does some action (e.g. logging in).
+/// The UI checks if the command can be executed by calling the CanExecute() method, and
+/// can execute the command by calling the Execute() command. This logic is implemented
+/// by WPF under the hood.
+/// </summary>
 public class RelayCommand : ICommand
 {
-    private Action<object> _execute;
-    private Func<object, bool> _canExecute;
+    private readonly Action<object> _execute;
+    private readonly Func<object, bool> _canExecute;
 
     public event EventHandler? CanExecuteChanged
     {
@@ -22,11 +28,11 @@ public class RelayCommand : ICommand
     
     public bool CanExecute(object? parameter)
     {
-        return this._canExecute == null || this._canExecute(parameter);
+        return _canExecute == null || _canExecute(parameter);
     }
     
     public void Execute(object? parameter)
     {
-        this._execute(parameter);
+        _execute(parameter);
     }
 }

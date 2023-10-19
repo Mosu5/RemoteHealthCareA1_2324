@@ -26,9 +26,9 @@
 
         <Button Name="stopstartBtn" Grid.Column="1" Content="Start" HorizontalAlignment="Left" Margin="12,177,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="#FFADFE86" FontSize="15"/>
         <Button Name="statsBtn" Grid.Column="1" Content="Stats" Margin="113,177,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="39" Width="81" FontSize="15" 
-                Click="statsBtn_Click"/>
+                Click="StatsBtn_Click"/>
         <Button Name="chatsBtn" Grid.Column="1" Content="Chats" HorizontalAlignment="Left" Margin="215,177,0,0" VerticalAlignment="Top" Height="39" Width="81" FontSize="15" 
-                Click="chatsBtn_Click"/>
+                Click="ChatsBtn_Click"/>
 
         <TextBox Name="LocalhostBox" Grid.Column="1" HorizontalAlignment="Left" Margin="11,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" Height="38" FontSize="15"/>
         <TextBox Name="PortBox" Grid.Column="1" HorizontalAlignment="Left" Margin="184,349,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" Height="39" FontSize="15"/>

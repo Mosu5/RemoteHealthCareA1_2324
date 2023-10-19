@@ -16,19 +16,18 @@ namespace DoctorWPFApp.MVVM.View
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
-        private void chatsBtn_Click(object sender, RoutedEventArgs e)
+        private void ChatsBtn_Click(object sender, RoutedEventArgs e)
         {
             Navigator.NavToChatWindow();
         }
 
-        private void statsBtn_Click(object sender, RoutedEventArgs e)
+        private void StatsBtn_Click(object sender, RoutedEventArgs e)
         {
             Navigator.NavToStatWindow();
         }
 
-        private void stopstartBtn_Click(object sender, RoutedEventArgs e)
+        private void StopstartBtn_Click(object sender, RoutedEventArgs e)
         {
-
             if (isRunning == true)
             {
                 isRunning = false;

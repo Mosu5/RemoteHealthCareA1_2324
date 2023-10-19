@@ -1,10 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Nodes;
-using Utilities.Communication;
+using System.Threading.Tasks;
 
-namespace DoctorApp.Helpers
+namespace DoctorWPFApp.Networking
 {
-    internal class DoctorFormat
+    /// <summary>
+    /// Can format messages to send to the server. This hides the implementation of
+    /// for example the command and data field.
+    /// </summary>
+    class DoctorFormat
     {
         public static JsonObject BaseMessage(string command)
         {

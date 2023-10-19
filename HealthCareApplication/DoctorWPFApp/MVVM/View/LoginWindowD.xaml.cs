@@ -5,7 +5,7 @@ using System.Windows.Controls;
 namespace DoctorWPFApp.MVVM.View
 {
     /// <summary>
-    /// Create a 
+    /// Logic for the login window with username and password fields
     /// </summary>
     public partial class LoginWindowD : Window
     {
@@ -14,26 +14,11 @@ namespace DoctorWPFApp.MVVM.View
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
+            // Create a new MainWindowViewModel for DataContext. This can
+            // only happen in the window which the UI starts up with. In
+            // this case, it's the login window.
             DataContext = new MainWindowViewModel();
             Navigator.CurrentWindow = this;
         }
-
-      
-
-        // TODO move login logic to viewmodel while making use of navigator
-        private void loginBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (gbBox.Text.ToString() == "super" && passwordBox.Password.ToString() == "sexy")
-            {
-                Navigator.NavToSessionWindow();
-            }
-            else
-            {
-                MessageBox.Show("Wrong username or password.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-        }
-
-
     }
 }

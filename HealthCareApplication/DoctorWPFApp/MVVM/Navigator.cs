@@ -4,39 +4,44 @@ using DoctorWPFApp.MVVM.View;
 namespace DoctorWPFApp.MVVM
 {
     /// <summary>
-    /// Handles the navigation and datacontext sharing between views
+    /// Handles the navigation and DataContext sharing between views
     /// </summary>
     public static class Navigator
     {
         public static Window CurrentWindow = null!;
 
+        /// <summary>
+        /// Closes previous window and opens the next.
+        /// </summary>
         private static void NavToWindow(Window window)
         {
-            if (CurrentWindow != null)
-            {
-               
-                window.DataContext = CurrentWindow.DataContext;
-                CurrentWindow.Close();
-                CurrentWindow = window;
-                CurrentWindow.Show();
-            }
+            // Null check
+            if (CurrentWindow == null) return;
+
+            // Close current window
+            window.DataContext = CurrentWindow.DataContext;
+            CurrentWindow.Close();
+
+            // Open next window
+            CurrentWindow = window;
+            CurrentWindow.Show();
         }
 
         public static void NavToSessionWindow()
         {
-            SessionWindowD sessionWindow = new SessionWindowD();
+            SessionWindowD sessionWindow = new();
             NavToWindow(sessionWindow);
         }
 
         public static void NavToStatWindow()
         {
-            StatsWindowD statsWindow = new StatsWindowD();
+            StatsWindowD statsWindow = new();
             NavToWindow(statsWindow);
         }
 
         public static void NavToChatWindow()
         {
-            ChatWindowD chatWindow = new ChatWindowD();
+            ChatWindowD chatWindow = new();
             NavToWindow(chatWindow);
         }
     }

@@ -13,14 +13,14 @@ namespace DoctorWPFApp.MVVM.View
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
-        private void backBtn_Click(object sender, RoutedEventArgs e)
+        private void BackBtn_Click(object sender, RoutedEventArgs e)
         {
             Navigator.NavToSessionWindow();
         }
 
-        private void summaryBtn_Click(object sender, RoutedEventArgs e)
+        private void SummaryBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Averege speed: " + "\n" + "Distance: " + "\n" + "Average heartrate: ", "Summary so far!", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Average speed: " + "\n" + "Distance: " + "\n" + "Average heartrate: ", "Summary so far!", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
