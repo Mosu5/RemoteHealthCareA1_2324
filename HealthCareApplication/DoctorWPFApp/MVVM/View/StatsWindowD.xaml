@@ -4,16 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoctorWPFApp.MVVM.ViewModel"        mc:Ignorable="d"
-        Title="StatsD" Height="450" Width="435">
+        Title="StatsD" Height="496" Width="435">
 
     <!--<Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>-->
 
-    <Grid>
+    <Grid Margin="0,0,0,37">
         <Button Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="41" Width="74" Click="BackBtn_Click"/>
-        <Button Name="summaryBtn" Content="Summary" HorizontalAlignment="Left" Margin="335,10,0,0" VerticalAlignment="Top" Height="41" Width="74" Click="SummaryBtn_Click"/>
-        <Rectangle HorizontalAlignment="Center" Height="141" Margin="0,262,0,0" Stroke="Black" VerticalAlignment="Top" Width="325"/>
         <Label Content="DataType" HorizontalAlignment="Left" Margin="35,60,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
         <Label Content="Speed:" HorizontalAlignment="Left" Margin="35,91,0,0" VerticalAlignment="Top"/>
         <Label Content="Distance:" HorizontalAlignment="Left" Margin="35,122,0,0" VerticalAlignment="Top"/>
@@ -24,6 +22,11 @@
         <Label Name="distanceLabel" Content="{Binding SelectedPatient.Distance, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,122,0,0" VerticalAlignment="Top"/>
         <Label Name="heartrateLabel" Content="{Binding SelectedPatient.HeartRate, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,153,0,0" VerticalAlignment="Top"/>
         <Label Name="intervalLabel" Content="{Binding SelectedPatient.RrIntervals, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,184,0,0" VerticalAlignment="Top"/>
+        <ListView  Margin="35,275,35,0" ScrollViewer.VerticalScrollBarVisibility="Visible">
+
+        </ListView>
+        <Label Content="Summary" HorizontalAlignment="Left" Margin="35,239,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
+        <Rectangle HorizontalAlignment="Center" Height="162" Margin="0,60,0,0" Stroke="Black" VerticalAlignment="Top" Width="365"/>
 
 
 
