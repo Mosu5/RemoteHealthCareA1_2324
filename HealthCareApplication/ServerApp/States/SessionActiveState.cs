@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +21,9 @@ namespace ServerApp.States
          
             if (command == "stats/send")
             {
-                double speed = Double.Parse(JsonUtil.GetValueFromPacket(packet, "data", "speed").ToString());
-                int distance = Int32.Parse(JsonUtil.GetValueFromPacket(packet, "data", "distance").ToString());
-                byte heartRate = Byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
+                double speed = double.Parse(JsonUtil.GetValueFromPacket(packet, "data", "speed").ToString());
+                int distance = int.Parse(JsonUtil.GetValueFromPacket(packet, "data", "distance").ToString());
+                byte heartRate = byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
 
                 // Save data in server
                 BufferUserData(speed, distance, heartRate);

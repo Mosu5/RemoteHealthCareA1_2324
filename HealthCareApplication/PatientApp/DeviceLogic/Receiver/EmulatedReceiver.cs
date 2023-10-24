@@ -49,9 +49,9 @@ namespace PatientApp.DeviceConnection.Receiver
         /// <summary>
         /// Emulates successful connection to the trainer and sends emulated messages in a new thread.
         /// </summary>
-        public void ConnectToTrainer()
+        public async Task ConnectToTrainer()
         {
-            // Signaling successful connection
+            // Emulate a successful connection
             ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
 
             // Emulate the trainer on a new thread
@@ -70,7 +70,7 @@ namespace PatientApp.DeviceConnection.Receiver
         /// <summary>
         /// Emulates successful connection to the heart rate monitor and sends emulated messages in a new thread.
         /// </summary>
-        public void ConnectToHrm()
+        public async Task ConnectToHrm()
         {
             // Signaling successful connection
             ConnectedToHrm?.Invoke(this, EventArgs.Empty);
@@ -139,7 +139,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
         public async Task SetResistance(int percentage)
         {
-            Console.WriteLine("The emulator cannot emulate sending resistance.");
+            throw new NotImplementedException("The emulator cannot emulate sending resistance.");
         }
     }
 }
