@@ -11,7 +11,7 @@
     </Window.DataContext>-->
 
     <Grid Margin="0,0,0,37">
-        <Button Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="41" Width="74" Click="backBtn_Click"/>
+        <Button Name="backBtn" Content="Back" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="41" Width="74" Click="BackBtn_Click"/>
         <Label Content="DataType" HorizontalAlignment="Left" Margin="35,60,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
         <Label Content="Speed:" HorizontalAlignment="Left" Margin="35,91,0,0" VerticalAlignment="Top"/>
         <Label Content="Distance:" HorizontalAlignment="Left" Margin="35,122,0,0" VerticalAlignment="Top"/>
