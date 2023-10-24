@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.ViewModel"        mc:Ignorable="d"
+        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}" mc:Ignorable="d"
         Title="StatsD" Height="496" Width="435">
 
     <!--<Window.DataContext>
@@ -21,10 +21,22 @@
         <Label Name="speedLabel" Content="{Binding SelectedPatient.Speed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,91,0,0" VerticalAlignment="Top"/>
         <Label Name="distanceLabel" Content="{Binding SelectedPatient.Distance, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,122,0,0" VerticalAlignment="Top"/>
         <Label Name="heartrateLabel" Content="{Binding SelectedPatient.HeartRate, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,153,0,0" VerticalAlignment="Top"/>
-        <Label Name="intervalLabel" Content="{Binding SelectedPatient.RrIntervals, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,184,0,0" VerticalAlignment="Top"/>
-        <ListView  Margin="35,275,35,0" ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <Label Name="intervalLabel" Content="{Binding SelectedPatient.RrInterval, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Margin="0,184,0,0" VerticalAlignment="Top"/>
 
+
+        <ListView ItemsSource="{Binding SelectedPatient.PatientDataCollection}"
+                  Margin="35,275,35,0" ScrollViewer.VerticalScrollBarVisibility="Visible">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="DateTime" DisplayMemberBinding="{Binding DateTime}" />
+                    <GridViewColumn Header="Speed" DisplayMemberBinding="{Binding RecordedSpeed}" />
+                    <GridViewColumn Header="Distance" DisplayMemberBinding="{Binding RecordedDistance}" />
+                    <GridViewColumn Header="Heart Rate" DisplayMemberBinding="{Binding RecordedHeartRate}" />
+                    <GridViewColumn Header="RrIntervals" DisplayMemberBinding="{Binding RecordedRrInterval}" />
+                </GridView>
+            </ListView.View>
         </ListView>
+
         <Label Content="Summary" HorizontalAlignment="Left" Margin="35,239,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
         <Rectangle HorizontalAlignment="Center" Height="162" Margin="0,60,0,0" Stroke="Black" VerticalAlignment="Top" Width="365"/>
 
