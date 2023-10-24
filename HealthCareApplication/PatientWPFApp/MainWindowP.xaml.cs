@@ -1,12 +1,12 @@
-﻿using System.Windows;
-using DoctorWPFApp.View;
+﻿using PatientWPFApp.View;
+using System.Windows;
 
-namespace DoctorWPFApp
+namespace PatientWPFApp
 {
-   
-    public partial class MainWindow : Window
+
+    public partial class MainWindowP : Window
     {
-        public MainWindow()
+        public MainWindowP()
         {
             InitializeComponent();
         }
@@ -15,7 +15,7 @@ namespace DoctorWPFApp
         {
             if (gbBox.Text.ToString() == "super" && wwBox.Password.ToString() == "sexy")
             {
-                SessionSetting sessionSetting = new SessionSetting();
+                SessionSettingP sessionSetting = new SessionSettingP();
                 Close();
                 sessionSetting.Show();
             }
@@ -25,7 +25,5 @@ namespace DoctorWPFApp
             }
 
         }
-
-        
     }
 }

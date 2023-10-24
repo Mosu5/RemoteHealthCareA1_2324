@@ -1,18 +1,19 @@
 ﻿using System.Windows;
 
-namespace DoctorWPFApp.View
+namespace PatientWPFApp.View
 {
-    public partial class SessionSetting : Window
+    
+    public partial class SessionSettingP : Window
     {
         public bool isRunning = false;
-        public SessionSetting()
+        public SessionSettingP()
         {
             InitializeComponent();
         }
 
         private void chatsBtn_Click(object sender, RoutedEventArgs e)
         {
-            Chats chats = new Chats();
+            ChatP chats = new ChatP();
             Close();
             chats.Show();
         }
@@ -25,8 +26,8 @@ namespace DoctorWPFApp.View
 
         private void stopstartBtn_Click(object sender, RoutedEventArgs e)
         {
-            
-            if(isRunning == true)
+
+            if (isRunning == true)
             {
                 isRunning = false;
                 stopstartBtn.Content = "Start";
@@ -38,7 +39,7 @@ namespace DoctorWPFApp.View
                 stopstartBtn.Content = "Stop";
                 stopstartBtn.Background = System.Windows.Media.Brushes.Red;
             }
-            
+
         }
     }
 }

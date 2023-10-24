@@ -1,10 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Nodes;
-using Utilities.Communication;
+using System.Threading.Tasks;
 
-namespace DoctorApp.Helpers
+namespace DoctorWPFApp.Networking
 {
-    internal class DoctorFormat
+    /// <summary>
+    /// Can format messages to send to the server. This hides the implementation of
+    /// for example the command and data field.
+    /// </summary>
+    class DoctorFormat
     {
         public static JsonObject BaseMessage(string command)
         {
@@ -27,6 +34,31 @@ namespace DoctorApp.Helpers
                 { "username", username },
                 { "password", password }
             });
+        }
+
+        public static JsonObject SessionStartMessage()
+        {
+            return BaseMessage("session/start");
+        }
+
+        public static JsonObject SessionStopMessage()
+        {
+            return BaseMessage("session/stop");
+        }
+
+        public static JsonObject SessionPauseMessage()
+        {
+            return BaseMessage("session/pause");
+        }
+
+        public static JsonObject SessionResumeMessage()
+        {
+            return BaseMessage("session/resume");
+        }
+
+        public static JsonObject StatsSummaryMessage()
+        {
+            return BaseMessage("stats/summary");
         }
 
         public static JsonObject ChatsSendMessage(string chatMessage)

@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DoctorWPFApp.View
+namespace PatientWPFApp.View
 {
     /// <summary>
-    /// Interaction logic for ChatRoom.xaml
+    /// Interaction logic for StatsP.xaml
     /// </summary>
-    public partial class ChatRoom : Window
+    public partial class StatsP : Window
     {
-        public ChatRoom()
+        public StatsP()
         {
             InitializeComponent();
         }
