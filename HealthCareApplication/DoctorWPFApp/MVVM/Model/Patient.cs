@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoctorWPFApp.MVVM.Model
 {
@@ -10,19 +7,21 @@ namespace DoctorWPFApp.MVVM.Model
     {
         public string Name { get; set; }
 
+        // Real-Time data
         public double Speed { get; set; }
 
         public double Distance { get; set; }
         public double HeartRate {  get; set; }
-        public double RrIntervals { get; set; }
+        public double RrInterval { get; set; }
         public double Time { get; set; }
 
-        public List<double> Speedlist { get; set; }
-        public List<double> Distancelist { get; set; }
-        public List<double> HeartRatelist { get; set; }
-        public List<double> RrIntervalslist { get; set; }
-        public List<double> Timelist { get; set; }
 
-        public List<String> ChatMessages { get; set; }
+        // Historical Data / Logs
+        public List<PatientData> PatientDataCollection { get; set; } = new List<PatientData>();
+
+        public List<String> ChatMessages { get; set; } = new List<String>();
+
+
+
     }
 }
