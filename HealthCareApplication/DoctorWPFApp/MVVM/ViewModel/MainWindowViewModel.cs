@@ -24,6 +24,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             // Subscribe to response event handler
             RequestHandler.LoggedIn += OnLoginResponse;
+            RequestHandler.ReceivedChat += OnChatReceived;
         }
 
         #region Commands called by the UI
@@ -36,20 +37,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             InitPlaceHolderData();
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
-
-        private bool _isSessionRunning = false;
-        public RelayCommand StartStopSession => new(async (execute) =>
-        {
-            JsonObject sessionRequest =
-                _isSessionRunning
-                ? DoctorFormat.SessionStartMessage()
-                : DoctorFormat.SessionStopMessage();
-
-            // Toggle boolean
-            _isSessionRunning = !_isSessionRunning;
-
-            await ClientConn.SendJson(sessionRequest);
-        }, canExecute => true);
 
         #endregion
 
@@ -113,6 +100,15 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
 
             MessageBox.Show("Wrong username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        private void OnChatReceived(object? sender, string chatMessage)
+        {
+            // TODO fix server sending chat to doctor
+            // TODO update observable list
+            //MessageBox.Show($"Chat received: {chatMessage}");
+            // todo update observable list based on patient name in received message
+
+            Application.Current.Dispatcher.Invoke(() => SelectedPatient.ChatMessages.Add(chatMessage));
         }
 
         #endregion
