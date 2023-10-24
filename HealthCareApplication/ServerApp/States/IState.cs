@@ -12,6 +12,6 @@ namespace ServerApp.States
     /// </summary>
     internal interface IState
     {
-        void Handle(JsonObject packet);
+        IState Handle(JsonObject packet);
     }
 }

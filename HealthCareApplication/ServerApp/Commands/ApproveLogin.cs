@@ -9,10 +9,25 @@ namespace ServerApp.Commands
 {
     internal class ApproveLogin : ISessionCommand
     {
+        private ServerConn _serverConn;
+
+        public ApproveLogin(ServerConn serverConn) 
+        {
+            this._serverConn = serverConn;
+        }
+
+
         public void Execute(JsonObject data)
         {
-            throw new NotImplementedException();
+            
+            // Current structure of command usage is not applicable with our application
+            // TODO: Refactor this command/state structure: See LoginState.cs for context!
+
+
         }
+
+
+
     }
 }
 

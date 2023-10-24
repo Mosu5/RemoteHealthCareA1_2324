@@ -1,4 +1,5 @@
 ﻿using Microsoft.SqlServer.Server;
+using ServerApp.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,41 +14,39 @@ namespace ServerApp.States
     /// </summary>
     internal class LoginState : IState
     {
-        //TODO current username and password are for testing
-        private string _username = "bob";
-        private string _password= "bob123";
+        //TODO current username and password are for 
 
-        private ServerContext context;
+        private ServerContext _context;
         public LoginState(ServerContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
-        public void Handle(JsonObject packet)
+        public IState Handle(JsonObject packet)
         {
-            if (packet.ContainsKey("data"))
-            {
-                JsonObject data = packet["data"] as JsonObject;
+            //extracting the needed values from packet
+            string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
+            string password = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();
 
-                string username= (string)data["username"];
-                string password = (string)data["password"];
-                if(data.ContainsKey("username") && data.ContainsKey("password"))
+            Console.WriteLine("Login recieved data: " + username + "    " + password);
+
+            if (Server.users.Any())
+            {
+
+                foreach (UserAccount account in Server.users)
                 {
-                    if (username == _username && password == _password)
+                    if (account.GetUserName() == username && account.GetPassword() == password)
                     {
-                        context.SetNextState(new SessionActiveState(context));
+                        Console.WriteLine("We are actually logging in!");
+                        _context.SetNewUser(account);
+                        _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+                        return new SessionIdle(_context);
                     }
                 }
-                else
-                {
-                    throw new FormatException("Converting data field to JsonObject failed");
-                }
-                
             }
-            else
-            {
-                throw new FormatException("Json packet format corrupted!");
-            }
+            //Login Failed so it stays in LoginState
+            return this;
         }
+
     }
 }

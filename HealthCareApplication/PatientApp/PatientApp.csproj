@@ -54,28 +54,33 @@
     <Reference Include="System.Text.Json, Version=7.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DeviceConnection\DeviceManager.cs" />
-    <Compile Include="DeviceConnection\EmulatedTrainer.cs" />
-    <Compile Include="DeviceConnection\Receiver\BLEReceiver.cs" />
-    <Compile Include="DeviceConnection\Receiver\EmulatedReceiver.cs" />
-    <Compile Include="DeviceConnection\Receiver\IReceiver.cs" />
-    <Compile Include="DeviceConnection\Statistic.cs" />
-    <Compile Include="Commands\PatientFormat.cs" />
-    <Compile Include="Commands\ISessionCommand.cs" />
-    <Compile Include="Commands\Login.cs" />
-    <Compile Include="Commands\LoginResponse.cs" />
-    <Compile Include="Commands\SendStats.cs" />
-    <Compile Include="Commands\SessionPause.cs" />
-    <Compile Include="Commands\SessionResume.cs" />
-    <Compile Include="Commands\SessionStart.cs" />
-    <Compile Include="Commands\SessionStop.cs" />
-    <Compile Include="Commands\Summary.cs" />
+    <Compile Include="DeviceLogic\DeviceManager.cs" />
+    <Compile Include="DeviceLogic\EmulatedTrainer.cs" />
+    <Compile Include="DeviceLogic\Receiver\BLEReceiver.cs" />
+    <Compile Include="DeviceLogic\Receiver\EmulatedReceiver.cs" />
+    <Compile Include="DeviceLogic\Receiver\IReceiver.cs" />
+    <Compile Include="DeviceLogic\Statistic.cs" />
+    <Compile Include="PatientLogic\Commands\ChatsSend.cs" />
+    <Compile Include="PatientLogic\Commands\Logout.cs" />
+    <Compile Include="PatientLogic\Helpers\PatientFormat.cs" />
+    <Compile Include="PatientLogic\Commands\IPatientCommand.cs" />
+    <Compile Include="PatientLogic\Commands\Login.cs" />
+    <Compile Include="PatientLogic\Commands\StatsSend.cs" />
+    <Compile Include="PatientLogic\Commands\SessionPause.cs" />
+    <Compile Include="PatientLogic\Commands\SessionResume.cs" />
+    <Compile Include="PatientLogic\Commands\SessionStart.cs" />
+    <Compile Include="PatientLogic\Commands\SessionStop.cs" />
+    <Compile Include="PatientLogic\Commands\StatsSummary.cs" />
     <Compile Include="PatientClient.cs" />
-    <Compile Include="CommandHandler.cs" />
+    <Compile Include="PatientLogic\Request.cs" />
+    <Compile Include="PatientLogic\RequestHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libraries\BLELibrary.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="VrLogic\" />
   </ItemGroup>
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
