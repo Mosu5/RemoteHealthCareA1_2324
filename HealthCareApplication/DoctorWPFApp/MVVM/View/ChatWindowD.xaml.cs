@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using DoctorWPFApp.Networking;
+using System.ComponentModel;
+using System.Text.Json.Nodes;
 using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View
@@ -14,14 +16,15 @@ namespace DoctorWPFApp.MVVM.View
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
-        private void backBtn_Click(object sender, RoutedEventArgs e)
+        private void BackBtn_Click(object sender, RoutedEventArgs e)
         {
             Navigator.NavToSessionWindow();
         }
 
-        private void sendBtn_Click(object sender, RoutedEventArgs e)
+        private async void SendBtn_Click(object sender, RoutedEventArgs e)
         {
-            // todo change to command in viewmodel
+            JsonObject chatObject = DoctorFormat.ChatsSendMessage(sendBox.Text);
+            await ClientConn.SendJson(chatObject);
         }
     }
 }

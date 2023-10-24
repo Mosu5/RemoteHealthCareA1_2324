@@ -53,7 +53,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         #endregion
 
-        #region Login properties
+        #region Properties of commands
 
         private string? _username;
         public string? Username
