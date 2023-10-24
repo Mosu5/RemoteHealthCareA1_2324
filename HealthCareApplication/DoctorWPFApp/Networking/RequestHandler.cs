@@ -9,8 +9,6 @@ namespace DoctorWPFApp.Networking
 {
     public class RequestHandler
     {
-        private static readonly List<Request> _pendingRequests = new List<Request>();
-
         // Doctor ViewModel events
         public static event EventHandler<bool>? LoggedIn;
         public static event EventHandler<string>? OnReceiveMessage;
@@ -45,7 +43,6 @@ namespace DoctorWPFApp.Networking
             }
         }
 
-        #region JSON helper methods
         /// <summary>
         /// Retrieves the command field (string) and the data field (JsonObject) from
         /// a message.
@@ -68,23 +65,5 @@ namespace DoctorWPFApp.Networking
             // Return a TjOePEl
             return (command, dataObject);
         }
-
-
-        /// <summary>
-        /// Sends the request to the server and waits for the response
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>The data field of the response sent by the server</returns>
-        public static async Task<JsonObject> GetResponse(Request request)
-        {
-            await ClientConn.SendJson(request.Message);
-
-            lock (_pendingRequests)
-                _pendingRequests.Add(request);
-
-            return await request.AwaitResponse();
-        }
-
-        #endregion
     }
 }
