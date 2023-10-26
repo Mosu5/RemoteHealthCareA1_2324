@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotnetNoise" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="BLELibrary">
       <HintPath>Libraries\BLELibrary.dll</HintPath>
     </Reference>

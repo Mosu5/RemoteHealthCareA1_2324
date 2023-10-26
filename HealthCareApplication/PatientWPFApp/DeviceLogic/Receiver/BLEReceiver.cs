@@ -21,7 +21,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
         private IReceiver _emulatedReceiver = null;
         private readonly int _maxConnectionAttempts = 5;
-        private readonly BLE _bleTrainer = new BLE();
+        private readonly BLE _bleTrainer = new();
         private bool _trainerConnected = false;
 
         /// <summary>
