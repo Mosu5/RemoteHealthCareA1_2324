@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PatientWPFApp.MVVM.ViewModel;
+using PatientWPFApp.PatientLogic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,16 +24,12 @@ namespace PatientWPFApp.View
         public LoginWindow()
         {
             InitializeComponent();
-        }
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            string username = UsernameInput.Text;
-            string password = PasswordInput.Password;
-
-            SessionWindow sessionWindow = new();
-            sessionWindow.Show();
-            Close();
+            // Create a new MainWindowViewModel for DataContext. This can
+            // only happen in the window which the UI starts up with. In
+            // this case, it's the login window.
+            Navigator.CurrentWindow = this;
         }
     }
 }
