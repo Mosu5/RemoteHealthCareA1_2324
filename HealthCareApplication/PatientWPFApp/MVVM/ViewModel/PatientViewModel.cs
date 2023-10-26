@@ -67,7 +67,8 @@ namespace PatientWPFApp.MVVM.ViewModel
             //deviceThread.Join();
 
             // Initialize VR environment
-            VrProgram.Initialize().Wait();
+            Thread vrThread = new(async () => await VrProgram.Initialize());
+            vrThread.Start();
 
             //// Listen for requests
             Thread listenerThread = new(async () => await RequestHandler.Listen());
