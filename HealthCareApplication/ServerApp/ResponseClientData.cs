@@ -31,12 +31,12 @@ namespace ServerApp
 
         }
 
-        public static JsonObject GenerateSummaryRequest(List<UserStat> userStats)
+        public static JsonObject GenerateSummaryRequest(string userStats)
         {
              return new JsonObject()
              {
                  {"command","stats/summary"},
-                 {"data",new JsonArray{userStats} }
+                 {"data",userStats }
              };
         }
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServerApp
 {
+    [Serializable]
     public class UserStat
     {
         public double speed { get; set; }

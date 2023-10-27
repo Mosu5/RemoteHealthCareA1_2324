@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Contexts;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace ServerApp.States
 {
@@ -31,12 +26,20 @@ namespace ServerApp.States
                 _context.ResponseToClient = ResponseClientData.GenerateResponse("session/start", null, "ok"); 
                 return new SessionActiveState(_context);
             }
-            if (command == "stats/summary")
+            else if (command == "stats/summary")
             {
                 // To do: Retrieve this data from the userstats buffer instead of the userstats file
-                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(_context.userStatsBuffer);
-                // Reset userbuffer for next session
+                List<UserStat> allUserStats = _context.GetUserAccount().GetUserStats();
 
+                string json = System.Text.Json.JsonSerializer.Serialize(allUserStats);
+
+                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(json);
+                // Reset userbuffer for next session
+            }
+            else if(command == "stats/history"){
+                //List<List<UserStat>> history = _context.GetUserAccount().GetUserStats();
+                //JsonObject json = (JsonObject)JsonSerializer.Serialize(history);
+                //_context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(json);
             }
             return this;
 
