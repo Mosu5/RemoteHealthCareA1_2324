@@ -4,6 +4,7 @@ using LiveCharts.Wpf;
 using LiveCharts;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading;
 
 namespace DoctorWPFApp.MVVM.View
 {
@@ -19,7 +20,7 @@ namespace DoctorWPFApp.MVVM.View
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            LineSeries mySeries = new LineSeries
+            LineSeries mySeries = new()
             {
                 Values = new ChartValues<int> { 12, 23, 55, 1 }
             };
@@ -30,6 +31,12 @@ namespace DoctorWPFApp.MVVM.View
             // only happen in the window which the UI starts up with. In
             // this case, it's the login window.
             Navigator.CurrentWindow = this;
+        }
+
+        private void ChartButton_Click(object sender, RoutedEventArgs e)
+        {
+            LineSeries mySeries = LineChart.Series[0] as LineSeries;
+            mySeries.Values.Add(12);
         }
     }
 }
