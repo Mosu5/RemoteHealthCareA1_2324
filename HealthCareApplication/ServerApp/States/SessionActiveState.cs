@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
@@ -26,8 +27,19 @@ namespace ServerApp.States
                 byte heartRate = Byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
 
                 Console.WriteLine("Buffering data: ");
+
+                UserStat currentStat = new UserStat(speed, distance, heartRate);
                 // Save data in server
-                BufferUserData(speed, distance, heartRate);
+                BufferUserData(currentStat);
+
+
+                //JsonObject statsForDoc = (JsonObject)JsonConvert.SerializeObject(currentStat);
+                //JsonObject statsForDoc = (JsonObject)JsonSerializer.Serialize<UserStat>(currentStat);
+                string statsForDoc = JsonSerializer.Serialize(currentStat);
+                // Data has been recieved and saved in the server, time to send it to the doctor
+                // The actual sending will be done in the Server class itself
+                _context.ResponseToDoctor = ResponseClientData.GenerateDoctorResponse(command, statsForDoc, _context.GetUserAccount().GetUserName());
+
                 return this; // Stay in this state to recieve more data
             }
             else if (command == "session/stop")
@@ -46,14 +58,14 @@ namespace ServerApp.States
             return this;
         }
 
-        private void BufferUserData(double speed, int distance, byte heartrate)
+        private void BufferUserData(UserStat userstat)
         {
           
-            this._context.userStatsBuffer.Add(new UserStat(speed, distance, heartrate));
-            foreach (UserStat stat in _context.userStatsBuffer)
-            {
-               stat.ToString();
-            }
+            this._context.userStatsBuffer.Add(userstat);
+            //foreach (UserStat stat in _context.userStatsBuffer)
+            //{
+            //   stat.ToString();
+            //}
         }
     }
 }

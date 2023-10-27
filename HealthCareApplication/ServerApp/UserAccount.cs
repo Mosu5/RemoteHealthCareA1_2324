@@ -21,6 +21,7 @@ namespace ServerApp
         private string _password { get; set; }
         public bool hasActiveSession { get; set; }
         public bool isPaused { get; set; }
+        public bool isDoctor { get; set; }
 
         public UserAccount(string username, string password) 
         {
@@ -76,6 +77,11 @@ namespace ServerApp
             }
     
 
+        }
+
+        public bool IsDoctor()
+        {
+            return this.isDoctor;
         }
 
         public string GetUserName() 

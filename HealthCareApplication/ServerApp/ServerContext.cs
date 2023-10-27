@@ -26,6 +26,7 @@ namespace ServerApp.States
         private IState nextState { get; set; }
         private ServerConn _serverConn { get; set; }
         public JsonObject ResponseToClient { get; set; }
+        public JsonObject ResponseToDoctor { get; set; }
         public List<UserStat> userStatsBuffer;
 
         public ServerContext(ServerConn serverConn)
@@ -63,6 +64,7 @@ namespace ServerApp.States
             {
                 // Add new data to old data
                 allUserStats.Add(this.userStatsBuffer);
+
 
                 //var allData = previousData.Concat(userStatsBuffer);
                 string userData = JsonSerializer.Serialize(allUserStats);

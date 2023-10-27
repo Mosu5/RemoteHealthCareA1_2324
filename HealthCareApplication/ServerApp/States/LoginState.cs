@@ -37,6 +37,7 @@ namespace ServerApp.States
                 {
                     if (account.GetUserName() == username && account.GetPassword() == password)
                     {
+
                         Console.WriteLine("We are actually logging in!");
                         _context.SetNewUser(account);
                         _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");

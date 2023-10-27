@@ -40,5 +40,20 @@ namespace ServerApp
              };
         }
 
-    }
+
+        public static JsonObject GenerateDoctorResponse(string command, string data, string username)
+        {
+                return new JsonObject()
+                 {
+                     {"command",command },
+                     {"data",new JsonObject
+                     {
+                         {"stats", data },
+                         {"username", username}
+                     }}
+                 };
+            }
+          
+        }
+
 }

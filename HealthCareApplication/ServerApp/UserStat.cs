@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServerApp
 {
+    [Serializable] // Make class serializable so stats can be send easily to the doctor 
     public class UserStat
     {
         public double speed { get; set; }
@@ -19,11 +20,11 @@ namespace ServerApp
             this.heartrate = heartrate;
         }
 
-        public string ToString()
-        {
-            return $"Speed: {speed}, --- Distance: {distance}, --- Heartrate: {heartrate}";
+        //public string ToString()
+        //{
+        //    return $"Speed: {speed}, --- Distance: {distance}, --- Heartrate: {heartrate}";
    
-        }
+        //}
 
     }
 }
