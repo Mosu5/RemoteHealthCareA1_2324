@@ -93,13 +93,13 @@
 
                 <!-- Statistics values -->
                 <Border BorderBrush="#444444" BorderThickness="1" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,10,0">
-                    <TextBlock Name="CurrentSpeedText" Text="No value" TextAlignment="Left" Margin="5,2,0,2" />
+                    <TextBlock Name="CurrentSpeedText" Text="0" TextAlignment="Left" Margin="5,2,0,2" />
                 </Border>
                 <Border BorderBrush="#444444" BorderThickness="1" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,10,0">
-                    <TextBlock Name="CurrentDistanceText" Text="No value" TextAlignment="Left" Margin="5,2,0,2" />
+                    <TextBlock Name="CurrentDistanceText" Text="0" TextAlignment="Left" Margin="5,2,0,2" />
                 </Border>
                 <Border BorderBrush="#444444" BorderThickness="1" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,10,0">
-                    <TextBlock Name="CurrentHeartRateText" Text="No value" TextAlignment="Left" Margin="5,2,0,2" />
+                    <TextBlock Name="CurrentHeartRateText" Text="0" TextAlignment="Left" Margin="5,2,0,2" />
                 </Border>
             </Grid>
         </Border>

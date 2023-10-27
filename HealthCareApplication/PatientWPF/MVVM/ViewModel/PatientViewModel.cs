@@ -2,7 +2,6 @@
 using PatientApp.DeviceConnection;
 using PatientApp.VrLogic;
 using PatientWPFApp.PatientLogic;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows;
@@ -41,7 +40,7 @@ namespace PatientWPFApp.MVVM.ViewModel
             // Send the login command
             JObject loginRequest = PatientFormat.LoginMessage(_username, _password);
             // TODO fix server side issue of exception when incorrect credentials
-            await PatientLogic.ClientConn.SendJson(loginRequest);
+            await ClientConn.SendJson(loginRequest);
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password));
 
         private string _messageToSend;
@@ -78,11 +77,6 @@ namespace PatientWPFApp.MVVM.ViewModel
                 LogType.Debug
             );
 
-            // Initialize BLE connection
-            Thread deviceThread = new Thread(async () => await DeviceManager.Initialize());
-            //deviceThread.Start();
-            //deviceThread.Join();
-
             // Initialize VR environment
             Thread vrThread = new Thread(() => VrProgram.Initialize().Wait());
             //vrThread.Start();
@@ -106,7 +100,7 @@ namespace PatientWPFApp.MVVM.ViewModel
             if (successfulLogin)
             {
                 _isLoggedIn = true;
-                Application.Current.Dispatcher.Invoke(() => Navigator.NavToSessionWindow());
+                Application.Current.Dispatcher.Invoke(() => Navigator.NavToSessionWindow(_username));
                 return;
             }
 

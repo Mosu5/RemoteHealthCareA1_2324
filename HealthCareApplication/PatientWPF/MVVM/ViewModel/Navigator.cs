@@ -33,9 +33,9 @@ namespace PatientWPFApp.MVVM.ViewModel
             CurrentWindow.Show();
         }
 
-        public static void NavToSessionWindow()
+        public static void NavToSessionWindow(string patientName)
         {
-            SessionWindow sessionWindow = new SessionWindow();
+            SessionWindow sessionWindow = new SessionWindow(patientName);
             NavToWindow(sessionWindow);
         }
     }
