@@ -75,6 +75,19 @@ namespace ServerApp
 
                 }
                 await serverConn.SendJson(client, serverContext.ResponseToClient);
+
+                // TODO TESTING
+                if (data["command"].ToString() == "chats/send")
+                {
+                    serverConn.SendJson(client, new JsonObject()
+                    {
+                        { "command", "chats/send" },
+                        { "data", new JsonObject()
+                        {
+                            { "message", "server message" }
+                        } }
+                    }).Wait();
+                }
             }
         }
 

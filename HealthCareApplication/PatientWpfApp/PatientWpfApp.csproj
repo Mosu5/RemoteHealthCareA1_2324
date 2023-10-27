@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Libraries\BLELibrary.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Libraries\BLELibrary.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MVVM\Model\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotnetNoise" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BLELibrary">
+      <HintPath>Libraries\BLELibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
+
+</Project>

@@ -1,7 +1,7 @@
 ﻿using BikeConnection.Receiver;
-using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Text.Json;
 
 namespace BikeConnection
 {
@@ -45,7 +45,7 @@ namespace BikeConnection
         {
             Console.WriteLine("Speed: {0} m/s", speed);
             
-            string jsonData = JsonConvert.SerializeObject(new Data
+            string jsonData = JsonSerializer.Serialize(new 
             {
                 DataType = "Speed",
                 Value = speed
@@ -58,7 +58,7 @@ namespace BikeConnection
         {
             Console.WriteLine("Distance: {0} meters", distance);
             
-            string jsonData = JsonConvert.SerializeObject(new Data
+            string jsonData = JsonSerializer.Serialize(new 
             {
                 DataType = "Distance",
                 Value = distance
@@ -71,7 +71,7 @@ namespace BikeConnection
         {
             Console.WriteLine("Heart rate: {0} bpm", heartRate);
             
-            string jsonData = JsonConvert.SerializeObject(new Data
+            string jsonData = JsonSerializer.Serialize(new 
             {
                 DataType = "HeartRate",
                 Value = heartRate
@@ -84,7 +84,7 @@ namespace BikeConnection
         {
             Console.WriteLine("R-R intervals: {0}", string.Join(", ", rrIntervals));
             
-            string jsonData = JsonConvert.SerializeObject(new Data
+            string jsonData = JsonSerializer.Serialize(new Data
             {
                 DataType = "RRIntervals",
                 Value = rrIntervals

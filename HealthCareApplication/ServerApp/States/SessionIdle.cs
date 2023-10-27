@@ -28,7 +28,7 @@ namespace ServerApp.States
                 // Mark user as active in session
                 _context.GetUserAccount().hasActiveSession = true;
                 _context.isSessionActive = true;
-                _context.ResponseToClient = ResponseClientData.GenerateResponse("session/start", null, "ok"); 
+                _context.ResponseToClient = ResponseClientData.GenerateResponse("session/start", null, "ok");
                 return new SessionActiveState(_context);
             }
             if (command == "stats/summary")

@@ -9,12 +9,11 @@ namespace DoctorWPFApp.Networking
 {
     public class RequestHandler
     {
-        private static readonly List<Request> _pendingRequests = new List<Request>();
-
         // Doctor ViewModel events
         public static event EventHandler<bool>? LoggedIn;
-        public static event EventHandler<string>? OnReceiveMessage;
-        public static event EventHandler<EventArgs>? OnReceiveData;
+        public static event EventHandler<string>? ReceivedStat;
+        public static event EventHandler<string>? ReceivedChat;
+        public static event EventHandler<string>? ReceivedSummary;
 
         public static async Task Listen()
         {
@@ -37,6 +36,14 @@ namespace DoctorWPFApp.Networking
                         LoggedIn?.Invoke(nameof(RequestHandler), loggedIn);
                         break;
                     case "chats/send":
+                        ReceivedChat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "message").ToString());
+                        break;
+                    case "stats/send":
+                        // TODO make event send whole statistic
+                        ReceivedStat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "speed").ToString());
+                        break;
+                    case "stats/summary":
+                        ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "statistics").AsArray().ToString());
                         break;
                     default:
                         Logger.Log($"Cannot process command '{command}'.", LogType.Warning);
@@ -45,7 +52,6 @@ namespace DoctorWPFApp.Networking
             }
         }
 
-        #region JSON helper methods
         /// <summary>
         /// Retrieves the command field (string) and the data field (JsonObject) from
         /// a message.
@@ -68,23 +74,5 @@ namespace DoctorWPFApp.Networking
             // Return a TjOePEl
             return (command, dataObject);
         }
-
-
-        /// <summary>
-        /// Sends the request to the server and waits for the response
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>The data field of the response sent by the server</returns>
-        public static async Task<JsonObject> GetResponse(Request request)
-        {
-            await ClientConn.SendJson(request.Message);
-
-            lock (_pendingRequests)
-                _pendingRequests.Add(request);
-
-            return await request.AwaitResponse();
-        }
-
-        #endregion
     }
 }
