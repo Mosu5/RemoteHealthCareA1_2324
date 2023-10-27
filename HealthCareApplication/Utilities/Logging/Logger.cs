@@ -14,7 +14,6 @@ namespace Utilities.Logging
         {
             LogType.GeneralInfo,
             LogType.DeviceInfo,
-            LogType.VrInfo,
             LogType.CommunicationExceptionInfo,
             LogType.Warning,
             LogType.Error,

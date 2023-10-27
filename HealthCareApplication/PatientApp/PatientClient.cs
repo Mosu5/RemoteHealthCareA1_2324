@@ -1,9 +1,7 @@
-using PatientApp.DeviceConnection;
+﻿using PatientApp.DeviceConnection;
 using PatientApp.PatientLogic;
 using PatientApp.PatientLogic.Commands;
-using PatientApp.VrLogic;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Utilities.Communication;
 using Utilities.Logging;
@@ -14,29 +12,13 @@ namespace PatientApp
     {
         static async Task Main(string[] args)
         {
-            // Logger will log if LogType is present
-            Logger.SetTypesToLogFor(
-                LogType.GeneralInfo,
-                LogType.DeviceInfo,
-                LogType.VrInfo,
-                LogType.CommunicationExceptionInfo,
-                LogType.Warning,
-                LogType.Error,
-                LogType.Debug
-            );
+            Logger.SetTypesToLogFor(LogType.GeneralInfo, LogType.Warning, LogType.Error, LogType.CommunicationExceptionInfo, LogType.Debug);
+            DeviceManager.Initialize();
 
             try
             {
-                // Initialize BLE connection
-                await DeviceManager.Initialize();
-
-                //// Initialize VR environment
-                await Task.Run(VrProgram.Initialize);
-
-                //// Initialize console commands, but don't wait for completion
                 Task.Run(ReceiveConsoleInput);
 
-                //// Listen for requests
                 await RequestHandler.Listen();
             }
             catch (CommunicationException ex)
@@ -45,17 +27,8 @@ namespace PatientApp
             }
         }
 
-        /// <summary>
-        /// Read console commands to be sent to the healthcare server.
-        /// </summary>
         private static async Task ReceiveConsoleInput()
         {
-            // To make sure the request listener had time to listen for responses
-            await Task.Delay(1000);
-
-            await new Login("bob", "bob").Execute();
-            await new SessionStart().Execute();
-
             Logger.Log("Enter commands in the console to execute them.", LogType.GeneralInfo);
 
 
@@ -110,27 +83,27 @@ namespace PatientApp
                         break;
                     case "session/stop":
                         // Attempt stopping the session
-                        if (await new SessionStop().Execute())
+                        if (await new SessionStop(RequestHandler.OnReceiveData).Execute())
                             Logger.Log($"The current session has been stopped.", LogType.GeneralInfo);
                         else
                             Logger.Log("The current session could not be stopped.", LogType.Error);
                         break;
                     case "session/pause":
                         // Attempt pausing the session
-                        if (await new SessionPause().Execute())
+                        if (await new SessionPause(RequestHandler.OnReceiveData).Execute())
                             Logger.Log($"The current session has been paused.", LogType.GeneralInfo);
                         else
                             Logger.Log("The current session could not be paused.", LogType.Error);
                         break;
                     case "session/resume":
                         // Attempt resuming the session
-                        if (await new SessionResume().Execute())
+                        if (await new SessionResume(RequestHandler.OnReceiveData).Execute())
                             Logger.Log($"The current session has been resumed.", LogType.GeneralInfo);
                         else
                             Logger.Log("The current session could not be resumed.", LogType.Error);
                         break;
                     default:
-                        Logger.Log($"Unknown command: {input}", LogType.Warning);
+                        Logger.Log($"Unknown command: {input}", LogType.Error);
                         break;
                 }
             }

@@ -1,5 +1,8 @@
 ﻿using PatientApp.DeviceConnection;
+using PatientApp.PatientLogic;
+using PatientApp.PatientLogic.Commands;
 using PatientApp.PatientLogic.Helpers;
+using System;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Utilities.Communication;
@@ -8,6 +11,13 @@ namespace PatientApp.PatientLogic.Commands
 {
     internal class SessionPause : IPatientCommand
     {
+        private readonly EventHandler<Statistic> _onReceiveData;
+
+        public SessionPause(EventHandler<Statistic> onReceiveData)
+        {
+            _onReceiveData = onReceiveData;
+        }
+
         public async Task<bool> Execute()
         {
             Request request = new Request(PatientFormat.SessionPauseMessage());
@@ -19,7 +29,7 @@ namespace PatientApp.PatientLogic.Commands
             if (!response["status"].ToString().Equals("ok"))
                 return false;
 
-            DeviceManager.OnReceiveData -= RequestHandler.OnReceiveData;
+            DeviceManager.OnReceiveData -= _onReceiveData;
 
             return true;
         }

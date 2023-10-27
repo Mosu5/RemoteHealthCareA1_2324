@@ -1,6 +1,5 @@
 ﻿using DoctorWPFApp.Networking;
 using System.ComponentModel;
-using System.Text.Json.Nodes;
 using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View
@@ -28,13 +27,12 @@ namespace DoctorWPFApp.MVVM.View
             Navigator.NavToStatWindow();
         }
 
-        private async void StopstartBtn_Click(object sender, RoutedEventArgs e)
+        private void StopstartBtn_Click(object sender, RoutedEventArgs e)
         {
-            JsonObject message;
             if (isRunning == true)
             {
                 // Stop the session
-                message = DoctorFormat.SessionStopMessage();
+
 
                 isRunning = false;
                 stopstartBtn.Content = "Start";
@@ -43,13 +41,12 @@ namespace DoctorWPFApp.MVVM.View
             else
             {
                 // Start a new session
-                message = DoctorFormat.SessionStartMessage();
+
 
                 isRunning = true;
                 stopstartBtn.Content = "Stop";
                 stopstartBtn.Background = System.Windows.Media.Brushes.Red;
             }
-            await ClientConn.SendJson(message);
         }
     }
 }

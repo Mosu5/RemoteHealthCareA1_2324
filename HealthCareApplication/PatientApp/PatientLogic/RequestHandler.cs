@@ -1,7 +1,7 @@
-using PatientApp.DeviceConnection;
+﻿using PatientApp.DeviceConnection;
 using PatientApp.PatientLogic.Commands;
 using PatientApp.PatientLogic.Helpers;
-using PatientApp.VrLogic;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -23,7 +23,6 @@ namespace PatientApp.PatientLogic
         /// </summary>
         public static async Task Listen()
         {
-            // Handle healthcare server connectivity
             if (!await ClientConn.ConnectToServer())
                 throw new CommunicationException("Could not connect to the server.");
 
@@ -51,7 +50,7 @@ namespace PatientApp.PatientLogic
                 }
 
                 // TODO here goes code for anything that was not a response, e.g. the chat listener
-                Logger.Log($"Was not response, but was {command}", LogType.Debug);
+                Logger.Log($"Was not response, but was {command}", LogType.GeneralInfo);
 
                 switch (command)
                 {
@@ -62,8 +61,6 @@ namespace PatientApp.PatientLogic
                         break;
                     // If any session/... has been sent and the code reaches this place,
                     // then assume that the doctor did not send the command, but that the patient did.
-
-                    // TODO run corresponding commands when doctor alters the session
                     case "session/start":
                         Logger.Log("Doctor has started the session", LogType.GeneralInfo);
                         break;
@@ -118,18 +115,15 @@ namespace PatientApp.PatientLogic
             lock (_pendingRequests)
                 _pendingRequests.Add(request);
 
-            // Wait for response of request
             return await request.AwaitResponse();
         }
 
         /// <summary>
         /// Handles the received trainer data and sends it to the server
         /// </summary>
-        public static void OnReceiveData(object _, Statistic stat)
+        public static void OnReceiveData(object sender, Statistic stat)
         {
             new StatsSend(stat, ClientConn).Execute().Wait();
-
-            VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
         }
 
         /// <summary>

@@ -8,9 +8,6 @@
         // Messages concerning the trainer or hrm
         DeviceInfo,
 
-        // Messages concerning the VR environment
-        VrInfo,
-
         // Messages triggered by a CommunicationException
         CommunicationExceptionInfo,
 

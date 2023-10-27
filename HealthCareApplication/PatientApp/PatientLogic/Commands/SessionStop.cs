@@ -11,6 +11,13 @@ namespace PatientApp.PatientLogic.Commands
 {
     public class SessionStop : IPatientCommand
     {
+        private readonly EventHandler<Statistic> _onReceiveData;
+
+        public SessionStop(EventHandler<Statistic> onReceiveData)
+        {
+            _onReceiveData = onReceiveData;
+        }
+
         public async Task<bool> Execute()
         {
             Request request = new Request(PatientFormat.SessionStopMessage());
@@ -22,7 +29,7 @@ namespace PatientApp.PatientLogic.Commands
             if (!response["status"].ToString().Equals("ok"))
                 return false;
 
-            DeviceManager.OnReceiveData -= RequestHandler.OnReceiveData;
+            DeviceManager.OnReceiveData -= _onReceiveData;
 
             return true;
         }
