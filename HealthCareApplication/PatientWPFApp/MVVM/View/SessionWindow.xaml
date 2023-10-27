@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PatientWPFApp.View"
+        xmlns:local="clr-namespace:PatientWPFApp.MVVM.ViewModel"
         mc:Ignorable="d"
         Title="SessionWindow" Height="450" Width="800">
     <Grid>
@@ -118,12 +118,12 @@
                 </Grid.RowDefinitions>
                 
                 <TextBlock Text="Chat with your doctor" Grid.Row="0" Grid.ColumnSpan="2" FontSize="18" Padding="0,10" HorizontalAlignment="Stretch" TextAlignment="Center" FontWeight="DemiBold" />
-                
-                <ListView Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" Margin="10,0" />
+
+                <ListView Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding PatientChats, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" Margin="10,0" />
 
                 <!-- Chat input -->
-                <TextBox Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" Text="" />
-                <Button Name="SendChatButton" Click="SendChatButton_Click" Content="Send" Grid.Row="2" Grid.Column="1" Margin="5,10,10,10"/>
+                <TextBox Text="{Binding MessageToSend, Mode=OneWay}" Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" />
+                <Button Name="SendChatButton" Command="{Binding SendChatCommand}" Content="Send" Grid.Row="2" Grid.Column="1" Margin="5,10,10,10"/>
             </Grid>
         </Border>
     </Grid>

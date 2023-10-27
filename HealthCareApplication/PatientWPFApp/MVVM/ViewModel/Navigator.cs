@@ -29,6 +29,7 @@ namespace PatientWPFApp.MVVM.ViewModel
 
             // Open next window
             CurrentWindow = window;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             CurrentWindow.Show();
         }
 

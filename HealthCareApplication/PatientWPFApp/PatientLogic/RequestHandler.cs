@@ -31,6 +31,7 @@ namespace PatientWPFApp.PatientLogic
 
                 switch (command)
                 {
+                    // TODO fix server side issue that sometimes sends login after the patient sent for example chats/send
                     case "login":
                         bool loggedIn = PatientFormat.GetKey(dataObject, "status").ToString().Equals("ok");
                         LoggedIn?.Invoke(nameof(RequestHandler), loggedIn);
