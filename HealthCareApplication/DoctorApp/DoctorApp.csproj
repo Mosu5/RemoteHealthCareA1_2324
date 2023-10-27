@@ -41,7 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Communication\DoctorProxy.cs" />
+    <Compile Include="Communication\Request.cs" />
+    <Compile Include="DoctorClient.cs" />
+    <Compile Include="Commands\ChatsSend.cs" />
+    <Compile Include="Commands\IDoctorCommand.cs" />
+    <Compile Include="Commands\Login.cs" />
+    <Compile Include="Commands\Logout.cs" />
+    <Compile Include="Commands\SessionPause.cs" />
+    <Compile Include="Commands\SessionResume.cs" />
+    <Compile Include="Commands\SessionStart.cs" />
+    <Compile Include="Commands\SessionStop.cs" />
+    <Compile Include="Commands\StatsSummary.cs" />
+    <Compile Include="Helpers\DoctorFormat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
