@@ -33,20 +33,30 @@ namespace ServerApp
 
         public void SaveUserStats(string jsonData)
         {
-
             // NOTE: The following path will point to the bin/debug folder of the project serverapp.
             string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
 
-            StreamWriter writer = new StreamWriter(correctPath);
-            
-            if (jsonData != null )
+            StreamWriter writer;
+            if (jsonData != null)
             {
-                
-                writer.Write(jsonData);
-                writer.Flush();
-                writer.Close();
-                Console.WriteLine("Userdata has been saved into file!");
+                if (!File.Exists(correctPath))
+                {
+                    File.Create(correctPath);
+                    writer = new StreamWriter(correctPath);
+                    writer.Write(jsonData);
+                    writer.Flush();
+                    writer.Close();
+                    Console.WriteLine("Userdata has been saved into file!");
+                }
+                else
+                {
+                    writer = File.AppendText(correctPath);
+                    writer.WriteLine(jsonData);
+                    writer.Flush();
+                    writer.Close();
+                    Console.WriteLine("Userdata has been saved into file!");
+                }
             }
             else
             {
@@ -74,7 +84,7 @@ namespace ServerApp
             {
                 return null;
             }
-    
+   
 
         }
 

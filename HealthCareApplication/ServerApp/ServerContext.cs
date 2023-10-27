@@ -58,16 +58,17 @@ namespace ServerApp.States
         {
             
             // Get previously saved data so current data can be added to the file. (Prevent overwriting)
-            List<List<UserStat>> allUserStats = this.GetUserAccount().GetUserStats();
-            if (allUserStats != null)
+            List<List<UserStat>> allUserStats = this.GetUserAccount().GetUserStats();//Previous Buffer
+            if (allUserStats != null)//if the previous stats are not empty
             {
                 // Add new data to old data
-                allUserStats.Add(this.userStatsBuffer);
+                allUserStats.Append(this.userStatsBuffer);
 
                 //var allData = previousData.Concat(userStatsBuffer);
                 string userData = JsonSerializer.Serialize(allUserStats);
                 this._userAccount.SaveUserStats(userData);
-            }else
+            }
+            else
             {
                 string userData = JsonSerializer.Serialize(this.userStatsBuffer);
                 this._userAccount.SaveUserStats(userData);
