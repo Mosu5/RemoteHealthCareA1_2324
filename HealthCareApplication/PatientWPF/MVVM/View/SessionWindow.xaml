@@ -122,7 +122,7 @@
                 <ListView Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding PatientChats, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" Margin="10,0" />
 
                 <!-- Chat input -->
-                <TextBox Text="{Binding MessageToSend, Mode=OneWay}" Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" />
+                <TextBox Text="{Binding MessageToSend}" Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" />
                 <Button Name="SendChatButton" Command="{Binding SendChatCommand}" Content="Send" Grid.Row="2" Grid.Column="1" Margin="5,10,10,10"/>
             </Grid>
         </Border>

@@ -3,6 +3,7 @@ using PatientApp.DeviceConnection;
 using PatientApp.VrLogic;
 using PatientWPFApp.PatientLogic;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows;
 using Utilities.Logging;
@@ -54,14 +55,14 @@ namespace PatientWPFApp.MVVM.ViewModel
             }
         }
 
-        public List<string> PatientChats = new List<string>() { "hallo"};
+        public ObservableCollection<string> PatientChats { get; set; } = new ObservableCollection<string>();
 
         public RelayCommand SendChatCommand => new RelayCommand(async (execute) =>
         {
             if (string.IsNullOrEmpty(_messageToSend)) return;
 
             JObject chatToServer = PatientFormat.ChatsSendMessage(_messageToSend);
-            await PatientLogic.ClientConn.SendJson(chatToServer);
+            await ClientConn.SendJson(chatToServer);
         });
 
         public PatientViewModel()
@@ -117,10 +118,6 @@ namespace PatientWPFApp.MVVM.ViewModel
             Application.Current.Dispatcher.Invoke(() =>
             {
                 PatientChats.Add(chatMessage);
-                foreach (var chat in PatientChats)
-                {
-                    MessageBox.Show(chat);
-                }
                 OnPropertyChanged(nameof(PatientChats));
             });
         }
