@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using LiveCharts.Wpf;
+using LiveCharts;
+using Newtonsoft.Json.Linq;
 using PatientApp.DeviceConnection;
 using PatientWPFApp.PatientLogic;
 using System.Windows;
@@ -11,11 +13,28 @@ namespace PatientWPFApp.View
     /// </summary>
     public partial class SessionWindow : Window
     {
+        private readonly LineSeries _speedGraph;
+        private readonly LineSeries _heartRateGraph;
+
         private bool _sessionActive = false;
 
         public SessionWindow(string patientName)
         {
             InitializeComponent();
+
+            LineSeries speedGraph = new LineSeries()
+            {
+                Values = new ChartValues<double>()
+            };
+            StatChart.Series.Add(speedGraph);
+            _speedGraph = StatChart.Series[0] as LineSeries;
+
+            LineSeries heartRateGraph = new LineSeries()
+            {
+                Values = new ChartValues<int>()
+            };
+            StatChart.Series.Add(heartRateGraph);
+            _heartRateGraph = StatChart.Series[1] as LineSeries;
 
             PatientNameText.Text = patientName;
 
@@ -88,9 +107,13 @@ namespace PatientWPFApp.View
                 CurrentSpeedText.Text = stat.Speed.ToString();
 
                 int oldDistance = int.Parse(CurrentDistanceText.Text);
-                CurrentDistanceText.Text = (oldDistance + stat.Distance).ToString();
+                int newDistance = oldDistance + stat.Distance;
+                CurrentDistanceText.Text = newDistance.ToString();
 
                 CurrentHeartRateText.Text = stat.HeartRate.ToString();
+
+                _speedGraph.Values.Add(stat.Speed);
+                _heartRateGraph.Values.Add(stat.HeartRate);
             });
         }
     }
