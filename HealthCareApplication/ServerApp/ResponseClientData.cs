@@ -28,6 +28,7 @@ namespace ServerApp
                  {"command",command },
                  {"data", data }
              };
+
         }
 
         public static JsonObject GenerateSummaryRequest(List<UserStat> userStats)

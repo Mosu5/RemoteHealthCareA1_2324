@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ServerApp.States
@@ -54,9 +56,23 @@ namespace ServerApp.States
 
         public void SaveUserData()
         {
-            string userData = JsonSerializer.Serialize(userStatsBuffer);
+            
+            // Get previously saved data so current data can be added to the file. (Prevent overwriting)
+            List<List<UserStat>> allUserStats = this.GetUserAccount().GetUserStats();
+            if (allUserStats != null)
+            {
+                // Add new data to old data
+                allUserStats.Add(this.userStatsBuffer);
 
-            this._userAccount.SaveUserStats(userData);
+                //var allData = previousData.Concat(userStatsBuffer);
+                string userData = JsonSerializer.Serialize(allUserStats);
+                this._userAccount.SaveUserStats(userData);
+            }else
+            {
+                string userData = JsonSerializer.Serialize(this.userStatsBuffer);
+                this._userAccount.SaveUserStats(userData);
+            }
+
         }
 
         public void SetNewUser(UserAccount user)
