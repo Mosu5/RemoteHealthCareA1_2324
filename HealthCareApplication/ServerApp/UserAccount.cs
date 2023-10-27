@@ -31,7 +31,6 @@ namespace ServerApp
         }
 
 
-        // To Do: In the future we want to check duplicate files, and add data if file already exist, rather than overwriting
         public void SaveUserStats(string jsonData)
         {
 
@@ -40,6 +39,7 @@ namespace ServerApp
             string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
 
             StreamWriter writer = new StreamWriter(correctPath);
+            
             if (jsonData != null )
             {
                 
@@ -55,7 +55,7 @@ namespace ServerApp
             }
         }
 
-        public List<UserStat> GetUserStats()
+        public List<List<UserStat>> GetUserStats()
         {
             string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
@@ -63,8 +63,19 @@ namespace ServerApp
             StreamReader reader = new StreamReader(correctPath);
 
             string jsonData = reader.ReadToEnd();
-            List<UserStat> retrievedUserStats = JsonSerializer.Deserialize<List<UserStat>>(jsonData);
-            return retrievedUserStats;
+            reader.Close();
+            
+            try
+            {
+                List<List<UserStat>> retrievedUserStats = JsonSerializer.Deserialize<List<List<UserStat>>>(jsonData);
+                return retrievedUserStats;
+            }
+            catch
+            {
+                return null;
+            }
+    
+
         }
 
         public string GetUserName() 

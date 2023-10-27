@@ -34,7 +34,9 @@ namespace ServerApp.States
             if (command == "stats/summary")
             {
                 // To do: Retrieve this data from the userstats buffer instead of the userstats file
-                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(_context.GetUserAccount().GetUserStats());
+                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(_context.userStatsBuffer);
+                // Reset userbuffer for next session
+
             }
             return this;
 

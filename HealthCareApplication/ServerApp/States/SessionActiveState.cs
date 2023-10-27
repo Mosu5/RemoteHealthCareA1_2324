@@ -25,6 +25,7 @@ namespace ServerApp.States
                 int distance = Int32.Parse(JsonUtil.GetValueFromPacket(packet, "data", "distance").ToString());
                 byte heartRate = Byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
 
+                Console.WriteLine("Buffering data: ");
                 // Save data in server
                 BufferUserData(speed, distance, heartRate);
                 return this; // Stay in this state to recieve more data
