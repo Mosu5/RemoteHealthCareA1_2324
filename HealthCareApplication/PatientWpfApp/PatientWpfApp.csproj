@@ -8,15 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MVVM\Model\**" />
+    <EmbeddedResource Remove="MVVM\Model\**" />
+    <None Remove="MVVM\Model\**" />
+    <Page Remove="MVVM\Model\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Libraries\BLELibrary.dll" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Libraries\BLELibrary.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="MVVM\Model\" />
   </ItemGroup>
 
   <ItemGroup>
