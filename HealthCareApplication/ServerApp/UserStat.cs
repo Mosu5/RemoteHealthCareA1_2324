@@ -12,7 +12,6 @@ namespace ServerApp
         public double speed { get; set; }
         public int distance { get; set; }
         public byte heartrate { get; set; }
-
         public UserStat(double speed, int distance, byte heartrate)
         {
             this.distance = distance;

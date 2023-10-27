@@ -27,7 +27,6 @@ namespace ServerApp.States
             _context.GetUserAccount().hasActiveSession = false;
             _context.isSessionActive = false;
 
-            //ResponseClientData.GenerateResponse("session/stop", null, "ok");
             return new SessionIdle(_context);
         }
 

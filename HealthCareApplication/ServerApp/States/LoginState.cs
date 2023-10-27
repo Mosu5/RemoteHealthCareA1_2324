@@ -30,7 +30,6 @@ namespace ServerApp.States
 
             Console.WriteLine("Login recieved data: " + username + "    " + password);
 
-
             if (Server.users.Any())
             {
 

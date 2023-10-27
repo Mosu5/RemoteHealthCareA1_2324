@@ -44,6 +44,7 @@ namespace ServerApp
             ServerContext serverContext = new ServerContext(serverConn);
             while (client.Connected)
             {
+                await Console.Out.WriteLineAsync(serverContext.GetState().ToString());
                 Console.Out.WriteLineAsync("Looking for data: ");
                 JsonObject data = await serverConn.ReceiveJson(client);
                 await Console.Out.WriteLineAsync("received " + data.ToString());

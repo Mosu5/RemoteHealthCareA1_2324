@@ -92,8 +92,9 @@ namespace ServerApp.States
             this.userStatsBuffer.Clear();
         }
 
-     
-
-       
+        internal string GetState()
+        {
+            return this.currentState.ToString();
+        }
     }
 }

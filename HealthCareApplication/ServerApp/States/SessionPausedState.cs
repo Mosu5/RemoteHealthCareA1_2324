@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -20,45 +21,17 @@ namespace ServerApp.States
 
         public IState Handle(JsonObject packet)
         {
+            Console.WriteLine(packet.ToString());
             //Getting needed values from the packet
-            string command = (string)JsonUtil.GetValueFromPacket(packet, "command");
-            string username = (string)JsonUtil.GetValueFromPacket(packet, "data", "username");
+            string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
 
             //checking if the command equals session/pause
-            if (command == "session/pause")
+            if (command == "session/resume")
             {
-                foreach (UserAccount account in Server.users)
-                {
-                    if (username.Equals(account.GetUserName()))
-                    {
-                        Console.WriteLine("session/pause for account");
-                        account.isPaused = true;
-                        _context.ResponseToClient = ResponseClientData.GenerateResponse("session/pause", null, "ok"); ;
-                        return this;
-                    }
-                    else
-                    {
-                        throw new Exception("User account not found");
-                    }
-                }
-            }
-            else if (command == "session/resume")
-            {
-                foreach (UserAccount account in Server.users)
-                {
-                    if (username.Equals(account.GetUserName()))
-                    {
-                        account.isPaused = false;
-                        _context.ResponseToClient = ResponseClientData.GenerateResponse("session/resume", null, "ok"); ;
-                        return this;
-                    }
-                    else
-                    {
-                        throw new Exception("User account not found");
-                        
-                    }
-                }
-
+                _context.GetUserAccount().isPaused = false;
+                this._context.GetUserAccount().hasActiveSession = true;
+                this._context.ResponseToClient = ResponseClientData.GenerateResponse("session/resume", null, "ok");
+                _context.isSessionActive = true;
                 return new SessionActiveState(_context);
             }
             return this;
