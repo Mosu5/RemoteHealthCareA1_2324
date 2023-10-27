@@ -60,7 +60,7 @@ namespace PatientWPFApp.MVVM.ViewModel
             }
         }
 
-        public List<string> PatientChats = new() { "hallo"};
+        public ObservableCollection<string> PatientChats { get; } = new();
 
         public RelayCommand SendChatCommand => new(async (execute) =>
         {
@@ -123,10 +123,6 @@ namespace PatientWPFApp.MVVM.ViewModel
             Application.Current.Dispatcher.Invoke(() =>
             {
                 PatientChats.Add(chatMessage);
-                foreach (var chat in PatientChats)
-                {
-                    MessageBox.Show(chat);
-                }
                 OnPropertyChanged(nameof(PatientChats));
             });
         }
