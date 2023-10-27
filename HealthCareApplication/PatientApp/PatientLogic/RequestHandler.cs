@@ -129,7 +129,7 @@ namespace PatientApp.PatientLogic
         {
             new StatsSend(stat, ClientConn).Execute().Wait();
 
-            VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
+            //VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
         }
 
         /// <summary>

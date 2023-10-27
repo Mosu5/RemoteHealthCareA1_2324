@@ -81,7 +81,12 @@ namespace DoctorApp.Communication
         /// <returns>The data field of the response sent by the server</returns>
         public static async Task<JsonObject> GetResponse(Request request)
         {
-            await _clientConn.SendJson(request.Message);
+
+            JsonObject payload = new JsonObject
+            {
+                { request.Command, request.Message }
+            };
+            await _clientConn.SendJson(payload);
 
             lock (_pendingRequests)
                 _pendingRequests.Add(request);

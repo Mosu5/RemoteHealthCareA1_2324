@@ -30,7 +30,7 @@ namespace ServerApp
             users.Add(new UserAccount("abc", "abc"));
 
             // Proof of concept, uitbreinding/refining later mogelijk
-            UserAccount doctor = new UserAccount("simon", "dokter");
+            UserAccount doctor = new UserAccount("dokter", "simon");
             doctor.isDoctor = true;
 
             users.Add(doctor);
