@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoctorWPFApp.MVVM.View.Components" 
         xmlns:local1="clr-namespace:DoctorWPFApp.MVVM.ViewModel"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" ResizeMode="NoResize" Height="450" Width="800">
 
@@ -20,5 +21,6 @@
         <Label Content="Gebruikersnaam" HorizontalAlignment="Left" Margin="214,86,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.264,0.472" Background="White" FontWeight="Bold"/>
         <TextBox Name="gbBox" Text="{Binding Username}" HorizontalAlignment="Center" Margin="0,117,0,0" VerticalAlignment="Top" Width="372" Height="40" FontSize="20"/>
 
+        <lvc:CartesianChart x:Name="LineChart"/>
     </Grid>
 </Window>

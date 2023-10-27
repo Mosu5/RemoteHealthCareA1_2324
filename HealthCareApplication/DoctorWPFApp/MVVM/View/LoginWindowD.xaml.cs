@@ -1,4 +1,7 @@
 ﻿using DoctorWPFApp.MVVM.ViewModel;
+using LiveCharts.Wpf.Charts.Base;
+using LiveCharts.Wpf;
+using LiveCharts;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,10 +12,19 @@ namespace DoctorWPFApp.MVVM.View
     /// </summary>
     public partial class LoginWindowD : Window
     {
+        
+
         public LoginWindowD()
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            LineSeries mySeries = new LineSeries
+            {
+                Values = new ChartValues<int> { 12, 23, 55, 1 }
+            };
+
+            LineChart.Series.Add(mySeries);
 
             // Create a new MainWindowViewModel for DataContext. This can
             // only happen in the window which the UI starts up with. In

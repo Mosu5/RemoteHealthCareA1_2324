@@ -1,5 +1,8 @@
 ﻿using DoctorWPFApp.MVVM.Model;
 using DoctorWPFApp.Networking;
+using LiveCharts;
+using LiveCharts.Wpf.Charts.Base;
+using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +20,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
     /// </summary>
     internal class MainWindowViewModel : ViewModelBase
     {
+
         public MainWindowViewModel()
         {
             Thread listenerThread = new(async () => await RequestHandler.Listen());
