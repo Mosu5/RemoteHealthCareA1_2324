@@ -32,53 +32,29 @@ namespace ServerApp
         }
 
 
-        public void SaveUserts(string jsonData)
-        {
-            // NOTE: The following path will point to the bin/debug folder of the project serverapp.
-            string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
-
-            string jsonObject = JsonSerializer.Serialize(jsonData);
-
-            StreamWriter writer;
-            if (jsonObject != null)
-            {
-                if (!File.Exists(correctPath))
-                {
-                    File.Create(correctPath);
-                    writer = new StreamWriter(correctPath);
-                    writer.Write(jsonObject);
-                    writer.Flush();
-                    writer.Close();
-                    Console.WriteLine("Userdata has been saved into file!");
-                }
-                else
-                {
-                    writer = File.AppendText(correctPath);
-                    writer.Write(jsonObject);
-                    writer.Flush();
-                    writer.Close();
-                    Console.WriteLine("Userdata has been saved into file!");
-                }
-            }
-            else
-            {
-                Logger.Log("JSONdata has not been saved into file. Check filepath or payload!", LogType.Warning);
-                Console.WriteLine("Data has not been saved!");
-            }
-        }
-
         public void SaveUserStats(string jsonData)
         {
             string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
 
-            string wrappedData = $" {jsonData} ";
+            StreamWriter writer;
+            if (!File.Exists(correctPath))
+            {
+                writer = new StreamWriter(correctPath);
+            }
+            else
+            {
+                writer = File.AppendText(correctPath);
+            }
 
-            File.WriteAllText(correctPath, wrappedData);
+            writer.WriteLine(jsonData); // Write the session data as a separate line
+            writer.Flush();
+            writer.Close();
 
             Console.WriteLine("Userdata has been saved into file!");
         }
+
+
 
         public List<UserStat> GetUserStats()
         {
@@ -90,16 +66,15 @@ namespace ServerApp
                 return null;
             }
 
-            string jsonData = File.ReadAllText(correctPath);
+            List<UserStat> data = new List<UserStat>();
 
-            var data = JsonSerializer.Deserialize<Dictionary<string, List<UserStat>>>(jsonData);
-
-            if (data.TryGetValue("sessions", out List<UserStat> retrievedUserStats))
+            foreach (var line in File.ReadLines(correctPath))
             {
-                return retrievedUserStats;
+                var sessionData = JsonSerializer.Deserialize<List<UserStat>>(line);
+                data.AddRange(sessionData);
             }
 
-            return null;
+            return data;
         }
 
 
