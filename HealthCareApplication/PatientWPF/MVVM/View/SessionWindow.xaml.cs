@@ -5,6 +5,7 @@ using PatientApp.DeviceConnection;
 using PatientWPFApp.PatientLogic;
 using System.Windows;
 using System.Windows.Media;
+using System;
 
 namespace PatientWPFApp.View
 {
@@ -104,7 +105,8 @@ namespace PatientWPFApp.View
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                CurrentSpeedText.Text = stat.Speed.ToString();
+                double speedKmH = Math.Round(stat.Speed * 3.6, 1);
+                CurrentSpeedText.Text = speedKmH.ToString();
 
                 int oldDistance = int.Parse(CurrentDistanceText.Text);
                 int newDistance = oldDistance + stat.Distance;
@@ -112,8 +114,8 @@ namespace PatientWPFApp.View
 
                 CurrentHeartRateText.Text = stat.HeartRate.ToString();
 
-                _speedGraph.Values.Add(stat.Speed);
-                _heartRateGraph.Values.Add(stat.HeartRate);
+                _speedGraph.Values.Add(speedKmH);
+                _heartRateGraph.Values.Add((stat.HeartRate - 80)/4);
             });
         }
     }
