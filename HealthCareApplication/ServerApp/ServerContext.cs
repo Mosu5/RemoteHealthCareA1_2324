@@ -28,14 +28,15 @@ namespace ServerApp.States
         public JsonObject ResponseToClient { get; set; }
         public JsonObject ResponseToDoctor { get; set; }
         public List<UserStat> userStatsBuffer;
+        public TcpClient tcpClient { get; set; }
 
-        public ServerContext(ServerConn serverConn)
+        public ServerContext(ServerConn serverConn, TcpClient connectingClient)
         {
             this._serverConn = serverConn;
             this.isSessionActive = false;
             currentState = new LoginState(this);
             this.userStatsBuffer = new List<UserStat>();
-            
+            this.tcpClient = tcpClient; // Save connecting client so the user can be associated with this client
         }
 
         public void SetNextState(IState newState)

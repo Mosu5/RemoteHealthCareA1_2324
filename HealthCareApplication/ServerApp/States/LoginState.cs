@@ -41,6 +41,9 @@ namespace ServerApp.States
                         Console.WriteLine("We are actually logging in!");
                         _context.SetNewUser(account);
                         _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+
+                        // Associate the current TCPclient connecting with the currently logged in User
+                        _context.GetUserAccount().userClient = _context.tcpClient; 
                         return new SessionIdle(_context);
                     }
                 }

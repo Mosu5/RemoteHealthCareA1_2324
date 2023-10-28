@@ -32,10 +32,8 @@ namespace ServerApp.States
                 // Save data in server
                 BufferUserData(currentStat);
 
-
-                //JsonObject statsForDoc = (JsonObject)JsonConvert.SerializeObject(currentStat);
-                //JsonObject statsForDoc = (JsonObject)JsonSerializer.Serialize<UserStat>(currentStat);
                 string statsForDoc = JsonSerializer.Serialize(currentStat);
+
                 // Data has been recieved and saved in the server, time to send it to the doctor
                 // The actual sending will be done in the Server class itself
                 _context.ResponseToDoctor = ResponseClientData.GenerateDoctorResponse(command, statsForDoc, _context.GetUserAccount().GetUserName());

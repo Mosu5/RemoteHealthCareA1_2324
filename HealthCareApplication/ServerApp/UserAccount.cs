@@ -22,6 +22,7 @@ namespace ServerApp
         public bool hasActiveSession { get; set; }
         public bool isPaused { get; set; }
         public bool isDoctor { get; set; }
+        public TcpClient userClient { get; set; }
 
         public UserAccount(string username, string password) 
         {
