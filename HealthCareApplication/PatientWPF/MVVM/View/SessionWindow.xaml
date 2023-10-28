@@ -50,9 +50,9 @@
                 <Button Name="EmergencyButton" Click="EmergencyButton_Click" Content="Emergency Break" Grid.Row="2" Grid.Column="1" Background="Red"  Padding="5 5" Margin="5,0" HorizontalAlignment="Stretch" FontWeight="DemiBold" IsEnabled="False" />
 
                 <!-- Trainer resistance -->
-                <TextBlock Text="Set trainer resistance (integer)" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,20,0,5"/>
-                <TextBox Name="TrainerResistanceInput" Grid.Row="4" Grid.Column="0" Margin="15,0,5,0" />
-                <Button Name="SetResistanceButton" Click="SetResistanceButton_Click" Grid.Row="4" Grid.Column="1" Margin="5,0,10,0" Content="Set" />
+                <TextBlock Text="Set trainer resistance (in integer %)" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,20,0,5"/>
+                <TextBox Name="TrainerResistanceInput" Text="{Binding TrainerResistance}" Grid.Row="4" Grid.Column="0" Margin="15,0,5,0" />
+                <Button Name="SetResistanceButton" Command="{Binding SetResistance}" Click="SetResistanceButton_Click" Grid.Row="4" Grid.Column="1" Margin="5,0,10,0" Content="Set" />
 
                 <!-- Patient name -->
                 <TextBlock Text="Patient name" Grid.Row="5" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,20,0,5"/>
@@ -134,8 +134,8 @@
                 <ListView Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding PatientChats, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" Margin="10,0" />
 
                 <!-- Chat input -->
-                <TextBox Text="{Binding MessageToSend}" Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" />
-                <Button Name="SendChatButton" Command="{Binding SendChatCommand}" Content="Send" Grid.Row="2" Grid.Column="1" Margin="5,10,10,10"/>
+                <TextBox Name="ChatInput" Text="{Binding MessageToSend}" Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" />
+                <Button Name="SendChatButton" Command="{Binding SendChatCommand}" Click="ChatButton_Click" Content="Send" Grid.Row="2" Grid.Column="1" Margin="5,10,10,10"/>
             </Grid>
         </Border>
     </Grid>

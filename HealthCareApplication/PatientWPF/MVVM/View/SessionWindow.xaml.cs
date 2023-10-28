@@ -92,7 +92,7 @@ namespace PatientWPF.MVVM.View
 
         private void SetResistanceButton_Click(object sender, RoutedEventArgs e)
         {
-
+            TrainerResistanceInput.Text = "";
         }
 
         private void StopExitButton_Click(object sender, RoutedEventArgs e)
@@ -103,6 +103,11 @@ namespace PatientWPF.MVVM.View
             // TODO fix the server side issue of throwing an exception when the connection closes.
             ClientConn.CloseConnection();
             Close();
+        }
+
+        private void ChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChatInput.Text = "";
         }
 
         private void OnReceiveData(object _, Statistic stat)

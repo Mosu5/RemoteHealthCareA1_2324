@@ -64,6 +64,27 @@ namespace PatientWPFApp.MVVM.ViewModel
             await ClientConn.SendJson(chatToServer);
         });
 
+        private string _trainerResistance;
+        public string TrainerResistance
+        {
+            get { return _trainerResistance; }
+            set
+            {
+                _trainerResistance = value;
+                OnPropertyChanged(nameof(TrainerResistance));
+            }
+        }
+
+        public RelayCommand SetResistance => new RelayCommand((execute) =>
+        {
+            if (string.IsNullOrEmpty(TrainerResistance)) return;
+
+            int resistanceAsInt = int.Parse(_trainerResistance);
+            if (resistanceAsInt < 0 || resistanceAsInt > 100) return;
+
+            DeviceManager.Receiver.SetResistance(resistanceAsInt);
+        });
+
         public PatientViewModel()
         {
             // Logger will log if LogType is present
@@ -79,10 +100,11 @@ namespace PatientWPFApp.MVVM.ViewModel
 
             // Initialize VR environment
             Thread vrThread = new Thread(() => VrProgram.Initialize().Wait());
+            // TODO uncomment before production push!
             //vrThread.Start();
             //vrThread.Join();
 
-            //// Listen for requests
+            // Listen for requests
             Thread listenerThread = new Thread(async () => await RequestHandler.Listen());
             listenerThread.Start();
 
