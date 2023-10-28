@@ -1,141 +1,142 @@
 using ServerApp.States;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using Utilities.Communication;
-using Utilities.Logging;
 
 namespace ServerApp
 {
     public class Server
     {
-        private static ServerConn serverConn = new ServerConn("127.0.0.1", 8888);
-        public static List<UserAccount> users = new List<UserAccount>();//List of users
-        private static TcpClient doctorClient;
+        // All user accounts
+        public static List<UserAccount> Users = new List<UserAccount>()
+        {
+            new UserAccount("bob", "bob"),
+            new UserAccount("jan", "jan"),
+            new UserAccount("eren", "eren"),
+            new UserAccount("abc", "abc")
+        };
+
+        // TODO add possibility of multiple doctors connected at the same time
+        private static TcpClient _doctorClient;
 
         public static async Task Main(string[] args)
         {
-            users.Add(new UserAccount("bob","bob"));
-            users.Add(new UserAccount("jan", "jan"));
-            users.Add(new UserAccount("eren", "eren"));
-            users.Add(new UserAccount("abc", "abc"));
-
             // Proof of concept, uitbreinding/refining later mogelijk
             UserAccount doctor = new UserAccount("dokter", "simon");
-            doctor.isDoctor = true;
+            doctor.IsDoctor = true;
+            Users.Add(doctor);
 
-            users.Add(doctor);
-            serverConn.StartListener();
+            // Start up listener for incoming connections
+            ServerConn.StartListener("127.0.0.1", 8888);
 
-            while (serverConn.AcceptClient() is var client)
+            // Runs every time a device (client) connects to the server listener
+            while (ServerConn.AcceptClient() is var client)
             {
-                Console.Out.WriteLineAsync("A client has connected");
+                await Console.Out.WriteLineAsync("A client has connected");
 
-                Thread clientThread = new Thread(HandleClientAsync);
-                clientThread.Start(client);
+                // Start a client handler specific to the client that just connected on a new thread
+                Thread clientThread = new Thread(async() => await HandleClientAsync(client));
+                clientThread.Start();
             }
         }
 
-        // Session of an active user
-        public static async void HandleClientAsync(object connectingClient)
+        /// <summary>
+        /// Handles communication with a client by responding to it and sending messages to it.
+        /// </summary>
+        /// <param name="client">Object containing the concrete connection to the client</param>
+        public static async Task HandleClientAsync(TcpClient client)
         {
-            TcpClient client = connectingClient as TcpClient;
-            ServerContext serverContext = new ServerContext(serverConn, client);
+            ServerContext serverContext = new ServerContext(client);
+
             while (client.Connected)
             {
-                await Console.Out.WriteLineAsync(serverContext.GetState().ToString());
-                Console.Out.WriteLineAsync("Looking for data: ");
-                JsonObject data = await serverConn.ReceiveJson(client);
-                await Console.Out.WriteLineAsync("received " + data.ToString());
+                await Console.Out.WriteLineAsync($"Set server state to {serverContext.GetState()}. Looking for data...");
+
+                // Block until the client sends a message to the server
+                JsonObject data = await ServerConn.ReceiveJson(client);
+
+                await Console.Out.WriteLineAsync($"Client ({client.Client.RemoteEndPoint}) sent: {data}");
+
+                // Update the server context, it might transition to a new state.
                 serverContext.Update(data);
                
                 // Check if user is doctor according to account class
-                if(serverContext.GetUserAccount() != null && serverContext.GetUserAccount().IsDoctor())
+                if(serverContext.GetUserAccount() != null && serverContext.GetUserAccount().IsDoctor)
                 {
+                    // Create a new thread for handling the doctor
                     Thread doctorThread = new Thread(HandleDoctorAsync);
                     doctorThread.Start(new object[] { serverContext, client });
-                    await serverConn.SendJson(client, serverContext.ResponseToClient);
+
+                    // Send the response of the client
+                    // TODO is this correct? Not .ResponseToDoctor?
+                    await ServerConn.SendJson(client, serverContext.ResponseToPatient);
                     return; // Close this thread since the doctor has another thread
                 }
-                if(doctorClient != null)
+
+                // Check if there was a message for the doctor. If so, send it.
+                if(_doctorClient != null && serverContext.ResponseToDoctor != null)
                 {
-                    if (serverContext.ResponseToDoctor != null)
-                    {
-                        await Console.Out.WriteLineAsync("Response to Doctor:" + serverContext.ResponseToDoctor.ToString());
-                        await serverConn.SendJson(doctorClient, serverContext.ResponseToDoctor);
-                    }
+                    await Console.Out.WriteLineAsync("Response to Doctor: " + serverContext.ResponseToDoctor.ToString());
+
+                    await ServerConn.SendJson(_doctorClient, serverContext.ResponseToDoctor);
                 }
 
                 // Send response according to updated server context
-                await serverConn.SendJson(client, serverContext.ResponseToClient);
-
-                // TODO TESTING
-                //if (data["command"].ToString() == "chats/send")
-                //{
-                //    serverConn.SendJson(client, new JsonObject()
-                //    {
-                //        { "command", "chats/send" },
-                //        { "data", new JsonObject()
-                //        {
-                //            { "message", "server message" }
-                //        } }
-                //    }).Wait();
-                //}
+                await ServerConn.SendJson(client, serverContext.ResponseToPatient);
             }
         }
 
-        // Handle Doctor connection. Pass in the existing servercontext because server knows the useraccount information
+        /// <summary>
+        /// Handle Doctor connection. Pass in the existing servercontext because server knows the useraccount information
+        /// </summary>
         public static async void HandleDoctorAsync(object doctorParams)
         {
-            DoctorHandler doctorHandler = new DoctorHandler(); 
-
             object[] parameterArray = (object[])doctorParams;
-            ServerContext serverContext = parameterArray[0] as ServerContext;
             TcpClient tcpClient = parameterArray[1] as TcpClient;
-            doctorClient = tcpClient;
+            _doctorClient = tcpClient;
+
+            // TODO maybe make static
+            DoctorHandler doctorHandler = new DoctorHandler(); 
 
             while (tcpClient.Connected) 
             {
-                
-                // Listen to messages from doctor client
-                JsonObject data = await serverConn.ReceiveJson(tcpClient);
+                // Listen to messages from doctor
+                JsonObject data = await ServerConn.ReceiveJson(tcpClient);
 
-                // Determine the data for the patient by the doctor handler
-                doctorHandler.Handle(data);
+                // Determine the data for the patient by the doctor handler.
+                // If the data was malformed, go to the next iteration of the while loop.
+                if (!doctorHandler.Handle(data)) continue;
 
-                UserAccount receivingUser = getUserByName(doctorHandler.userToRespondTo);
-                TcpClient clientToRespond = receivingUser.userClient;
-                JsonObject msgPayload = doctorHandler.responseValue;
+                // Get the user account to which the doctor is communicating
+                UserAccount receivingPatient = GetUserByName(doctorHandler.PatientToRespondTo);
 
-                // Send command from the doctorWPFclient through server to the correct patient
-                await serverConn.SendJson(clientToRespond, msgPayload);
+                // Get the receiving patient's TcpClient
+                TcpClient patientToRespondTo = receivingPatient.UserClient;
 
+                // The message to send to the patient
+                JsonObject msgPayload = doctorHandler.ResponseValue;
+
+                // Send command from the DoctorWPFApp through server to the correct patient
+                await ServerConn.SendJson(patientToRespondTo, msgPayload);
             }
-
         }
 
-        private static UserAccount getUserByName(string name) 
+        /// <summary>
+        /// Goes through the list of user accounts and gets the user account with the corresponding name, or if absent null.
+        /// </summary>
+        private static UserAccount GetUserByName(string name) 
         {
-
-            foreach (UserAccount user in Server.users)
+            foreach (UserAccount user in Users)
             {
                 if (name.Equals(user.GetUserName()))
                 {
                     return user;
                 }
             }
-
             return null;
-
         }
     }   
 }

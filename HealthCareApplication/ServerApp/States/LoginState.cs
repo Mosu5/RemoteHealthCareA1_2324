@@ -14,12 +14,11 @@ namespace ServerApp.States
     /// </summary>
     internal class LoginState : IState
     {
-        //TODO current username and password are for 
+        private readonly ServerContext _context;
 
-        private ServerContext _context;
         public LoginState(ServerContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public IState Handle(JsonObject packet)
@@ -28,26 +27,34 @@ namespace ServerApp.States
             string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
             string password = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();
 
-            Console.WriteLine("Login recieved data: " + username + "    " + password);
+            Console.WriteLine($"A client attempted to login with username '{username}' and password '{password}'");
 
-            if (Server.users.Any())
+            // If the list of users is not empty
+            if (Server.Users.Any())
             {
-
-                foreach (UserAccount account in Server.users)
+                // Loop through user accounts to see which one's credentials matches the credentials sent by the client.
+                foreach (UserAccount account in Server.Users)
                 {
                     if (account.GetUserName() == username && account.GetPassword() == password)
                     {
-
-                        Console.WriteLine("We are actually logging in!");
+                        // Bind a user account to this client
                         _context.SetNewUser(account);
-                        _context.ResponseToClient = ResponseClientData.GenerateResponse("login", null, "ok");
+
+                        // Send a login response to the client
+                        _context.ResponseToPatient = ResponseClientData.GenerateResponse("login", null, "ok");
 
                         // Associate the current TCPclient connecting with the currently logged in User
-                        _context.GetUserAccount().userClient = _context.tcpClient; 
+                        _context.GetUserAccount().UserClient = _context.tcpClient;
+
+                        // Set the state to idle
                         return new SessionIdle(_context);
                     }
                 }
             }
+
+            // Send an error to the client if the credentials are incorrect.
+            _context.ResponseToPatient = ResponseClientData.GenerateResponse("login", null, "error");
+
             //Login Failed so it stays in LoginState
             return this;
         }

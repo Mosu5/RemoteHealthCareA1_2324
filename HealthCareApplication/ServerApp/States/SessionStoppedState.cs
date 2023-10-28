@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Nodes;
 
 namespace ServerApp.States
 {
     internal class SessionStoppedState : IState
     {
-        private ServerContext _context;
+        private readonly ServerContext _context;
 
-        public SessionStoppedState(ServerContext serverContext) 
+        public SessionStoppedState(ServerContext serverContext)
         {
-        this._context = serverContext;
+            _context = serverContext;
         }
-
 
         public IState Handle(JsonObject packet)
         {
             // Save data to file
             // Data will be saved so client/doctor can recieve a stats summary later
-            Console.WriteLine("State = Session/stop");
-            this._context.SaveUserData();
-            _context.GetUserAccount().hasActiveSession = false;
-            _context.isSessionActive = false;
+            _context.SaveUserData();
+            _context.GetUserAccount().HasActiveSession = false;
+            _context.IsSessionActive = false;
 
             return new SessionIdle(_context);
         }

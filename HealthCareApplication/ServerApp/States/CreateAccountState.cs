@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServerApp.States
 {
+    // TODO can this class be removed?
     internal class CreateAccountState : IState
     {
         private ServerContext _context;
@@ -29,25 +30,25 @@ namespace ServerApp.States
 
             //checks if the packet is contains the correct data
 
-            foreach (UserAccount account in Server.users)
+            foreach (UserAccount account in Server.Users)
             {
                 if (account.GetUserName() == username)
                 {
                     //context.ResponseToClient = AccCreationFailed("Username is already being used by an account. Please Login or use another username to create an account");
-                    _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "error");
+                    _context.ResponseToPatient = ResponseDataForClient.GenerateResponse("create account", null, "error");
                     return new LoginState(_context);
                 }
                 else
                 {
                     //context.ResponseToClient = AccSuccesfullCreated();
-                    _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "ok");
-                    Server.users.Add(new UserAccount(username, password));
+                    _context.ResponseToPatient = ResponseDataForClient.GenerateResponse("create account", null, "ok");
+                    Server.Users.Add(new UserAccount(username, password));
                     return new SessionIdle(_context);
                 }
             }
             //Account Creation Failed so it stays in CreateAccountState
             //context.ResponseToClient = AccCreationFailed("Account creation Failed because");
-            _context.ResponseToClient = ResponseDataForClient.GenerateResponse("create account", null, "error");
+            _context.ResponseToPatient = ResponseDataForClient.GenerateResponse("create account", null, "error");
             return this;
         }
     }

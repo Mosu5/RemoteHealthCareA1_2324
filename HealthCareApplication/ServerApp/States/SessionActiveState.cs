@@ -42,12 +42,12 @@ namespace ServerApp.States
             }
             else if (command == "session/stop")
             {
-                this._context.ResponseToClient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
+                this._context.ResponseToPatient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
                 return new SessionStoppedState(this._context);
             }
             else if(command == "session/pause")
             {
-                this._context.ResponseToClient = ResponseClientData.GenerateResponse("session/pause", null, "ok");
+                this._context.ResponseToPatient = ResponseClientData.GenerateResponse("session/pause", null, "ok");
                 return new SessionPausedState(this._context);
             }
             
@@ -59,7 +59,7 @@ namespace ServerApp.States
         private void BufferUserData(UserStat userstat)
         {
           
-            this._context.userStatsBuffer.Add(userstat);
+            this._context.UserStatsBuffer.Add(userstat);
             //foreach (UserStat stat in _context.userStatsBuffer)
             //{
             //   stat.ToString();
