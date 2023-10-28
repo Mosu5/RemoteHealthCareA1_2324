@@ -63,6 +63,7 @@ namespace ServerApp
                 {
                     Thread doctorThread = new Thread(HandleDoctorAsync);
                     doctorThread.Start(new object[] { serverContext, client });
+                    await serverConn.SendJson(client, serverContext.ResponseToClient);
                     return; // Close this thread since the doctor has another thread
                 }
                 if(doctorClient != null)

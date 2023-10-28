@@ -1,4 +1,5 @@
-﻿using PatientWPFApp.View;
+﻿using PatientWPF.MVVM.View;
+using PatientWPFApp.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;

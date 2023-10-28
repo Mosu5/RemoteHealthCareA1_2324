@@ -93,6 +93,7 @@
     <Compile Include="UserStat.cs" />
     <Compile Include="States\SessionIdle.cs" />
     <Compile Include="ResponseClientData.cs"/>
+    <Compile Include="DoctorHandler.cs"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
