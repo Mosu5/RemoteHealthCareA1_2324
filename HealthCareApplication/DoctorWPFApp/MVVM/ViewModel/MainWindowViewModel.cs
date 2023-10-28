@@ -37,6 +37,20 @@ namespace DoctorWPFApp.MVVM.ViewModel
             InitPlaceHolderData(); // TODO remove when not needed anymore
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
 
+        private bool _isSessionRunning = false;
+        public RelayCommand StartStopSession => new(async (execute) =>
+        {
+            JsonObject sessionRequest =
+                _isSessionRunning
+                ? DoctorFormat.SessionStartMessage(SelectedPatient.Name)
+                : DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+
+            // Toggle boolean
+            _isSessionRunning = !_isSessionRunning;
+
+            await ClientConn.SendJson(sessionRequest);
+        }, canExecute => true);
+
         #endregion
 
         #region Properties of commands

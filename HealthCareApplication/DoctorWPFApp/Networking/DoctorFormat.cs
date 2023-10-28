@@ -36,36 +36,37 @@ namespace DoctorWPFApp.Networking
             });
         }
 
-        public static JsonObject SessionStartMessage()
+        public static JsonObject SessionStartMessage(string patientName)
         {
-            return BaseMessage("session/start");
+            return BaseMessage("session/start", new JsonObject() { { "username", patientName } });
         }
 
-        public static JsonObject SessionStopMessage()
+        public static JsonObject SessionStopMessage(string patientName)
         {
-            return BaseMessage("session/stop");
+            return BaseMessage("session/stop", new JsonObject() { { "username", patientName } });
         }
 
-        public static JsonObject SessionPauseMessage()
+        //public static JsonObject SessionPauseMessage()
+        //{
+        //    return BaseMessage("session/pause");
+        //}
+
+        //public static JsonObject SessionResumeMessage()
+        //{
+        //    return BaseMessage("session/resume");
+        //}
+
+        public static JsonObject StatsSummaryMessage(string patientName)
         {
-            return BaseMessage("session/pause");
+            return BaseMessage("stats/summary", new JsonObject() { { "username", patientName } });
         }
 
-        public static JsonObject SessionResumeMessage()
-        {
-            return BaseMessage("session/resume");
-        }
-
-        public static JsonObject StatsSummaryMessage()
-        {
-            return BaseMessage("stats/summary");
-        }
-
-        public static JsonObject ChatsSendMessage(string chatMessage)
+        public static JsonObject ChatsSendMessage(string chatMessage, string patientName)
         {
             return BaseMessage("chats/send", new JsonObject
             {
-                { "message", chatMessage }
+                { "message", chatMessage },
+                { "username", patientName }
             });
         }
 
