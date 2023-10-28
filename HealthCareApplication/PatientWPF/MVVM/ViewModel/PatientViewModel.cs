@@ -1,16 +1,10 @@
-﻿using PatientApp.DeviceConnection;
+﻿using Newtonsoft.Json.Linq;
+using PatientApp.DeviceConnection;
 using PatientApp.VrLogic;
 using PatientWPFApp.PatientLogic;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using Utilities.Communication;
 using Utilities.Logging;
 
 namespace PatientWPFApp.MVVM.ViewModel
@@ -19,8 +13,8 @@ namespace PatientWPFApp.MVVM.ViewModel
     {
         private bool _isLoggedIn = false;
 
-        private string? _username;
-        public string? Username
+        private string _username;
+        public string Username
         {
             get { return _username; }
             set
@@ -30,8 +24,8 @@ namespace PatientWPFApp.MVVM.ViewModel
             }
         }
 
-        private string? _password;
-        public string? Password
+        private string _password;
+        public string Password
         {
             get { return _password; }
             set
@@ -41,16 +35,16 @@ namespace PatientWPFApp.MVVM.ViewModel
             }
         }
 
-        public RelayCommand LoginCommand => new(async (execute) =>
+        public RelayCommand LoginCommand => new RelayCommand(async (execute) =>
         {
             // Send the login command
-            JsonObject loginRequest = PatientFormat.LoginMessage(_username, _password);
+            JObject loginRequest = PatientFormat.LoginMessage(_username, _password);
             // TODO fix server side issue of exception when incorrect credentials
-            await PatientLogic.ClientConn.SendJson(loginRequest);
+            await ClientConn.SendJson(loginRequest);
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password));
 
-        private string? _messageToSend;
-        public string? MessageToSend
+        private string _messageToSend;
+        public string MessageToSend
         {
             get { return _messageToSend; }
             set
@@ -60,14 +54,14 @@ namespace PatientWPFApp.MVVM.ViewModel
             }
         }
 
-        public ObservableCollection<string> PatientChats { get; } = new();
+        public ObservableCollection<string> PatientChats { get; set; } = new ObservableCollection<string>();
 
-        public RelayCommand SendChatCommand => new(async (execute) =>
+        public RelayCommand SendChatCommand => new RelayCommand(async (execute) =>
         {
             if (string.IsNullOrEmpty(_messageToSend)) return;
 
-            JsonObject chatToServer = PatientFormat.ChatsSendMessage(_messageToSend);
-            await PatientLogic.ClientConn.SendJson(chatToServer);
+            JObject chatToServer = PatientFormat.ChatsSendMessage(_messageToSend);
+            await ClientConn.SendJson(chatToServer);
         });
 
         public PatientViewModel()
@@ -83,18 +77,13 @@ namespace PatientWPFApp.MVVM.ViewModel
                 LogType.Debug
             );
 
-            // Initialize BLE connection
-            Thread deviceThread = new(async () => await DeviceManager.Initialize());
-            deviceThread.Start();
-            deviceThread.Join();
-
             // Initialize VR environment
-            Thread vrThread = new(() => VrProgram.Initialize().Wait());
+            Thread vrThread = new Thread(() => VrProgram.Initialize().Wait());
             //vrThread.Start();
             //vrThread.Join();
 
             //// Listen for requests
-            Thread listenerThread = new(async () => await RequestHandler.Listen());
+            Thread listenerThread = new Thread(async () => await RequestHandler.Listen());
             listenerThread.Start();
 
             RequestHandler.LoggedIn += OnLoginResponse;
@@ -104,21 +93,21 @@ namespace PatientWPFApp.MVVM.ViewModel
         /// <summary>
         /// When a response is received from the server, give feedback to the user or switch window.
         /// </summary>
-        private void OnLoginResponse(object? sender, bool successfulLogin)
+        private void OnLoginResponse(object sender, bool successfulLogin)
         {
             if (_isLoggedIn) return;
 
             if (successfulLogin)
             {
                 _isLoggedIn = true;
-                Application.Current.Dispatcher.Invoke(() => Navigator.NavToSessionWindow());
+                Application.Current.Dispatcher.Invoke(() => Navigator.NavToSessionWindow(_username));
                 return;
             }
 
             MessageBox.Show("Wrong username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private void OnReceivedChat(object? sender, string chatMessage)
+        private void OnReceivedChat(object sender, string chatMessage)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {

@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net472</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
@@ -23,15 +22,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotnetNoise" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="BLELibrary">
       <HintPath>Libraries\BLELibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 
-  <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />
+  <ItemGroup>
+    <PackageReference Include="DotnetNoise" Version="1.0.0" />
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 
 </Project>

@@ -1,43 +1,33 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using PatientWPF.Utilities;
+using System;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace Utilities.Communication
+namespace PatientWPFApp.PatientLogic
 {
     public class ClientConn
     {
-        private readonly Encoding _encoding = Encoding.ASCII;
+        private static readonly Encoding _encoding = Encoding.ASCII;
 
-        private TcpClient _tcpClient;
-        private NetworkStream _stream;
-
-        private readonly string _ipAddress;
-        private readonly int _port;
-
-        /// <param name="ipAddress">The IP-address of the server</param>
-        /// <param name="port">The port of the server</param>
-        public ClientConn(string ipAddress, int port)
-        {
-            _ipAddress = ipAddress;
-            _port = port;
-        }
+        private static TcpClient _tcpClient;
+        private static NetworkStream _stream;
 
         /// <summary>
         ///     Attempts to asynchronously connect to the server and establishes a NetworkStream that listens
         ///     to incoming messages.
         /// </summary>
         /// <returns>Wether the connection attempt was successful.</returns>
-        public async Task<bool> ConnectToServer()
+        public static async Task<bool> ConnectToServer(string ipAddress, int port)
         {
+            // Return if already connected
             if (_tcpClient != null && _tcpClient.Connected) return false;
 
+            // Create new TcpClient and await the connection process to the server
             _tcpClient = new TcpClient();
-
-            await _tcpClient.ConnectAsync(_ipAddress, _port);
+            await _tcpClient.ConnectAsync(ipAddress, port);
 
             if (_tcpClient.Connected) _stream = _tcpClient.GetStream();
 
@@ -47,11 +37,12 @@ namespace Utilities.Communication
         /// <summary>
         ///     Closes the TcpClient and NetworkStream.
         /// </summary>
-        public void CloseConnection()
+        public static void CloseConnection()
         {
-            if (!_tcpClient.Connected) return;
-            _tcpClient?.Close();
-            _stream?.Close();
+            // Return if not connected
+            if (_tcpClient == null || !_tcpClient.Connected) return;
+            _tcpClient.Close();
+            _stream.Close();
         }
 
         /// <summary>
@@ -59,9 +50,9 @@ namespace Utilities.Communication
         /// </summary>
         /// <param name="payload">An object whose structure will be converted to JSON and sent to the server.</param>
         /// <exception cref="CommunicationException">When something goes wrong while sending data to the server.</exception>
-        public async Task SendJson(JsonObject payload)
+        public static async Task SendJson(JObject payload)
         {
-            if (!_tcpClient.Connected)
+            if (_tcpClient == null || !_tcpClient.Connected)
                 throw new CommunicationException(
                     "There is no active communication between the client application and the server.");
 
@@ -82,9 +73,9 @@ namespace Utilities.Communication
         /// </summary>
         /// <returns>The message which the server sent, as a JObject.</returns>
         /// <exception cref="CommunicationException">When something goes wrong while receiving data from the server.</exception>
-        public async Task<JsonObject> ReceiveJson()
+        public static async Task<JObject> ReceiveJson()
         {
-            if (!_tcpClient.Connected)
+            if (_tcpClient == null || !_tcpClient.Connected)
                 throw new CommunicationException(
                     "There is no active communication between the client application and the server.");
 
@@ -109,7 +100,7 @@ namespace Utilities.Communication
 
             // Deserialize message
             var messageAsString = _encoding.GetString(payloadBuffer, 0, totalBytesRead);
-            JsonObject deserializedMessage = JsonSerializer.Deserialize<JsonObject>(messageAsString)?.AsObject();
+            JObject deserializedMessage = JObject.Parse(messageAsString);
 
             if (deserializedMessage == null)
                 throw new CommunicationException("Something went wrong while receiving a message from the server.");
