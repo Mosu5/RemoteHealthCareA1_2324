@@ -17,19 +17,20 @@ namespace ServerApp
     public class UserAccount
     {
 
-        private string _username { get; set; }
-        private string _password { get; set; }
-        public bool hasActiveSession { get; set; }
-        public bool isPaused { get; set; }
-        public bool isDoctor { get; set; }
-        public TcpClient userClient { get; set; }
+        private readonly string _username;
+        private readonly string _password;
+
+        public bool HasActiveSession { get; set; }
+        public bool IsPaused { get; set; }
+        public bool IsDoctor { get; set; }
+        public TcpClient UserClient { get; set; }
 
         public UserAccount(string username, string password) 
         {
-            this._username = username;
-            this._password = password;
-            this.hasActiveSession = false;
-            this.isPaused = false;
+            _username = username;
+            _password = password;
+            HasActiveSession = false;
+            IsPaused = false;
         }
 
 
@@ -76,23 +77,17 @@ namespace ServerApp
             {
                 return null;
             }
-    
-
-        }
-
-        public bool IsDoctor()
-        {
-            return this.isDoctor;
+   
         }
 
         public string GetUserName() 
         { 
-            return this._username;
+            return _username;
         }
 
         public string GetPassword()
         {
-            return this._password;
+            return _password;
         }
     }
 }

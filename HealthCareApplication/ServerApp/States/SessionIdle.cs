@@ -1,46 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Contexts;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Nodes;
 
 namespace ServerApp.States
 {
     internal class SessionIdle : IState
     {
 
-        private ServerContext _context;
+        private readonly ServerContext _context;
         public SessionIdle(ServerContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public IState Handle(JsonObject packet)
         {
+            // Get the command of the sent message
             string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
 
             if (command == "session/start")
             {
                 // Mark user as active in session
-                _context.GetUserAccount().hasActiveSession = true;
-                _context.isSessionActive = true;
-                _context.ResponseToClient = ResponseClientData.GenerateResponse("session/start", null, "ok");
+                _context.GetUserAccount().HasActiveSession = true;
+                _context.IsSessionActive = true;
+
+                _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/start", null, "ok");
                 return new SessionActiveState(_context);
             }
             if (command == "stats/summary")
             {
-                // To do: Retrieve this data from the userstats buffer instead of the userstats file
-                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(_context.userStatsBuffer);
+                // TODO: Retrieve this data from the userstats buffer instead of the userstats file
+                _context.ResponseToPatient = ResponseClientData.GenerateSummaryRequest(_context.UserStatsBuffer);
                 // Reset userbuffer for next session
-
             }
             return this;
-
         }
-
     }
 }

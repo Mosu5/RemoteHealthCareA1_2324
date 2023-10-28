@@ -13,35 +13,17 @@ namespace ServerApp
     internal class ServerConn
     {
         private static readonly Encoding _encoding = Encoding.ASCII;
+        private static TcpListener _tcpListener;
 
-        private TcpListener _tcpListener;
-
-        private readonly IPAddress _ipAddress;
-        private readonly int _port;
-
-        public ServerConn(string ipAddress, int port)
-        { 
-            this._ipAddress = IPAddress.Parse(ipAddress);
-            this._port = port;
-        }
-
-        public void StartListener()
+        public static void StartListener(string ipAddress, int port)
         {
-            _tcpListener = new TcpListener(_ipAddress, _port);
+            _tcpListener = new TcpListener(IPAddress.Parse(ipAddress), port);
             _tcpListener.Start();
         }
 
-        public TcpClient AcceptClient()
+        public static TcpClient AcceptClient()
         {
             return _tcpListener.AcceptTcpClient();
-        }
-
-        /// <summary>
-        ///     Closes the TcpClient and NetworkStream.
-        /// </summary>
-        public void CloseConnection()
-        {
-            _tcpListener?.Stop();
         }
 
         /// <summary>
@@ -49,7 +31,7 @@ namespace ServerApp
         /// </summary>
         /// <param name="payload">An object whose structure will be converted to JSON and sent to the VR server.</param>
         /// <exception cref="CommunicationException">When something goes wrong while sending data to the VR server.</exception>
-        public async Task SendJson(TcpClient client, JsonObject payload)
+        public static async Task SendJson(TcpClient client, JsonObject payload)
         {
             // Encode JSON string as a byte array
             byte[] payloadAsBytes = _encoding.GetBytes(payload.ToString());
@@ -68,7 +50,7 @@ namespace ServerApp
         /// </summary>
         /// <returns>The message which the server sent, as a JsonObject.</returns>
         /// <exception cref="CommunicationException">When something goes wrong while receiving data from the VR server.</exception>
-        public async Task<JsonObject> ReceiveJson(TcpClient client)
+        public static async Task<JsonObject> ReceiveJson(TcpClient client)
         {
             NetworkStream clientStream = client.GetStream();
             byte[] lengthArray = new byte[4];

@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net;
 using System.Net.Sockets;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace ServerApp.States
 {
@@ -20,84 +11,97 @@ namespace ServerApp.States
     /// </summary>
     internal class ServerContext
     {
-        public bool isSessionActive { get; set; }
-        private UserAccount _userAccount { get; set; }
-        private IState currentState { get; set; }
-        private IState nextState { get; set; }
-        private ServerConn _serverConn { get; set; }
-        public JsonObject ResponseToClient { get; set; }
+        // Fields for the response of client/doctor.
+        // Used by Server.cs to send the JsonObject over the network
+        // to a patient or doctor
+        public JsonObject ResponseToPatient { get; set; }
         public JsonObject ResponseToDoctor { get; set; }
-        public List<UserStat> userStatsBuffer;
+        public bool IsSessionActive { get; set; }
         public TcpClient tcpClient { get; set; }
+        public List<UserStat> UserStatsBuffer;
 
-        public ServerContext(ServerConn serverConn, TcpClient connectingClient)
+        private IState currentState;
+        private UserAccount _userAccount;
+
+        public ServerContext(TcpClient connectingClient)
         {
-            this._serverConn = serverConn;
-            this.isSessionActive = false;
+            // Set the current state to login and set session active to false
             currentState = new LoginState(this);
-            this.userStatsBuffer = new List<UserStat>();
-            this.tcpClient = connectingClient; // Save connecting client so the user can be associated with this client
+            IsSessionActive = false;
+
+            UserStatsBuffer = new List<UserStat>();
+            tcpClient = connectingClient; // Save connecting client so the user can be associated with this client
         }
 
-        public void SetNextState(IState newState)
-        {
-            nextState = newState;
-        }
-
+        /// <summary>
+        /// Update the state of the client, enables transitioning to other states.
+        /// </summary>
+        /// <param name="receivedData">Data that was received over the network parsed as JSON</param>
+        /// <exception cref="NullReferenceException">If the received data is null</exception>
         public void Update(JsonObject receivedData)
         {
             if (receivedData == null)
-            {
-                throw new NullReferenceException("Error while receiving JsonObject");
-            }
- 
+                throw new NullReferenceException("Expected a JsonObject, but got null");
+
+            // Set new state
             currentState = currentState.Handle(receivedData);
-            
-            
         }
 
+        /// <summary>
+        /// Save the buffer of userstats into the user account.
+        /// </summary>
         public void SaveUserData()
         {
-            
             // Get previously saved data so current data can be added to the file. (Prevent overwriting)
-            List<List<UserStat>> allUserStats = this.GetUserAccount().GetUserStats();
+            List<List<UserStat>> allUserStats = GetUserAccount().GetUserStats();
+
+            string userData;
+
+            // If there are userstats present, add the buffer to the userstats and serialize it.
+            // Otherwise, only serialize the buffer.
             if (allUserStats != null)
             {
                 // Add new data to old data
-                allUserStats.Add(this.userStatsBuffer);
-
+                allUserStats.Add(UserStatsBuffer);
 
                 //var allData = previousData.Concat(userStatsBuffer);
-                string userData = JsonSerializer.Serialize(allUserStats);
-                this._userAccount.SaveUserStats(userData);
-            }else
+                userData = JsonSerializer.Serialize(allUserStats);
+            }
+            else
             {
-                string userData = JsonSerializer.Serialize(this.userStatsBuffer);
-                this._userAccount.SaveUserStats(userData);
+                userData = JsonSerializer.Serialize(UserStatsBuffer);
             }
 
+            _userAccount.SaveUserStats(userData);
         }
 
+        /// <summary>
+        /// Set the user account of the client. For when the client logs in with the credentials
+        /// of their user account.
+        /// </summary>
         public void SetNewUser(UserAccount user)
         {
-            this._userAccount = user;
+            _userAccount = user;
         }
 
-        public UserAccount GetUserAccount() { return this._userAccount; }
+        public UserAccount GetUserAccount() { return _userAccount; }
 
         // Gets the userstats from the current session
         public List<UserStat> GetUserStatsBuffer()
         {
-            return this.userStatsBuffer;
+            return UserStatsBuffer;
         }
         public void ResetUserStatsBuffer()
         {
-            this.userStatsBuffer.Clear();
+            UserStatsBuffer.Clear();
         }
 
+        /// <summary>
+        /// Gets the current state as a string.
+        /// </summary>
         internal string GetState()
         {
-            return this.currentState.ToString();
+            return currentState.ToString();
         }
     }
 }
