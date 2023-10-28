@@ -34,7 +34,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             JsonObject loginRequest = DoctorFormat.LoginMessage(_username, _password);
             await ClientConn.SendJson(loginRequest);
 
-            InitPlaceHolderData();
+            InitPlaceHolderData(); // TODO remove when not needed anymore
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
 
         private bool _isSessionRunning = false;
@@ -130,7 +130,26 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     Speed = 1,
                     Distance = 1,
                     HeartRate = 1,
-                    ChatMessages = new List<string> { "hi bob is mijn naam", "fdsfdsfdsf", "dfsdffdfsdf" }
+                    ChatMessages = new List<string> { "hi bob is mijn naam", "fdsfdsfdsf", "dfsdffdfsdf" },
+                    PatientDataCollection = new List<PatientData> {
+                        new PatientData
+                        {
+                            DateTime = DateTime.Now,
+                            RecordedSpeed = 1,
+                            RecordedDistance = 1,
+                            RecordedHeartRate = 1,
+                            RecordedRrInterval = 1,
+                        },
+                        new PatientData
+                        {
+                            DateTime = DateTime.Now,
+                            RecordedSpeed = 1,
+                            RecordedDistance = 1,
+                            RecordedHeartRate = 1,
+                            RecordedRrInterval = 1,
+                        },
+                    }
+
                 },
 
                 new Patient
