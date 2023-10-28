@@ -26,8 +26,8 @@ namespace DoctorWPFApp.MVVM.View
         // Todo maybe change return type to task?
         private async void SendBtn_Click(object sender, RoutedEventArgs e)
         {
-            JsonObject chatObject = DoctorFormat.ChatsSendMessage(sendBox.Text);
-            await ClientConn.SendJson(chatObject);
+            //JsonObject chatObject = DoctorFormat.ChatsSendMessage(sendBox.Text);
+            //await ClientConn.SendJson(chatObject);
         }
 
         private async void OnChatReceived(object? sender, string chatMessage)
