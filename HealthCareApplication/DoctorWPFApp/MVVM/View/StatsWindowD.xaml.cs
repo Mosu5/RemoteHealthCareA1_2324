@@ -12,7 +12,6 @@ namespace DoctorWPFApp.MVVM.View
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            RequestHandler.ReceivedStat += OnStatReceived;
             RequestHandler.ReceivedSummary += OnSummaryReceived;
 
             // Send summary request
@@ -28,12 +27,6 @@ namespace DoctorWPFApp.MVVM.View
         private void SummaryBtn_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Average speed: " + "\n" + "Distance: " + "\n" + "Average heartrate: ", "Summary so far!", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void OnStatReceived(object? sender, string stat)
-        {
-            //TODO
-            //MessageBox.Show(stat);
         }
 
         private void OnSummaryReceived(object? sender, string summary)

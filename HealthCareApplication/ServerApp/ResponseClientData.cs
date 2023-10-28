@@ -41,7 +41,7 @@ namespace ServerApp
         }
 
 
-        public static JsonObject GenerateDoctorResponse(string command, string data, string username)
+        public static JsonObject GenerateDoctorResponse(string command, JsonObject data, string username)
         {
                 return new JsonObject()
                  {

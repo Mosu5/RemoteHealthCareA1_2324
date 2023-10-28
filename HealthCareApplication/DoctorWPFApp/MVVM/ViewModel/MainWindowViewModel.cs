@@ -24,6 +24,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             // Subscribe to response event handler
             RequestHandler.LoggedIn += OnLoginResponse;
+            RequestHandler.ReceivedStat += OnStatReceived;
         }
 
         #region Commands called by the UI
@@ -104,7 +105,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
         /// <summary>
         /// When a response is received from the server, give feedback to the user or switch window.
         /// </summary>
-        private void OnLoginResponse(object? sender, bool successfulLogin)
+        private void OnLoginResponse(object? _, bool successfulLogin)
         {
             if (successfulLogin)
             {
@@ -113,6 +114,17 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
 
             MessageBox.Show("Wrong username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void OnStatReceived(object? _, Statistic stat)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SelectedPatient.Speed = stat.Speed;
+                SelectedPatient.Distance = stat.Distance;
+                SelectedPatient.HeartRate = stat.HeartRate;
+                OnPropertyChanged(nameof(SelectedPatient));
+            });
         }
 
         #endregion

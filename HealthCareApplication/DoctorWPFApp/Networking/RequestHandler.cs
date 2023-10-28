@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using System.Windows;
 using Utilities.Logging;
 
 namespace DoctorWPFApp.Networking
@@ -11,7 +9,7 @@ namespace DoctorWPFApp.Networking
     {
         // Doctor ViewModel events
         public static event EventHandler<bool>? LoggedIn;
-        public static event EventHandler<string>? ReceivedStat;
+        public static event EventHandler<Statistic>? ReceivedStat;
         public static event EventHandler<string>? ReceivedChat;
         public static event EventHandler<string>? ReceivedSummary;
 
@@ -39,9 +37,13 @@ namespace DoctorWPFApp.Networking
                         ReceivedChat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "message").ToString());
                         break;
                     case "stats/send":
-                        string statString = DoctorFormat.GetKey(dataObject, "stats").ToString();
-                        MessageBox.Show(statString);
-                        //ReceivedStat?.Invoke(nameof(DoctorFormat),);
+                        JsonObject statObject = DoctorFormat.GetKey(dataObject, "stats").AsObject();
+                        ReceivedStat?.Invoke(nameof(DoctorFormat), new Statistic
+                        (
+                            double.Parse(DoctorFormat.GetKey(statObject, "speed").ToString()),
+                            int.Parse(DoctorFormat.GetKey(statObject, "distance").ToString()),
+                            int.Parse(DoctorFormat.GetKey(statObject, "heartrate").ToString())
+                        ));
                         break;
                     case "stats/summary":
                         ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "statistics").AsArray().ToString());

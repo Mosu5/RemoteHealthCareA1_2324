@@ -13,7 +13,7 @@ namespace ServerApp.States
         private ServerContext _context;
         public SessionActiveState(ServerContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public IState Handle(JsonObject packet)
@@ -29,10 +29,11 @@ namespace ServerApp.States
                 Console.WriteLine("Buffering data: ");
 
                 UserStat currentStat = new UserStat(speed, distance, heartRate);
+
                 // Save data in server
                 BufferUserData(currentStat);
 
-                string statsForDoc = JsonSerializer.Serialize(currentStat);
+                JsonObject statsForDoc = JsonSerializer.Deserialize<JsonObject>(JsonSerializer.Serialize(currentStat));
 
                 // Data has been recieved and saved in the server, time to send it to the doctor
                 // The actual sending will be done in the Server class itself
@@ -42,24 +43,23 @@ namespace ServerApp.States
             }
             else if (command == "session/stop")
             {
-                this._context.ResponseToPatient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
-                return new SessionStoppedState(this._context);
+                _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
+                return new SessionStoppedState(_context);
             }
             else if(command == "session/pause")
             {
-                this._context.ResponseToPatient = ResponseClientData.GenerateResponse("session/pause", null, "ok");
-                return new SessionPausedState(this._context);
+                _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/pause", null, "ok");
+                return new SessionPausedState(_context);
             }
             
-            // To DO:
+            // TODO:
             // Implement pause and resume into this state.
             return this;
         }
 
         private void BufferUserData(UserStat userstat)
         {
-          
-            this._context.UserStatsBuffer.Add(userstat);
+            _context.UserStatsBuffer.Add(userstat);
             //foreach (UserStat stat in _context.userStatsBuffer)
             //{
             //   stat.ToString();
