@@ -120,6 +120,11 @@ namespace PatientWPF.MVVM.View
 
                 _speedGraph.Values.Add(speedKmH);
                 _heartRateGraph.Values.Add((stat.HeartRate - 80) / 4);
+
+                // Sending data in the same thread causes the UI thread to completely freeze
+                // To prevent this send data through a different thread
+                Thread t = new Thread(async () => await ClientConn.SendJson(PatientFormat.StatsSendMessage(stat)));
+                t.Start();
             });
         }
 
@@ -145,6 +150,8 @@ namespace PatientWPF.MVVM.View
 
                 EmergencyButton.IsEnabled = true;
 
+                // Sending data in the same thread causes the UI thread to completely freeze
+                // To prevent this send data through a different thread
                 Thread t = new Thread(async() => await ClientConn.SendJson(PatientFormat.SessionStartMessage()));
                 t.Start();
             });
