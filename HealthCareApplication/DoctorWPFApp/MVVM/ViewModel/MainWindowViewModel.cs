@@ -42,8 +42,8 @@ namespace DoctorWPFApp.MVVM.ViewModel
         {
             JsonObject sessionRequest =
                 _isSessionRunning
-                ? DoctorFormat.SessionStartMessage()
-                : DoctorFormat.SessionStopMessage();
+                ? DoctorFormat.SessionStartMessage(SelectedPatient.Name)
+                : DoctorFormat.SessionStopMessage(SelectedPatient.Name);
 
             // Toggle boolean
             _isSessionRunning = !_isSessionRunning;
