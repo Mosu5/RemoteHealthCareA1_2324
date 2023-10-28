@@ -39,7 +39,9 @@ namespace DoctorWPFApp.Networking
                         ReceivedChat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "message").ToString());
                         break;
                     case "stats/send":
-                        ReceivedStat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "speed").ToString());
+                        string statString = DoctorFormat.GetKey(dataObject, "stats").ToString();
+                        MessageBox.Show(statString);
+                        //ReceivedStat?.Invoke(nameof(DoctorFormat),);
                         break;
                     case "stats/summary":
                         ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "statistics").AsArray().ToString());
@@ -48,7 +50,6 @@ namespace DoctorWPFApp.Networking
                         Logger.Log($"Cannot process command '{command}'.", LogType.Warning);
                         break;
                 }
-                MessageBox.Show(message.ToString());
             }
         }
 
