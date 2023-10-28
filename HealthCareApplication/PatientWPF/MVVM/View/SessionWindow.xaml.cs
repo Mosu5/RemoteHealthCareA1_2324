@@ -6,6 +6,7 @@ using PatientWPFApp.PatientLogic;
 using System.Windows;
 using System.Windows.Media;
 using System;
+using System.Threading;
 
 namespace PatientWPF.MVVM.View
 {
@@ -118,7 +119,7 @@ namespace PatientWPF.MVVM.View
                 CurrentHeartRateText.Text = stat.HeartRate.ToString();
 
                 _speedGraph.Values.Add(speedKmH);
-                _heartRateGraph.Values.Add((stat.HeartRate - 80)/4);
+                _heartRateGraph.Values.Add((stat.HeartRate - 80) / 4);
             });
         }
 
@@ -127,7 +128,8 @@ namespace PatientWPF.MVVM.View
             // Method gets called on a different thread than the current UI thread.
             // Therefore invoke this method within a lambda to make it possible
 
-            Application.Current.Dispatcher.Invoke(() => { 
+            Application.Current.Dispatcher.Invoke(() =>
+            {
 
                 if (_sessionActive) return;
 
@@ -143,11 +145,11 @@ namespace PatientWPF.MVVM.View
 
                 EmergencyButton.IsEnabled = true;
 
-                ClientConn.SendJson(PatientFormat.SessionStartMessage()).Wait();
-
+                Thread t = new Thread(async() => await ClientConn.SendJson(PatientFormat.SessionStartMessage()));
+                t.Start();
             });
 
-            
+
         }
 
         private async void OnSessionStopped(object _, bool __)
@@ -155,24 +157,25 @@ namespace PatientWPF.MVVM.View
             // Method gets called on a different thread than the current UI thread.
             // Therefore invoke this method within a lambda to make it possible
 
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
 
                 if (!_sessionActive) return;
 
-            // Stop the session
-            DeviceManager.OnReceiveData -= OnReceiveData;
+                // Stop the session
+                DeviceManager.OnReceiveData -= OnReceiveData;
 
-            _sessionActive = false;
-            ToggleSessionButton.Content = "Start session";
-            ToggleSessionButton.Background = Brushes.LightGreen;
+                _sessionActive = false;
+                ToggleSessionButton.Content = "Start session";
+                ToggleSessionButton.Background = Brushes.LightGreen;
 
-            SessionStatusText.Text = "Session stopped. Click the 'Start session' button to start a new training.";
-            SessionStatusText.Background = Brushes.Azure;
+                SessionStatusText.Text = "Session stopped. Click the 'Start session' button to start a new training.";
+                SessionStatusText.Background = Brushes.Azure;
 
-            EmergencyButton.IsEnabled = false;
+                EmergencyButton.IsEnabled = false;
 
-             ClientConn.SendJson(PatientFormat.SessionStopMessage()).Wait();
-
+                Thread t = new Thread(async () => await ClientConn.SendJson(PatientFormat.SessionStopMessage()));
+                t.Start();
             });
 
         }
