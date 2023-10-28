@@ -34,7 +34,7 @@ namespace DoctorWPFApp.MVVM.View
             if (isRunning == true)
             {
                 // Stop the session
-                message = DoctorFormat.SessionStopMessage();
+                message = DoctorFormat.SessionStopMessage("bob");
 
                 isRunning = false;
                 stopstartBtn.Content = "Start";
@@ -43,7 +43,7 @@ namespace DoctorWPFApp.MVVM.View
             else
             {
                 // Start a new session
-                message = DoctorFormat.SessionStartMessage();
+                message = DoctorFormat.SessionStartMessage("bob");
 
                 isRunning = true;
                 stopstartBtn.Content = "Stop";

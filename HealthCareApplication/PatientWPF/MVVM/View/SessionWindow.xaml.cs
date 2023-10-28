@@ -124,26 +124,40 @@ namespace PatientWPF.MVVM.View
 
         private async void OnSessionStarted(object _, bool __)
         {
-            if (_sessionActive) return;
+            // Method gets called on a different thread than the current UI thread.
+            // Therefore invoke this method within a lambda to make it possible
 
-            // Start a new session
-            DeviceManager.OnReceiveData += OnReceiveData;
+            Application.Current.Dispatcher.Invoke(() => { 
 
-            _sessionActive = true;
-            ToggleSessionButton.Content = "Stop session";
-            ToggleSessionButton.Background = Brushes.Salmon;
+                if (_sessionActive) return;
 
-            SessionStatusText.Text = "Training is in progress.";
-            SessionStatusText.Background = Brushes.LightSalmon;
+                // Start a new session
+                DeviceManager.OnReceiveData += OnReceiveData;
 
-            EmergencyButton.IsEnabled = true;
+                _sessionActive = true;
+                ToggleSessionButton.Content = "Stop session";
+                ToggleSessionButton.Background = Brushes.Salmon;
 
-            await ClientConn.SendJson(PatientFormat.SessionStartMessage());
+                SessionStatusText.Text = "Training is in progress.";
+                SessionStatusText.Background = Brushes.LightSalmon;
+
+                EmergencyButton.IsEnabled = true;
+
+                ClientConn.SendJson(PatientFormat.SessionStartMessage()).Wait();
+
+            });
+
+            
         }
 
         private async void OnSessionStopped(object _, bool __)
         {
-            if (!_sessionActive) return;
+            // Method gets called on a different thread than the current UI thread.
+            // Therefore invoke this method within a lambda to make it possible
+
+            Application.Current.Dispatcher.Invoke(() => {
+
+                if (!_sessionActive) return;
 
             // Stop the session
             DeviceManager.OnReceiveData -= OnReceiveData;
@@ -157,7 +171,10 @@ namespace PatientWPF.MVVM.View
 
             EmergencyButton.IsEnabled = false;
 
-            await ClientConn.SendJson(PatientFormat.SessionStopMessage());
+             ClientConn.SendJson(PatientFormat.SessionStopMessage()).Wait();
+
+            });
+
         }
     }
 }

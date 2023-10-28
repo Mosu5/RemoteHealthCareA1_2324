@@ -36,7 +36,7 @@ namespace ServerApp.States
             this.isSessionActive = false;
             currentState = new LoginState(this);
             this.userStatsBuffer = new List<UserStat>();
-            this.tcpClient = tcpClient; // Save connecting client so the user can be associated with this client
+            this.tcpClient = connectingClient; // Save connecting client so the user can be associated with this client
         }
 
         public void SetNextState(IState newState)

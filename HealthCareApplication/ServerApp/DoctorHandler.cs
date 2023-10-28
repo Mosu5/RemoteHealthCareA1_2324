@@ -42,21 +42,21 @@ namespace ServerApp
             // Handle responsevalue according to the incoming command from the doctor client
             switch (command)
             {
-
+                // Note: Data object in responsevalue is empty. Client expects a data field but doesnt expect any values. Donut Wurry Boudda Ting
                 case "session/start":
-                    responseValue = new JsonObject { { "command", "session/start" } };
+                    responseValue = new JsonObject { { "command", "session/start" }, {"data", new JsonObject() } };
                     break;
                 case "session/stop":
-                    responseValue = new JsonObject { { "command", "session/stop" } };
+                    responseValue = new JsonObject { { "command", "session/stop" }, { "data", new JsonObject() } };
                     break;
                 case "stats/summary":
-                    responseValue = new JsonObject { { "command", "stats/summary" } };
+                    responseValue = new JsonObject { { "command", "stats/summary" }, { "data", new JsonObject() } };
                     break;
                 case "session/pause":
-                    responseValue = new JsonObject { { "command", "session/pause" } };
+                    responseValue = new JsonObject { { "command", "session/pause" }, { "data", new JsonObject() } };
                     break;
                 case "session/resume":
-                    responseValue = new JsonObject { { "command", "session/resume" } };
+                    responseValue = new JsonObject { { "command", "session/resume" }, { "data", new JsonObject() } };
                     break;
 
             }
