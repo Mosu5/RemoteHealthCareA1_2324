@@ -14,6 +14,8 @@ namespace PatientWPFApp.PatientLogic
         // Patient ViewModel events
         public static event EventHandler<bool> LoggedIn;
         public static event EventHandler<string> ReceivedChat;
+        public static event EventHandler<bool> SessionStarted;
+        public static event EventHandler<bool> SessionStopped;
 
         public static async Task Listen()
         {
@@ -38,6 +40,12 @@ namespace PatientWPFApp.PatientLogic
                         break;
                     case "chats/send":
                         ReceivedChat.Invoke(nameof(RequestHandler), (string)PatientFormat.GetKey(dataObject, "message"));
+                        break;
+                    case "session/start":
+                        SessionStarted?.Invoke(nameof(RequestHandler), true);
+                        break;
+                    case "session/stop":
+                        SessionStopped?.Invoke(nameof(RequestHandler), true);
                         break;
                     default:
                         Logger.Log($"Cannot process command '{command}'.", LogType.Warning);

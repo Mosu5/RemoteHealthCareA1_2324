@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using System;
 
-namespace PatientWPFApp.View
+namespace PatientWPF.MVVM.View
 {
     /// <summary>
     /// Interaction logic for SessionWindow.xaml
@@ -38,6 +38,9 @@ namespace PatientWPFApp.View
             _heartRateGraph = StatChart.Series[1] as LineSeries;
 
             PatientNameText.Text = patientName;
+
+            RequestHandler.SessionStarted += OnSessionStarted;
+            RequestHandler.SessionStopped += OnSessionStopped;
 
             // Initialize BLE connection
             DeviceManager.Initialize().Wait();
@@ -117,6 +120,44 @@ namespace PatientWPFApp.View
                 _speedGraph.Values.Add(speedKmH);
                 _heartRateGraph.Values.Add((stat.HeartRate - 80)/4);
             });
+        }
+
+        private async void OnSessionStarted(object _, bool __)
+        {
+            if (_sessionActive) return;
+
+            // Start a new session
+            DeviceManager.OnReceiveData += OnReceiveData;
+
+            _sessionActive = true;
+            ToggleSessionButton.Content = "Stop session";
+            ToggleSessionButton.Background = Brushes.Salmon;
+
+            SessionStatusText.Text = "Training is in progress.";
+            SessionStatusText.Background = Brushes.LightSalmon;
+
+            EmergencyButton.IsEnabled = true;
+
+            await ClientConn.SendJson(PatientFormat.SessionStartMessage());
+        }
+
+        private async void OnSessionStopped(object _, bool __)
+        {
+            if (!_sessionActive) return;
+
+            // Stop the session
+            DeviceManager.OnReceiveData -= OnReceiveData;
+
+            _sessionActive = false;
+            ToggleSessionButton.Content = "Start session";
+            ToggleSessionButton.Background = Brushes.LightGreen;
+
+            SessionStatusText.Text = "Session stopped. Click the 'Start session' button to start a new training.";
+            SessionStatusText.Background = Brushes.Azure;
+
+            EmergencyButton.IsEnabled = false;
+
+            await ClientConn.SendJson(PatientFormat.SessionStopMessage());
         }
     }
 }
