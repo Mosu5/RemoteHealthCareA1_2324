@@ -42,6 +42,7 @@ namespace PatientWPF.MVVM.View
 
             RequestHandler.SessionStarted += OnSessionStarted;
             RequestHandler.SessionStopped += OnSessionStopped;
+            RequestHandler.ReceivedResistance += OnReceivedResistance;
 
             // Initialize BLE connection
             DeviceManager.Initialize().Wait();
@@ -150,8 +151,6 @@ namespace PatientWPF.MVVM.View
                 Thread t = new Thread(async() => await ClientConn.SendJson(PatientFormat.SessionStartMessage()));
                 t.Start();
             });
-
-
         }
 
         private async void OnSessionStopped(object _, bool __)
@@ -179,7 +178,11 @@ namespace PatientWPF.MVVM.View
                 Thread t = new Thread(async () => await ClientConn.SendJson(PatientFormat.SessionStopMessage()));
                 t.Start();
             });
+        }
 
+        private void OnReceivedResistance(object sender, int value)
+        {
+            DeviceManager.Receiver.SetResistance(value);
         }
     }
 }

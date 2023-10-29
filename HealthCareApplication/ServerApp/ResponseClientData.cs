@@ -66,6 +66,18 @@ namespace ServerApp
                 } }
             };
         }
+
+        public static JsonObject GenerateResistanceMessage(string value)
+        {
+            return new JsonObject()
+            {
+                { "command", "resistance/set" },
+                { "data", new JsonObject()
+                {
+                    { "value", value }
+                } }
+            };
+        }
     }
 
 }

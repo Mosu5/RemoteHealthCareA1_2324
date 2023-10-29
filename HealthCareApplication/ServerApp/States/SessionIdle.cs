@@ -35,7 +35,6 @@ namespace ServerApp.States
             else if (command == "chats/send")
             {
                 string message = JsonUtil.GetValueFromPacket(packet, "data", "message").ToString();
-
                 _context.ResponseToDoctor = ResponseClientData.DoctorChatSendResponse(message, _context.GetUserAccount().GetUserName());
             }
             return this;

@@ -1,5 +1,6 @@
 ﻿using ServerApp.States;
 using System;
+using System.Runtime.Remoting.Contexts;
 using System.Text.Json.Nodes;
 using Utilities.Logging;
 
@@ -58,6 +59,10 @@ namespace ServerApp
                 case "chats/send":
                     string message = JsonUtil.GetValueFromPacket(packet, "data", "message").ToString();
                     ResponseValue = new JsonObject() { { "command", "chats/send" }, { "data", new JsonObject() { { "message", message } } } };
+                    break;
+                case "resistance/set":
+                    string value = JsonUtil.GetValueFromPacket(packet, "data", "value").ToString();
+                    ResponseValue = ResponseClientData.GenerateResistanceMessage(value);
                     break;
             }
             return true;
