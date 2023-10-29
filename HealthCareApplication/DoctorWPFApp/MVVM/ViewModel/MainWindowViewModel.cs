@@ -29,6 +29,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
+            EmergencyBreakEnabled = "False";
         }
 
         #region Commands called by the UI
@@ -331,6 +332,9 @@ namespace DoctorWPFApp.MVVM.ViewModel
             };
 
             OnPropertyChanged(nameof(Patients));
+
+            SelectedPatient = Patients[0];
+            OnPropertyChanged(nameof(SelectedPatient));
         }
     }
 }
