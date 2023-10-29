@@ -116,6 +116,13 @@ namespace ServerApp
                 // Get the receiving patient's TcpClient
                 TcpClient patientToRespondTo = receivingPatient.UserClient;
 
+                // If so, then the doctor sent a request to a patient that is not logged in/does not exist.
+                if (patientToRespondTo == null)
+                {
+                    // TODO better handle this edge case, the doctor still assumes that everything went well
+                    return;
+                }
+
                 // The message to send to the patient
                 JsonObject msgPayload = doctorHandler.ResponseValue;
 
