@@ -44,8 +44,13 @@ namespace ServerApp.States
             else if (command == "session/stop")
             {
                 _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
-                _context.ResponseToDoctor = ResponseClientData.GenerateDoctorResponse("session/stop", null, _context.GetUserAccount().GetUserName());
-                return new SessionStoppedState(_context);
+
+                // Reset response to doctor. This prevents previous messages to be sent in the wrong context
+                _context.ResponseToDoctor = null;
+                //_context.ResponseToDoctor = ResponseClientData.GenerateDoctorResponse("session/stop", null, _context.GetUserAccount().GetUserName());
+
+                // Returns Session Idle, we only want to execute in the stopped state and imediatly go to the next state
+                return new SessionStoppedState(_context).Handle(null); 
             }
             else if(command == "session/pause")
             {

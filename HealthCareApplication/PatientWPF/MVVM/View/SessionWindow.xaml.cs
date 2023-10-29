@@ -42,6 +42,7 @@ namespace PatientWPF.MVVM.View
 
             RequestHandler.SessionStarted += OnSessionStarted;
             RequestHandler.SessionStopped += OnSessionStopped;
+            RequestHandler.SummaryRequested += OnSummaryRequested;
 
             // Initialize BLE connection
             DeviceManager.Initialize().Wait();
@@ -179,6 +180,13 @@ namespace PatientWPF.MVVM.View
                 Thread t = new Thread(async () => await ClientConn.SendJson(PatientFormat.SessionStopMessage()));
                 t.Start();
             });
+
+        }
+
+        private async void OnSummaryRequested(object _, bool __)
+        {
+            JObject summaryMsg = PatientFormat.StatsSummaryMessage();
+            await ClientConn.SendJson(summaryMsg);
 
         }
     }

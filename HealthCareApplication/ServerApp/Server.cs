@@ -38,7 +38,7 @@ namespace ServerApp
                 await Console.Out.WriteLineAsync("A client has connected");
 
                 // Start a client handler specific to the client that just connected on a new thread
-                Thread clientThread = new Thread(async() => await HandleClientAsync(client));
+                Thread clientThread = new Thread(async() => await HandlePatientAsync(client));
                 clientThread.Start();
             }
         }
@@ -47,7 +47,7 @@ namespace ServerApp
         /// Handles communication with a client by responding to it and sending messages to it.
         /// </summary>
         /// <param name="client">Object containing the concrete connection to the client</param>
-        public static async Task HandleClientAsync(TcpClient client)
+        public static async Task HandlePatientAsync(TcpClient client)
         {
             ServerContext serverContext = new ServerContext(client);
 
@@ -73,6 +73,7 @@ namespace ServerApp
                     // Send the response of the client
                     // TODO is this correct? Not .ResponseToDoctor?
                     await ServerConn.SendJson(client, serverContext.ResponseToPatient);
+
                     return; // Close this thread since the doctor has another thread
                 }
 
@@ -80,12 +81,12 @@ namespace ServerApp
                 if(_doctorClient != null && serverContext.ResponseToDoctor != null)
                 {
                     await Console.Out.WriteLineAsync("Response to Doctor: " + serverContext.ResponseToDoctor.ToString());
-
                     await ServerConn.SendJson(_doctorClient, serverContext.ResponseToDoctor);
                 }
 
                 // Send response according to updated server context
-                await ServerConn.SendJson(client, serverContext.ResponseToPatient);
+                if (serverContext.ResponseToPatient != null)
+                    await ServerConn.SendJson(client, serverContext.ResponseToPatient);
             }
         }
 
