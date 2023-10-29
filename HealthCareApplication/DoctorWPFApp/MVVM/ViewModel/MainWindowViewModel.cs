@@ -3,6 +3,7 @@ using DoctorWPFApp.Networking;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,10 +27,17 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.LoggedIn += OnLoginResponse;
             RequestHandler.ReceivedStat += OnStatReceived;
             RequestHandler.ReceivedChat += OnChatReceived;
+            RequestHandler.SessionStopped += OnSessionStopped;
+            RequestHandler.ReceivedSummary += OnSummaryReceived;
 
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
             EmergencyBreakEnabled = "False";
+        }
+
+        private void RequestHandler_SessionStopped(object? sender, bool e)
+        {
+            throw new NotImplementedException();
         }
 
         #region Commands called by the UI
@@ -43,6 +51,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             InitPlaceHolderData(); // TODO remove when not needed anymore
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
 
+
         private bool _isSessionRunning = false;
         public RelayCommand StartStopSession => new(async (execute) =>
         {
@@ -55,7 +64,17 @@ namespace DoctorWPFApp.MVVM.ViewModel
             _isSessionRunning = !_isSessionRunning;
 
             await ClientConn.SendJson(sessionRequest);
+
         }, canExecute => true);
+
+
+        public RelayCommand GetSummaryCommand => new(
+        async (execute) =>
+            {
+                JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
+                await ClientConn.SendJson(summaryRequest);
+            }, canExecute => !_isSessionRunning
+        );
 
         private string _messageToSend;
         public string MessageToSend
@@ -275,6 +294,18 @@ namespace DoctorWPFApp.MVVM.ViewModel
             });
         }
 
+
+
+
+        private void OnSummaryReceived(object? sender, string json)
+        {
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                MessageBox.Show(json.ToString());
+            });
+        }
+
         private void OnChatReceived(object? sender, string chatMessage)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -282,6 +313,12 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 SelectedPatient.ChatMessages.Add($"{SelectedPatient.Name}: {chatMessage}");
                 OnPropertyChanged(nameof(SelectedPatient));
             });
+        }
+
+        private async void OnSessionStopped(object? sender, bool sessionStopped)
+        {
+            JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
+            await ClientConn.SendJson(summaryRequest);
         }
 
         #endregion

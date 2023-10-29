@@ -45,6 +45,14 @@ namespace ServerApp.States
 
             // Set new state
             currentState = currentState.Handle(receivedData);
+
+
+            //// Temporary bugfix, search for better alternative later
+            //// Dont blame me, there is not much time left
+            //if (currentState.GetType() == typeof(SessionStoppedState))
+            //    currentState = currentState.Handle(receivedData);
+
+
         }
 
         /// <summary>
@@ -52,27 +60,27 @@ namespace ServerApp.States
         /// </summary>
         public void SaveUserData()
         {
+
             // Get previously saved data so current data can be added to the file. (Prevent overwriting)
-            List<List<UserStat>> allUserStats = GetUserAccount().GetUserStats();
-
-            string userData;
-
-            // If there are userstats present, add the buffer to the userstats and serialize it.
-            // Otherwise, only serialize the buffer.
-            if (allUserStats != null)
+            List<UserStat> allUserStats = this.GetUserAccount().GetUserStats();//Previous Buffer
+            if (allUserStats != null)//if the previous stats are not empty
             {
                 // Add new data to old data
-                allUserStats.Add(UserStatsBuffer);
+                foreach (var item in UserStatsBuffer)
+                {
+                    allUserStats.Add(item);
+                }
 
                 //var allData = previousData.Concat(userStatsBuffer);
-                userData = JsonSerializer.Serialize(allUserStats);
+                string userData = JsonSerializer.Serialize(allUserStats);
+                this._userAccount.SaveUserStats(userData);
             }
             else
             {
-                userData = JsonSerializer.Serialize(UserStatsBuffer);
+                string userData = JsonSerializer.Serialize(UserStatsBuffer);
+                this._userAccount.SaveUserStats(userData);
             }
 
-            _userAccount.SaveUserStats(userData);
         }
 
         /// <summary>

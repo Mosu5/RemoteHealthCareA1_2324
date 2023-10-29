@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
@@ -31,12 +32,23 @@ namespace ServerApp
 
         }
 
-        public static JsonObject GenerateSummaryRequest(List<UserStat> userStats)
+        public static JsonObject GenerateSummaryRequest(string userStats)
         {
+            
             return new JsonObject()
              {
                  {"command","stats/summary"},
-                 {"data",new JsonArray{userStats} }
+                 {"data",  userStats}
+             };
+        }
+
+        public static JsonObject GenerateSummaryRequest(JsonObject userStats)
+        {
+
+            return new JsonObject()
+             {
+                 {"command","stats/summary"},
+                 {"data",  userStats}
              };
         }
 

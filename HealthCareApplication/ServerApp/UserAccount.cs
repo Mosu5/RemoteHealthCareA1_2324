@@ -36,48 +36,44 @@ namespace ServerApp
 
         public void SaveUserStats(string jsonData)
         {
-
-            // NOTE: The following path will point to the bin/debug folder of the project serverapp.
             string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
 
-            StreamWriter writer = new StreamWriter(correctPath);
-            
-            if (jsonData != null )
+            StreamWriter writer;
+            if (!File.Exists(correctPath))
             {
-                
-                writer.Write(jsonData);
-                writer.Flush();
-                writer.Close();
-                Console.WriteLine("Userdata has been saved into file!");
+                writer = new StreamWriter(correctPath);
             }
             else
             {
-                Logger.Log("JSONdata has not been saved into file. Check filepath or payload!", LogType.Warning);
-                Console.WriteLine("Data has not been saved!");
+                writer = File.AppendText(correctPath);
             }
-        }
 
-        public List<List<UserStat>> GetUserStats()
+            writer.WriteLine(jsonData); // Write the session data as a separate line
+            writer.Flush();
+            writer.Close();
+
+            Console.WriteLine("Userdata has been saved into file!");
+        }
+        public List<UserStat> GetUserStats()
         {
             string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
 
-            StreamReader reader = new StreamReader(correctPath);
-
-            string jsonData = reader.ReadToEnd();
-            reader.Close();
-            
-            try
-            {
-                List<List<UserStat>> retrievedUserStats = JsonSerializer.Deserialize<List<List<UserStat>>>(jsonData);
-                return retrievedUserStats;
-            }
-            catch
+            if (!File.Exists(correctPath))
             {
                 return null;
             }
-   
+
+            List<UserStat> data = new List<UserStat>();
+
+            foreach (var line in File.ReadLines(correctPath))
+            {
+                var sessionData = JsonSerializer.Deserialize<List<UserStat>>(line);
+                data.AddRange(sessionData);
+            }
+
+            return data;
         }
 
         public string GetUserName() 

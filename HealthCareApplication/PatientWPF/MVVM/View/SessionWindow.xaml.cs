@@ -44,6 +44,7 @@ namespace PatientWPF.MVVM.View
             RequestHandler.SessionStarted += OnSessionStarted;
             RequestHandler.SessionStopped += OnSessionStopped;
             RequestHandler.ReceivedResistance += OnReceivedResistance;
+            RequestHandler.SummaryRequested += OnSummaryRequested;
 
             // Initialize BLE connection
             DeviceManager.Initialize().Wait();
@@ -188,6 +189,13 @@ namespace PatientWPF.MVVM.View
         private void OnReceivedResistance(object sender, int value)
         {
             DeviceManager.Receiver.SetResistance(value);
+        }
+
+        private async void OnSummaryRequested(object _, bool __)
+        {
+            JObject summaryMsg = PatientFormat.StatsSummaryMessage();
+            await ClientConn.SendJson(summaryMsg);
+
         }
     }
 }
