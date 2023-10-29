@@ -1,9 +1,12 @@
 ﻿using DoctorWPFApp.MVVM.Model;
 using DoctorWPFApp.Networking;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,6 +29,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.LoggedIn += OnLoginResponse;
             RequestHandler.ReceivedStat += OnStatReceived;
             RequestHandler.ReceivedChat += OnChatReceived;
+            RequestHandler.SessionStopped += OnSessionStopped;
             RequestHandler.ReceivedSummary += OnSummaryReceived;
 
             SessionButtonText = "Start";
@@ -33,7 +37,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
             EmergencyBreakEnabled = "False";
         }
 
-      
+        private void RequestHandler_SessionStopped(object? sender, bool e)
+        {
+            throw new NotImplementedException();
+        }
+
         #region Commands called by the UI
 
         public RelayCommand LoginCommand => new(async (execute) =>
@@ -44,6 +52,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             InitPlaceHolderData(); // TODO remove when not needed anymore
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
+
 
         private bool _isSessionRunning = false;
         public RelayCommand StartStopSession => new(async (execute) =>
@@ -58,8 +67,16 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             await ClientConn.SendJson(sessionRequest);
 
-         
         }, canExecute => true);
+
+
+        public RelayCommand GetSummaryCommand => new(
+        async (execute) =>
+            {
+                JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
+                await ClientConn.SendJson(summaryRequest);
+            }, canExecute => !_isSessionRunning
+        );
 
         private string _messageToSend;
         public string MessageToSend
@@ -182,14 +199,14 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
         }
 
-        public RelayCommand SetResistance => new((execute) =>
+        public RelayCommand SetResistance => new(async (execute) =>
         {
             if (string.IsNullOrEmpty(TrainerResistance)) return;
 
             int resistanceAsInt = int.Parse(_trainerResistance);
             if (resistanceAsInt < 0 || resistanceAsInt > 100) return;
 
-            // TODO send network message for setting resistance
+            await ClientConn.SendJson(DoctorFormat.SetResistanceMessage(resistanceAsInt, SelectedPatient.Name));
 
             TrainerResistance = "";
         });
@@ -279,6 +296,19 @@ namespace DoctorWPFApp.MVVM.ViewModel
             });
         }
 
+
+
+
+        private void OnSummaryReceived(object? sender, string json)
+        {
+            var patientDataList = JsonConvert.DeserializeObject<List<PatientData>>(json);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SelectedPatient.PatientDataCollection = patientDataList != null ? patientDataList : new();
+                OnPropertyChanged(nameof(SelectedPatient));
+            });
+        }
+
         private void OnChatReceived(object? sender, string chatMessage)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -287,11 +317,13 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
-        private void OnSummaryReceived(object? sender, string json)
-        {
-            MessageBox.Show(json.ToString());
-        }
 
+
+        private async void OnSessionStopped(object? sender, bool sessionStopped)
+        {
+            JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
+            await ClientConn.SendJson(summaryRequest);
+        }
 
         #endregion
 
@@ -312,19 +344,16 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     PatientDataCollection = new List<PatientData> {
                         new PatientData
                         {
-                            DateTime = DateTime.Now,
-                            RecordedSpeed = 1,
-                            RecordedDistance = 1,
-                            RecordedHeartRate = 1,
-                            RecordedRrInterval = 1,
+
+                            Speed = 1,
+                           Distance = 1,
+                            HeartRate = 1,
                         },
                         new PatientData
                         {
-                            DateTime = DateTime.Now,
-                            RecordedSpeed = 1,
-                            RecordedDistance = 1,
-                            RecordedHeartRate = 1,
-                            RecordedRrInterval = 1,
+                            Speed = 1,
+                            Distance = 1,
+                            HeartRate = 1,
                         },
                     }
 

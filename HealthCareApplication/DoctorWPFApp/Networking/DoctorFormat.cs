@@ -70,6 +70,11 @@ namespace DoctorWPFApp.Networking
             });
         }
 
+        public static JsonObject SetResistanceMessage(int value, string patientName)
+        {
+            return BaseMessage("resistance/set", new JsonObject() { { "value", value }, { "username", patientName } });
+        }
+
         /// <summary>
         /// Gets a key in a JsonObject (cannot retrieve nested keys).
         /// </summary>

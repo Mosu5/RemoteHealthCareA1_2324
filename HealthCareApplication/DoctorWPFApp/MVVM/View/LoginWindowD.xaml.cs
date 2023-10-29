@@ -12,7 +12,6 @@ namespace DoctorWPFApp.MVVM.View
         public LoginWindowD()
         {
             InitializeComponent();
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             // Create a new MainWindowViewModel for DataContext. This can
             // only happen in the window which the UI starts up with. In

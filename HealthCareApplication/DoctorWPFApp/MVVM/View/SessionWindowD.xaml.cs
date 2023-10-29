@@ -18,7 +18,6 @@ namespace DoctorWPFApp.MVVM.View
         public SessionWindowD()
         {
             InitializeComponent();
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             RequestHandler.SessionStarted += OnSessionStarted;
             RequestHandler.SessionStopped += OnSessionStopped;
