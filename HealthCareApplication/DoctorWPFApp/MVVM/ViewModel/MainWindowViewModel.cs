@@ -26,12 +26,14 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.LoggedIn += OnLoginResponse;
             RequestHandler.ReceivedStat += OnStatReceived;
             RequestHandler.ReceivedChat += OnChatReceived;
+            RequestHandler.ReceivedSummary += OnSummaryReceived;
 
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
             EmergencyBreakEnabled = "False";
         }
 
+      
         #region Commands called by the UI
 
         public RelayCommand LoginCommand => new(async (execute) =>
@@ -285,6 +287,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
+        private void OnSummaryReceived(object? sender, string json)
+        {
+            MessageBox.Show(json.ToString());
+        }
+
 
         #endregion
 
