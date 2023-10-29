@@ -49,13 +49,13 @@ namespace DoctorWPFApp.Networking
                         ));
                         break;
                     case "stats/summary":
-                        ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "statistics").AsArray().ToString());
+                        ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "stats").ToString());
                         break;
                     case "session/start":
                         SessionStarted?.Invoke(nameof(RequestHandler), true);
                         break;
                     case "session/stop":
-                        SessionStopped?.Invoke(nameof(RequestHandler), true);
+                        SessionStopped?.Invoke(nameof(RequestHandler), true);                  
                         break;
                     default:
                         Logger.Log($"Cannot process command '{command}'.", LogType.Warning);

@@ -4,10 +4,8 @@ namespace DoctorWPFApp.MVVM.Model
 {
     internal class PatientData
     {
-        public DateTime DateTime { get; set; } = DateTime.MinValue;
-        public double RecordedSpeed { get; set; } = 0;
-        public double RecordedDistance { get; set; } = 0;
-        public double RecordedHeartRate { get; set; } = 0;
-        public double RecordedRrInterval { get; set; } = 0;
+        public double Speed { get; set; } = 0;
+        public double Distance { get; set; } = 0;
+        public double HeartRate { get; set; } = 0;
     }
 }

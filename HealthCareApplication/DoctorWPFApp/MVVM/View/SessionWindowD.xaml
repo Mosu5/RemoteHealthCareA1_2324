@@ -66,7 +66,8 @@
                 <Button Name="SetResistanceButton" Command="{Binding SetResistance}" Grid.Row="6" Grid.Column="1" Margin="5,0,10,0" Content="Set" />
 
                 <!-- Exit program -->
-                <Button Name="StopExitButton" Command="{Binding StopExitCommand}" Click="StopExitButton_Click" Content="Stop and exit program" Grid.Row="7" Grid.ColumnSpan="2" Background=" #FAA0A0" HorizontalAlignment="Center" Padding="15,5" Margin="0 30" FontWeight="DemiBold" />
+                <Button Name="StopExitButton" Command="{Binding StopExitCommand}" Click="StopExitButton_Click" Content="Stop and exit program" Grid.Row="7" Grid.ColumnSpan="2" Background=" #FAA0A0" HorizontalAlignment="Left" Padding="15,5" Margin="47,44,0,16" FontWeight="DemiBold" />
+                <Button Name="GetSummaryButton" Content="Get Summary" Command="{Binding GetSummaryCommand}" HorizontalAlignment="Left" Margin="47,5,0,0" Grid.Row="7" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="154" Height="22"/>
             </Grid>
         </Border>
 
@@ -113,18 +114,24 @@
 
                 <TextBlock Text="Summary" Grid.Row="5" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,10,0,5"/>
 
-                <ListView ItemsSource="{Binding SelectedPatient.PatientDataCollection}" Grid.Row="6" Grid.ColumnSpan="2" Margin="10,0,10,10" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListView ItemsSource="{Binding SelectedPatient.PatientDataCollection}" Grid.Row="6" Grid.ColumnSpan="2" Margin="10,0,10,10" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Time" DisplayMemberBinding="{Binding DateTime}" />
-                            <GridViewColumn Header="Speed" DisplayMemberBinding="{Binding RecordedSpeed}" />
-                            <GridViewColumn Header="Distance" DisplayMemberBinding="{Binding RecordedDistance}" />
-                            <GridViewColumn Header="Heartrate" DisplayMemberBinding="{Binding RecordedHeartRate}" />
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="FontSize" Value="9"></Setter>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                            <GridViewColumn Header="Speed (km/s)" DisplayMemberBinding="{Binding Speed}" Width="65" />
+                            <GridViewColumn Header="Distance (m)" DisplayMemberBinding="{Binding Distance}" Width="65"/>
+                            <GridViewColumn Header="Heart rate (bpm)" DisplayMemberBinding="{Binding HeartRate}" Width="80"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
+                
+                
 
-                <!--<lvc:CartesianChart x:Name="StatChart" Grid.Row="4" Grid.ColumnSpan="2" Margin="5,0">
+                <lvc:CartesianChart x:Name="StatChart" Grid.Row="4" Grid.ColumnSpan="2" Margin="5,0">
                     <lvc:CartesianChart.AxisX>
                         <lvc:Axis ShowLabels="False" />
                     </lvc:CartesianChart.AxisX>
@@ -132,7 +139,7 @@
                     <lvc:CartesianChart.AxisY>
                         <lvc:Axis ShowLabels="False" />
                     </lvc:CartesianChart.AxisY>
-                </lvc:CartesianChart>-->
+                </lvc:CartesianChart>
             </Grid>
         </Border>
 
@@ -151,7 +158,7 @@
 
                 <TextBlock Text="Chat with your patient" Grid.Row="0" Grid.ColumnSpan="2" FontSize="18" Padding="0,10" HorizontalAlignment="Stretch" TextAlignment="Center" FontWeight="DemiBold" />
 
-                <ListView Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedPatient.ChatMessages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" Margin="10,0" />
+                <ListView Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" Margin="10,0" />
 
                 <!-- Chat input -->
                 <TextBox Name="ChatInput" Text="{Binding MessageToSend}" Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" />
