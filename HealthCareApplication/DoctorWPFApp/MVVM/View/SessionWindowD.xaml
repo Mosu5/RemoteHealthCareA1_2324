@@ -138,7 +138,7 @@
                     <lvc:CartesianChart.AxisY>
                         <lvc:Axis ShowLabels="False" />
                     </lvc:CartesianChart.AxisY>
-                </lvc:CartesianChart>-->
+                </lvc:CartesianChart>
             </Grid>
         </Border>
 
