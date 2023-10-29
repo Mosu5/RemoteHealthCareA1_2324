@@ -3,13 +3,10 @@ using DoctorWPFApp.Networking;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Security;
 using System.Text.Json.Nodes;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Xml.Linq;
+using System.Windows.Media;
 
 namespace DoctorWPFApp.MVVM.ViewModel
 {
@@ -27,6 +24,9 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.LoggedIn += OnLoginResponse;
             RequestHandler.ReceivedStat += OnStatReceived;
             RequestHandler.ReceivedChat += OnChatReceived;
+
+            SessionButtonText = "Start";
+            SessionButtonColor = Brushes.LightGreen;
         }
 
         #region Commands called by the UI
@@ -65,7 +65,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
         }
 
-        public RelayCommand SendChatCommand => new RelayCommand(async (execute) =>
+        public RelayCommand SendChatCommand => new(async (execute) =>
         {
             if (string.IsNullOrEmpty(_messageToSend)) return;
 
@@ -74,6 +74,53 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             JsonObject chatToServer = DoctorFormat.ChatsSendMessage(_messageToSend, SelectedPatient.Name);
             await ClientConn.SendJson(chatToServer);
+        });
+
+        private string _sessionButtonText;
+        public string SessionButtonText
+        {
+            get { return _sessionButtonText; }
+            set
+            {
+                _sessionButtonText = value;
+                OnPropertyChanged(nameof(SessionButtonText));
+            }
+        }
+
+        private SolidColorBrush _sessionButtonColor;
+        public SolidColorBrush SessionButtonColor
+        {
+            get { return _sessionButtonColor; }
+            set
+            {
+                _sessionButtonColor = value;
+                OnPropertyChanged(nameof(SessionButtonColor));
+            }
+        }
+
+        private bool _sessionActive = false;
+        public RelayCommand ToggleSessionCommand => new(async (execute) =>
+        {
+            JsonObject message;
+            if (_sessionActive)
+            {
+                // Stop the session
+                message = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+
+                _sessionActive = false;
+                SessionButtonText = "Start";
+                SessionButtonColor = Brushes.LightGreen;
+            }
+            else
+            {
+                // Start a new session
+                message = DoctorFormat.SessionStartMessage(SelectedPatient.Name);
+
+                _sessionActive = true;
+                SessionButtonText = "Stop";
+                SessionButtonColor = Brushes.Salmon;
+            }
+            await ClientConn.SendJson(message);
         });
 
         #endregion
@@ -122,6 +169,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
         }
         public ObservableCollection<Patient> Patients { get; set; } = new ObservableCollection<Patient>();
+
         #endregion
 
         #region Response actions

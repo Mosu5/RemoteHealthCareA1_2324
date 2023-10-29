@@ -16,8 +16,8 @@
         <Label Name="StatusLabel" Grid.Column="1" Content="Status: disconnected" HorizontalAlignment="Left" Margin="12,92,0,0" VerticalAlignment="Top" Height="33" Width="284" FontSize="20"/>
         <Label Grid.Column="1" Content="Patient:" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Height="33" Width="83" FontSize="20" />
 
-        <Button Name="stopstartBtn" Grid.Column="1" Content="Start" HorizontalAlignment="Left" Margin="12,177,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="#FFADFE86" FontSize="15"
-                Click="StopstartBtn_Click"/>
+        <Button Name="stopstartBtn" Grid.Column="1" Content="{Binding SessionButtonText}" HorizontalAlignment="Left" Margin="12,177,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="{Binding SessionButtonColor}" FontSize="15"
+                Command="{Binding ToggleSessionCommand}"/>
         <Button Name="statsBtn" Grid.Column="1" Content="Stats" Margin="113,177,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="39" Width="81" FontSize="15" 
                 Click="StatsBtn_Click"/>
         <Button Name="chatsBtn" Grid.Column="1" Content="Chats" HorizontalAlignment="Left" Margin="215,177,0,0" VerticalAlignment="Top" Height="39" Width="81" FontSize="15" 

@@ -33,30 +33,6 @@ namespace DoctorWPFApp.MVVM.View
             Navigator.NavToStatWindow();
         }
 
-        private async void StopstartBtn_Click(object sender, RoutedEventArgs e)
-        {
-            JsonObject message;
-            if (_sessionActive == true)
-            {
-                // Stop the session
-                message = DoctorFormat.SessionStopMessage("bob");
-
-                _sessionActive = false;
-                stopstartBtn.Content = "Start";
-                stopstartBtn.Background = Brushes.LightGreen;
-            }
-            else
-            {
-                // Start a new session
-                message = DoctorFormat.SessionStartMessage("bob");
-
-                _sessionActive = true;
-                stopstartBtn.Content = "Stop";
-                stopstartBtn.Background = Brushes.Salmon;
-            }
-            await ClientConn.SendJson(message);
-        }
-
         private void OnSessionStarted(object? _, bool __)
         {
             // Method gets called on a different thread than the current UI thread.
