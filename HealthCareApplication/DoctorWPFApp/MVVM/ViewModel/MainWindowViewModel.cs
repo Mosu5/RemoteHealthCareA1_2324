@@ -56,9 +56,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             await ClientConn.SendJson(sessionRequest);
 
-            // for testing purpose
-            JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
-            await ClientConn.SendJson(summaryRequest);
+         
         }, canExecute => true);
 
         private string _messageToSend;
