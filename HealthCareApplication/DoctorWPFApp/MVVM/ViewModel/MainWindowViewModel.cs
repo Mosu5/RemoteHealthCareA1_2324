@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.Json.Nodes;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace DoctorWPFApp.MVVM.ViewModel
 {
@@ -72,6 +74,8 @@ namespace DoctorWPFApp.MVVM.ViewModel
             SelectedPatient.ChatMessages.Add($"You: {_messageToSend}");
             OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
 
+            MessageToSend = "";
+
             JsonObject chatToServer = DoctorFormat.ChatsSendMessage(_messageToSend, SelectedPatient.Name);
             await ClientConn.SendJson(chatToServer);
         });
@@ -98,6 +102,28 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
         }
 
+        private string _statusText;
+        public string StatusText
+        {
+            get { return _statusText; }
+            set
+            {
+                _statusText = value;
+                OnPropertyChanged(nameof(StatusText));
+            }
+        }
+
+        private string _emergencyBreakEnabled;
+        public string EmergencyBreakEnabled
+        {
+            get { return _emergencyBreakEnabled; }
+            set
+            {
+                _emergencyBreakEnabled = value;
+                OnPropertyChanged(nameof(EmergencyBreakEnabled));
+            }
+        }
+
         private bool _sessionActive = false;
         public RelayCommand ToggleSessionCommand => new(async (execute) =>
         {
@@ -110,6 +136,8 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 _sessionActive = false;
                 SessionButtonText = "Start";
                 SessionButtonColor = Brushes.LightGreen;
+                StatusText = "No active session for current patient.";
+                EmergencyBreakEnabled = "False";
             }
             else
             {
@@ -119,8 +147,55 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 _sessionActive = true;
                 SessionButtonText = "Stop";
                 SessionButtonColor = Brushes.Salmon;
+                StatusText = "Training is in progress for current patient.";
+                EmergencyBreakEnabled = "True";
             }
             await ClientConn.SendJson(message);
+        });
+
+        public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
+        {
+            JsonObject sessionStop = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+            JsonObject chatSend = DoctorFormat.ChatsSendMessage($"\t<<ACTIVATED THE EMERGENCY BREAK!>>", SelectedPatient.Name);
+
+            await ClientConn.SendJson(sessionStop);
+
+            // Introducte a small delay, because the server otherwise cannot handle the chats/send below
+            await Task.Delay(1000);
+
+            await ClientConn.SendJson(chatSend);
+        });
+
+        private string _trainerResistance;
+        public string TrainerResistance
+        {
+            get { return _trainerResistance; }
+            set
+            {
+                _trainerResistance = value;
+                OnPropertyChanged(nameof(TrainerResistance));
+            }
+        }
+
+        public RelayCommand SetResistance => new((execute) =>
+        {
+            if (string.IsNullOrEmpty(TrainerResistance)) return;
+
+            int resistanceAsInt = int.Parse(_trainerResistance);
+            if (resistanceAsInt < 0 || resistanceAsInt > 100) return;
+
+            // TODO send network message for setting resistance
+
+            TrainerResistance = "";
+        });
+
+        public RelayCommand StopExitCommand => new(async (execute) =>
+        {
+            JsonObject stopMessage = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+            await ClientConn.SendJson(stopMessage);
+
+            // TODO fix the server side issue of throwing an exception when the connection closes.
+            ClientConn.CloseConnection();
         });
 
         #endregion

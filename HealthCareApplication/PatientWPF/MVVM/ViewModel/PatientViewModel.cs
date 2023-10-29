@@ -64,6 +64,8 @@ namespace PatientWPFApp.MVVM.ViewModel
             PatientChats.Add($"You: {_messageToSend}");
             OnPropertyChanged(nameof(PatientChats));
 
+            MessageToSend = "";
+
             JObject chatToServer = PatientFormat.ChatsSendMessage(_messageToSend);
             await ClientConn.SendJson(chatToServer);
         });

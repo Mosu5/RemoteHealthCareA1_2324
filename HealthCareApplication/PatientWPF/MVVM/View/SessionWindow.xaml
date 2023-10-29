@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="SessionWindow" Height="450" Width="800">
+        Title="Patient Session Window" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -19,7 +19,7 @@
 
         <!-- Top bar -->
         <StackPanel Grid.ColumnSpan="3" Grid.Row="0" >
-            <TextBlock Text="Session screen" FontSize="24" HorizontalAlignment="Stretch" TextAlignment="Center"  Padding="0,20,0,15" FontWeight="SemiBold" Background="#eeeeee"/>
+            <TextBlock Text="Session screen (patient)" FontSize="24" HorizontalAlignment="Stretch" TextAlignment="Center"  Padding="0,20,0,15" FontWeight="SemiBold" Background="#eeeeee"/>
             <TextBlock Name="SessionStatusText" Text="Click the 'Start session' button to start the training." FontSize="14" HorizontalAlignment="Stretch" TextAlignment="Center" Padding="0,10" Background="Azure"/>
         </StackPanel>
 
@@ -134,8 +134,8 @@
                 <ListView Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding PatientChats, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" Margin="10,0" />
 
                 <!-- Chat input -->
-                <TextBox Name="ChatInput" Text="{Binding MessageToSend}" Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" />
-                <Button Name="SendChatButton" Command="{Binding SendChatCommand}" Click="ChatButton_Click" Content="Send" Grid.Row="2" Grid.Column="1" Margin="5,10,10,10"/>
+                <TextBox Text="{Binding MessageToSend}" Grid.Row="2" Grid.Column="0" Margin="10,10,5,10" Padding="0,5" />
+                <Button Name="SendChatButton" Command="{Binding SendChatCommand}" Content="Send" Grid.Row="2" Grid.Column="1" Margin="5,10,10,10"/>
             </Grid>
         </Border>
     </Grid>

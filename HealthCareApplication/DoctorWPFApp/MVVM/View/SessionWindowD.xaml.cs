@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Media;
 using System.Text.Json.Nodes;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace DoctorWPFApp.MVVM.View
 {
@@ -33,6 +34,13 @@ namespace DoctorWPFApp.MVVM.View
             Navigator.NavToStatWindow();
         }
 
+        private async void StopExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Small delay to wait for MainWindowViewModel to send stop message, etc.
+            await Task.Delay(500);
+            Close();
+        }
+
         private void OnSessionStarted(object? _, bool __)
         {
             // Method gets called on a different thread than the current UI thread.
@@ -43,8 +51,8 @@ namespace DoctorWPFApp.MVVM.View
 
                 // Start a new session
                 _sessionActive = true;
-                stopstartBtn.Content = "Stop";
-                stopstartBtn.Background = Brushes.Salmon;
+                ToggleSessionButton.Content = "Stop";
+                ToggleSessionButton.Background = Brushes.Salmon;
             });
         }
 
@@ -59,8 +67,8 @@ namespace DoctorWPFApp.MVVM.View
                 // Stop the session
                 _sessionActive = false;
 
-                stopstartBtn.Content = "Start";
-                stopstartBtn.Background = Brushes.LightGreen;
+                ToggleSessionButton.Content = "Start";
+                ToggleSessionButton.Background = Brushes.LightGreen;
             });
         }
     }

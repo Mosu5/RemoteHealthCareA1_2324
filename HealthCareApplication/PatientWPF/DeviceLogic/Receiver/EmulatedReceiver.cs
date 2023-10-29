@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Avans.TI.BLE;
 
 namespace PatientApp.DeviceConnection.Receiver
@@ -139,7 +140,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
         public async Task SetResistance(int percentage)
         {
-            throw new NotImplementedException("The emulator cannot emulate sending resistance.");
+            MessageBox.Show("The emulator cannot emulate setting resistance, because it is not connected to a physical bike.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
