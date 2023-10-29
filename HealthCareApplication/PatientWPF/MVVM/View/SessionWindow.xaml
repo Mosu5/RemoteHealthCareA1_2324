@@ -47,7 +47,7 @@
                 <!-- Session state -->
                 <TextBlock Text="Session state" Grid.Row="1" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,0,0,5"/>
                 <Button Name="ToggleSessionButton" Click="ToggleSessionButton_Click" Content="Start session" Grid.Row="2" Background="LightGreen" FontSize="12" Padding="5 5" Margin="15,0" HorizontalAlignment="Left" />
-                <Button Name="EmergencyButton" Click="EmergencyButton_Click" Content="Emergency Break" Grid.Row="2" Grid.Column="1" Background="Red"  Padding="5 5" Margin="5,0" HorizontalAlignment="Stretch" FontWeight="DemiBold" IsEnabled="False" />
+                <Button Name="EmergencyButton" Command="{Binding EmergencyBreak}" Content="Emergency Break" Grid.Row="2" Grid.Column="1" Background="Red"  Padding="5 5" Margin="5,0" HorizontalAlignment="Stretch" FontWeight="DemiBold" IsEnabled="False" />
 
                 <!-- Trainer resistance -->
                 <TextBlock Text="Set trainer resistance (in integer %)" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,20,0,5"/>

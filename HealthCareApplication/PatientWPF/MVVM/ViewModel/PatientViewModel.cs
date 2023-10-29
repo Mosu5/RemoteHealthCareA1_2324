@@ -4,6 +4,7 @@ using PatientApp.VrLogic;
 using PatientWPFApp.PatientLogic;
 using System.Collections.ObjectModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Utilities.Logging;
 
@@ -86,6 +87,18 @@ namespace PatientWPFApp.MVVM.ViewModel
             if (resistanceAsInt < 0 || resistanceAsInt > 100) return;
 
             DeviceManager.Receiver.SetResistance(resistanceAsInt);
+        });
+
+        public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
+        {
+            JObject sessionStop = PatientFormat.SessionStopMessage();
+            JObject chatSend = PatientFormat.ChatsSendMessage($"\t<<ACTIVATED THE EMERGENCY BREAK!>>");
+
+            await ClientConn.SendJson(sessionStop);
+
+            await Task.Delay(1000);
+
+            await ClientConn.SendJson(chatSend);
         });
 
         public PatientViewModel()
