@@ -140,7 +140,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
         public async Task SetResistance(int percentage)
         {
-            MessageBox.Show("The emulator cannot emulate setting resistance, because it is not connected to a physical bike.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Attempted to set the resistance to {percentage}.\nThe emulator cannot emulate setting resistance, because it is not connected to a physical bike.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

@@ -25,13 +25,12 @@ namespace PatientApp.VrLogic
         ///     computer that is running the application, and the tunnel ID
         /// </summary>
         /// <returns>Wether a successful connection was established to the server.</returns>
-        public static async Task Initialize(string serverIpAddress, int serverPort)
+        public static async Task<bool> Initialize(string serverIpAddress, int serverPort)
         {
             // If the application could not connect to the server
             if (!await VrCommunication.ConnectToServer(serverIpAddress, serverPort))
             {
-                throw new CommunicationException(
-                    $"Could not connect to address {serverIpAddress} on port {serverPort}. Maybe there is an already active session?");
+                return false;
             }
 
             // Request session list
@@ -41,12 +40,15 @@ namespace PatientApp.VrLogic
             JObject sessionListResponse = await VrCommunication.ReceiveJsonObject();
             _sessionId = Formatting.ValidateAndGetSessionId(sessionListResponse);
 
+            if (_sessionId == null) return false;
+
             // Request adding a new tunnel
             await VrCommunication.SendAsJson(Formatting.TunnelCreate(_sessionId));
 
             // Receive and process the tunnel ID of the running NetworkEngine instance
             JObject tunnelCreateResponse = await VrCommunication.ReceiveJsonObject();
             _tunnelId = Formatting.ValidateAndGetTunnelId(tunnelCreateResponse);
+            return true;
         }
 
         /// <summary>

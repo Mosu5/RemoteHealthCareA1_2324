@@ -13,9 +13,10 @@ namespace PatientWPFApp.PatientLogic
     {
         // Patient ViewModel events
         public static event EventHandler<bool> LoggedIn;
-        public static event EventHandler<string> ReceivedChat;
         public static event EventHandler<bool> SessionStarted;
         public static event EventHandler<bool> SessionStopped;
+        public static event EventHandler<string> ReceivedChat;
+        public static event EventHandler<int> ReceivedResistance;
         public static event EventHandler<bool> SummaryRequested;
 
         public static async Task Listen()
@@ -50,6 +51,9 @@ namespace PatientWPFApp.PatientLogic
                         break;
                     case "stats/summary":
                         SummaryRequested?.Invoke(nameof(RequestHandler), true);
+                        break;
+                    case "resistance/set":
+                        ReceivedResistance?.Invoke(nameof(RequestHandler), int.Parse(PatientFormat.GetKey(dataObject, "value").ToString()));
                         break;
                     default:
                         Logger.Log($"Cannot process command '{command}'.", LogType.Warning);
