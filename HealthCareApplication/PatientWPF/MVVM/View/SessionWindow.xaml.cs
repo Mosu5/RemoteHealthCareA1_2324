@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using System;
 using System.Threading;
+using PatientApp.VrLogic;
 
 namespace PatientWPF.MVVM.View
 {
@@ -119,8 +120,12 @@ namespace PatientWPF.MVVM.View
 
                 // Sending data in the same thread causes the UI thread to completely freeze
                 // To prevent this send data through a different thread
-                Thread t = new Thread(async () => await ClientConn.SendJson(PatientFormat.StatsSendMessage(stat)));
-                t.Start();
+                Thread bikeSpeedThread = new Thread(() =>
+                {
+                    VrProgram.UpdateBikeSpeed(speedKmH).Wait();
+                    ClientConn.SendJson(PatientFormat.StatsSendMessage(stat)).Wait();
+                });
+                bikeSpeedThread.Start();
             });
         }
 

@@ -118,9 +118,9 @@ namespace PatientWPFApp.MVVM.ViewModel
             );
 
             // Initialize VR environment
-            Thread vrThread = new Thread(async () =>
+            Thread vrThread = new Thread(() =>
             {
-                if (!await VrProgram.Initialize())
+                if (!VrProgram.Initialize().Result)
                     MessageBox.Show("Could not load VR environment.\nCheck wether you are running NetworkEngine (sim.bat)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             });
             vrThread.Start();

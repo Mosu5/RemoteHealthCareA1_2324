@@ -58,6 +58,21 @@ namespace PatientApp.VrLogic
         #endregion
 
         #region Scene
+
+        public static async Task SaveScene()
+        {
+            object sceneSave = Formatting.SceneSave();
+            object tunnelSend = Formatting.TunnelSend(_tunnelId, sceneSave);
+            await VrCommunication.SendAsJson(tunnelSend);
+        }
+
+        public static async Task LoadScene()
+        {
+            object sceneLoad = Formatting.SceneLoad();
+            object tunnelSend = Formatting.TunnelSend(_tunnelId, sceneLoad);
+            await VrCommunication.SendAsJson(tunnelSend);
+        }
+
         /// <summary>
         ///     Send a request to VR server and retrieve the VR scene data
         /// </summary>

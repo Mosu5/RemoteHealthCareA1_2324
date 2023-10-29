@@ -1,15 +1,19 @@
 ﻿using Newtonsoft.Json.Linq;
 using PatientApp.VrLogic.Graphics;
 using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Threading.Tasks;
+using System.Windows;
 using Utilities.Logging;
 
 namespace PatientApp.VrLogic
 {
     internal class VrProgram
     {
-        private static double _initialBikeSpeed = 7.0;
+        private static double _initialBikeSpeed = 0;
+        private static bool _vrConnected = false;
+        private static Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
         /// Builds the entire VR environment. Takes a while to complete.
@@ -17,6 +21,8 @@ namespace PatientApp.VrLogic
         public static async Task<bool> Initialize()
         {
             if (!await VrSession.Initialize("145.48.6.10", 6666)) return false;
+            _vrConnected = true;
+
             await VrSession.ResetScene();
 
             // Add a terrain with hills
@@ -225,13 +231,23 @@ namespace PatientApp.VrLogic
         /// </summary>
         public static async Task UpdateBikeSpeed(double speed)
         {
+            if (!_vrConnected) return;
+
+            if (!_stopwatch.IsRunning)
+            {
+                _stopwatch.Start();
+                return;
+            }
+            else if (_stopwatch.ElapsedMilliseconds < 5000) return;
+
+            _stopwatch.Reset();
+
             // Clear Panel
             await VrSession.ClearPanel();
 
             //// Add text to panel
             JObject text = await VrSession.AddText("Speed: " + Math.Round(speed * 3.6, 1) + "km/h");
             JObject swap = await VrSession.SwapPanel();
-
             string bikeId = await VrSession.GetNodeId("bike");
             await VrSession.UpdateSpeed(bikeId, speed);
         }
