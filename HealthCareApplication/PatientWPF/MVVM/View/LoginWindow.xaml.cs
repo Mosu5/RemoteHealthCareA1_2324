@@ -23,6 +23,7 @@ namespace PatientWPFApp.View
     {
         public LoginWindow()
         {
+            
             InitializeComponent();
 
             // Create a new MainWindowViewModel for DataContext. This can
