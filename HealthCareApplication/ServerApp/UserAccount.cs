@@ -26,7 +26,7 @@ namespace ServerApp
         public bool IsDoctor { get; set; }
         public TcpClient UserClient { get; set; }
 
-        public UserAccount(string username, string password) 
+        public UserAccount(string username, string password)
         {
             _username = username;
             _password = password;
@@ -59,31 +59,30 @@ namespace ServerApp
 
 
 
-        public List<UserStat> GetUserStats()
+        public List<List<UserStat>> GetUserStats()
         {
             string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
 
-            if (!File.Exists(correctPath))
+            StreamReader reader = new StreamReader(correctPath);
+
+            string jsonData = reader.ReadToEnd();
+            reader.Close();
+
+            try
+            {
+                List<List<UserStat>> retrievedUserStats = JsonSerializer.Deserialize<List<List<UserStat>>>(jsonData);
+                return retrievedUserStats;
+            }
+            catch
             {
                 return null;
             }
-   
-
-            List<UserStat> data = new List<UserStat>();
-
-            foreach (var line in File.ReadLines(correctPath))
-            {
-                var sessionData = JsonSerializer.Deserialize<List<UserStat>>(line);
-                data.AddRange(sessionData);
-            }
-
-            return data;
         }
 
 
-        public string GetUserName() 
-        { 
+        public string GetUserName()
+        {
             return _username;
         }
 

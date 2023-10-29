@@ -66,6 +66,11 @@ namespace ServerApp
                 } }
             };
         }
+
+        internal static JsonObject GenerateSummaryRequest(List<UserStat> userStatsBuffer)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
