@@ -30,6 +30,12 @@ namespace ServerApp.States
             {
                 // TODO: Retrieve this data from the userstats buffer instead of the userstats file
                 _context.ResponseToPatient = ResponseClientData.GenerateSummaryRequest(_context.UserStatsBuffer);
+                // To do: Retrieve this data from the userstats buffer instead of the userstats file
+                List<UserStat> allUserStats = _context.GetUserAccount().GetUserStats();
+
+                string json = System.Text.Json.JsonSerializer.Serialize(allUserStats);
+
+                _context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(json);
                 // Reset userbuffer for next session
             }
             else if (command == "chats/send")
@@ -37,6 +43,11 @@ namespace ServerApp.States
                 string message = JsonUtil.GetValueFromPacket(packet, "data", "message").ToString();
 
                 _context.ResponseToDoctor = ResponseClientData.DoctorChatSendResponse(message, _context.GetUserAccount().GetUserName());
+            }
+            else if(command == "stats/history"){
+                //List<List<UserStat>> history = _context.GetUserAccount().GetUserStats();
+                //JsonObject json = (JsonObject)JsonSerializer.Serialize(history);
+                //_context.ResponseToClient = ResponseClientData.GenerateSummaryRequest(json);
             }
             return this;
         }
