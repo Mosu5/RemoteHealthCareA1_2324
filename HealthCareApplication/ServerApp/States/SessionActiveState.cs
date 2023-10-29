@@ -44,6 +44,7 @@ namespace ServerApp.States
             else if (command == "session/stop")
             {
                 _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
+                _context.ResponseToDoctor = ResponseClientData.GenerateDoctorResponse("session/stop", null, _context.GetUserAccount().GetUserName());
                 return new SessionStoppedState(_context);
             }
             else if(command == "session/pause")

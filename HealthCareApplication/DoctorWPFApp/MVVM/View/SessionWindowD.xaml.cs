@@ -1,5 +1,6 @@
 ﻿using DoctorWPFApp.Networking;
 using System.ComponentModel;
+using System.Windows.Media;
 using System.Text.Json.Nodes;
 using System.Windows;
 
@@ -11,11 +12,15 @@ namespace DoctorWPFApp.MVVM.View
     /// </summary>
     public partial class SessionWindowD : Window
     {
-        public bool isRunning = false;
+        private bool _sessionActive = false;
+
         public SessionWindowD()
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            RequestHandler.SessionStarted += OnSessionStarted;
+            RequestHandler.SessionStopped += OnSessionStopped;
         }
 
         private void ChatsBtn_Click(object sender, RoutedEventArgs e)
@@ -31,25 +36,56 @@ namespace DoctorWPFApp.MVVM.View
         private async void StopstartBtn_Click(object sender, RoutedEventArgs e)
         {
             JsonObject message;
-            if (isRunning == true)
+            if (_sessionActive == true)
             {
                 // Stop the session
                 message = DoctorFormat.SessionStopMessage("bob");
 
-                isRunning = false;
+                _sessionActive = false;
                 stopstartBtn.Content = "Start";
-                stopstartBtn.Background = System.Windows.Media.Brushes.LightGreen;
+                stopstartBtn.Background = Brushes.LightGreen;
             }
             else
             {
                 // Start a new session
                 message = DoctorFormat.SessionStartMessage("bob");
 
-                isRunning = true;
+                _sessionActive = true;
                 stopstartBtn.Content = "Stop";
-                stopstartBtn.Background = System.Windows.Media.Brushes.Red;
+                stopstartBtn.Background = Brushes.Salmon;
             }
             await ClientConn.SendJson(message);
+        }
+
+        private void OnSessionStarted(object? _, bool __)
+        {
+            // Method gets called on a different thread than the current UI thread.
+            // Therefore invoke this method within a lambda to make it possible
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (_sessionActive) return;
+
+                // Start a new session
+                _sessionActive = true;
+                stopstartBtn.Content = "Stop";
+                stopstartBtn.Background = Brushes.Salmon;
+            });
+        }
+
+        private void OnSessionStopped(object? _, bool __)
+        {
+            // Method gets called on a different thread than the current UI thread.
+            // Therefore invoke this method within a lambda to make it possible
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (!_sessionActive) return;
+
+                // Stop the session
+                _sessionActive = false;
+
+                stopstartBtn.Content = "Start";
+                stopstartBtn.Background = Brushes.LightGreen;
+            });
         }
     }
 }

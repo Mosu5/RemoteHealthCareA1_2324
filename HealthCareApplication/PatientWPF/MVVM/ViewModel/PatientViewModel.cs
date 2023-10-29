@@ -96,6 +96,7 @@ namespace PatientWPFApp.MVVM.ViewModel
 
             await ClientConn.SendJson(sessionStop);
 
+            // Introducte a small delay, because the server otherwise cannot handle the chats/send below
             await Task.Delay(1000);
 
             await ClientConn.SendJson(chatSend);

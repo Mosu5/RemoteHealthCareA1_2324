@@ -13,6 +13,8 @@ namespace DoctorWPFApp.Networking
         public static event EventHandler<Statistic>? ReceivedStat;
         public static event EventHandler<string>? ReceivedChat;
         public static event EventHandler<string>? ReceivedSummary;
+        public static event EventHandler<bool> SessionStarted;
+        public static event EventHandler<bool> SessionStopped;
 
         public static async Task Listen()
         {
@@ -48,6 +50,12 @@ namespace DoctorWPFApp.Networking
                         break;
                     case "stats/summary":
                         ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "statistics").AsArray().ToString());
+                        break;
+                    case "session/start":
+                        SessionStarted?.Invoke(nameof(RequestHandler), true);
+                        break;
+                    case "session/stop":
+                        SessionStopped?.Invoke(nameof(RequestHandler), true);
                         break;
                     default:
                         Logger.Log($"Cannot process command '{command}'.", LogType.Warning);

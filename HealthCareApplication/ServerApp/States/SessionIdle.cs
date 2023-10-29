@@ -23,6 +23,7 @@ namespace ServerApp.States
                 _context.IsSessionActive = true;
 
                 _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/start", null, "ok");
+                _context.ResponseToDoctor = ResponseClientData.GenerateDoctorResponse("session/start", null, _context.GetUserAccount().GetUserName());
                 return new SessionActiveState(_context);
             }
             else if (command == "stats/summary")
