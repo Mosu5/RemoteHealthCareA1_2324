@@ -74,10 +74,10 @@ namespace DoctorWPFApp.MVVM.ViewModel
             SelectedPatient.ChatMessages.Add($"You: {_messageToSend}");
             OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
 
-            MessageToSend = "";
-
             JsonObject chatToServer = DoctorFormat.ChatsSendMessage(_messageToSend, SelectedPatient.Name);
             await ClientConn.SendJson(chatToServer);
+
+            MessageToSend = "";
         });
 
         private string _sessionButtonText;
