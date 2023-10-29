@@ -529,10 +529,7 @@ namespace PatientApp.VrLogic
                     sessionId = session?["id"]?.ToString();
             }
 
-            if (sessionId != null) return sessionId;
-
-            throw new CommunicationException(
-                "Could not retrieve session ID from this message. Are you actually running NetworkEngine?");
+            return sessionId;
         }
 
         public static string ValidateAndGetTunnelId(JObject serverResponse)

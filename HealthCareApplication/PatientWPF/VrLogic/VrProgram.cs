@@ -14,9 +14,9 @@ namespace PatientApp.VrLogic
         /// <summary>
         /// Builds the entire VR environment. Takes a while to complete.
         /// </summary>
-        public static async Task Initialize()
+        public static async Task<bool> Initialize()
         {
-            await VrSession.Initialize("145.48.6.10", 6666);
+            if (!await VrSession.Initialize("145.48.6.10", 6666)) return false;
             await VrSession.ResetScene();
 
             // Add a terrain with hills
@@ -217,6 +217,7 @@ namespace PatientApp.VrLogic
              );
 
             Logger.Log("VR environment initialized", LogType.GeneralInfo);
+            return true;
         }
 
         /// <summary>
