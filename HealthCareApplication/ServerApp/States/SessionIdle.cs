@@ -25,11 +25,17 @@ namespace ServerApp.States
                 _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/start", null, "ok");
                 return new SessionActiveState(_context);
             }
-            if (command == "stats/summary")
+            else if (command == "stats/summary")
             {
                 // TODO: Retrieve this data from the userstats buffer instead of the userstats file
                 _context.ResponseToPatient = ResponseClientData.GenerateSummaryRequest(_context.UserStatsBuffer);
                 // Reset userbuffer for next session
+            }
+            else if (command == "chats/send")
+            {
+                string message = JsonUtil.GetValueFromPacket(packet, "data", "message").ToString();
+
+                _context.ResponseToDoctor = ResponseClientData.DoctorChatSendResponse(message, _context.GetUserAccount().GetUserName());
             }
             return this;
         }

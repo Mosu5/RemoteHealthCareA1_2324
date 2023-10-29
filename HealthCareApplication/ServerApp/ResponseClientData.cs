@@ -33,7 +33,7 @@ namespace ServerApp
 
         public static JsonObject GenerateSummaryRequest(List<UserStat> userStats)
         {
-             return new JsonObject()
+            return new JsonObject()
              {
                  {"command","stats/summary"},
                  {"data",new JsonArray{userStats} }
@@ -43,7 +43,7 @@ namespace ServerApp
 
         public static JsonObject GenerateDoctorResponse(string command, JsonObject data, string username)
         {
-                return new JsonObject()
+            return new JsonObject()
                  {
                      {"command",command },
                      {"data",new JsonObject
@@ -52,8 +52,20 @@ namespace ServerApp
                          {"username", username}
                      }}
                  };
-            }
-          
         }
+
+        public static JsonObject DoctorChatSendResponse(string message, string patientName)
+        {
+            return new JsonObject()
+            {
+                { "command", "chats/send" },
+                { "data", new JsonObject()
+                {
+                    { "message", message },
+                    { "username", patientName }
+                } }
+            };
+        }
+    }
 
 }

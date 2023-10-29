@@ -55,6 +55,10 @@ namespace ServerApp
                 case "session/resume":
                     ResponseValue = new JsonObject { { "command", "session/resume" }, { "data", new JsonObject() } };
                     break;
+                case "chats/send":
+                    string message = JsonUtil.GetValueFromPacket(packet, "data", "message").ToString();
+                    ResponseValue = new JsonObject() { { "command", "chats/send" }, { "data", new JsonObject() { { "message", message } } } };
+                    break;
             }
             return true;
         }

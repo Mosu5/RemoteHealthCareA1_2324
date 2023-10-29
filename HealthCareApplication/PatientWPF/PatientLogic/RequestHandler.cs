@@ -39,7 +39,7 @@ namespace PatientWPFApp.PatientLogic
                         LoggedIn.Invoke(nameof(RequestHandler), loggedIn);
                         break;
                     case "chats/send":
-                        ReceivedChat.Invoke(nameof(RequestHandler), (string)PatientFormat.GetKey(dataObject, "message"));
+                        ReceivedChat.Invoke(nameof(RequestHandler), $"Doctor: {(string)PatientFormat.GetKey(dataObject, "message")}");
                         break;
                     case "session/start":
                         SessionStarted?.Invoke(nameof(RequestHandler), true);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DoctorWPFApp.MVVM.Model
 {
@@ -17,9 +18,9 @@ namespace DoctorWPFApp.MVVM.Model
 
 
         // Historical Data / Logs
-        public List<PatientData> PatientDataCollection { get; set; } = new List<PatientData>();
+        public List<PatientData> PatientDataCollection { get; set; } = new();
 
-        public List<String> ChatMessages { get; set; } = new List<String>();
+        public ObservableCollection<string> ChatMessages { get; set; } = new();
 
 
 

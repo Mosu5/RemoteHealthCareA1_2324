@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace DoctorWPFApp.MVVM.ViewModel
 {
@@ -25,6 +26,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             // Subscribe to response event handler
             RequestHandler.LoggedIn += OnLoginResponse;
             RequestHandler.ReceivedStat += OnStatReceived;
+            RequestHandler.ReceivedChat += OnChatReceived;
         }
 
         #region Commands called by the UI
@@ -51,6 +53,28 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             await ClientConn.SendJson(sessionRequest);
         }, canExecute => true);
+
+        private string _messageToSend;
+        public string MessageToSend
+        {
+            get { return _messageToSend; }
+            set
+            {
+                _messageToSend = value;
+                OnPropertyChanged(nameof(MessageToSend));
+            }
+        }
+
+        public RelayCommand SendChatCommand => new RelayCommand(async (execute) =>
+        {
+            if (string.IsNullOrEmpty(_messageToSend)) return;
+
+            SelectedPatient.ChatMessages.Add($"You: {_messageToSend}");
+            OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
+
+            JsonObject chatToServer = DoctorFormat.ChatsSendMessage(_messageToSend, SelectedPatient.Name);
+            await ClientConn.SendJson(chatToServer);
+        });
 
         #endregion
 
@@ -127,6 +151,15 @@ namespace DoctorWPFApp.MVVM.ViewModel
             });
         }
 
+        private void OnChatReceived(object? sender, string chatMessage)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SelectedPatient.ChatMessages.Add($"{SelectedPatient.Name}: {chatMessage}");
+                OnPropertyChanged(nameof(SelectedPatient));
+            });
+        }
+
         #endregion
 
         /// <summary>
@@ -138,11 +171,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
             {
                 new Patient
                 {
-                    Name = "Bob",
+                    Name = "bob",
                     Speed = 1,
                     Distance = 1,
                     HeartRate = 1,
-                    ChatMessages = new List<string> { "hi bob is mijn naam", "fdsfdsfdsf", "dfsdffdfsdf" },
+                    ChatMessages = new ObservableCollection<string> { "Bob: bro stop ik krijg hartaanval", "Bob: fdsfdsfdsf", "Bob: dfsdffdfsdf" },
                     PatientDataCollection = new List<PatientData> {
                         new PatientData
                         {
@@ -166,11 +199,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
                 new Patient
                 {
-                    Name = "Jan",
+                    Name = "jan",
                     Speed = 2,
                     Distance = 5,
                     HeartRate = 3,
-                    ChatMessages = new List<string> { "jo dit is jan" }
+                    ChatMessages = new ObservableCollection<string> { "Jan: wanneer beginnen we?" }
                 }
             };
 

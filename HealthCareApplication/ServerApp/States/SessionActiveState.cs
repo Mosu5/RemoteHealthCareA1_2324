@@ -51,6 +51,12 @@ namespace ServerApp.States
                 _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/pause", null, "ok");
                 return new SessionPausedState(_context);
             }
+            else if (command == "chats/send")
+            {
+                string message = JsonUtil.GetValueFromPacket(packet, "data", "message").ToString();
+
+                _context.ResponseToDoctor = ResponseClientData.DoctorChatSendResponse(message, _context.GetUserAccount().GetUserName());
+            }
             
             // TODO:
             // Implement pause and resume into this state.
