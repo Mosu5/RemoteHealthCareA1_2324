@@ -82,6 +82,7 @@ namespace PatientApp.VrLogic
             if (!_isConnected)
                 throw new CommunicationException(
                     "There is no active communication between the application and the VR server.");
+
             var lengthArray = new byte[4];
 
             await _stream.ReadAsync(lengthArray, 0, lengthArray.Length);

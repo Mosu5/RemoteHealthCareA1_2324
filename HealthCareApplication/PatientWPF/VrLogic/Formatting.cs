@@ -49,6 +49,32 @@ namespace PatientApp.VrLogic
         #endregion
 
         #region Scene
+
+        public static object SceneSave()
+        {
+            return new
+            {
+                id = "scene/save",
+                data = new
+                {
+                    filename = "rh_a1_vr_environment.json",
+                    overwrite = true
+                }
+            };
+        }
+
+        public static object SceneLoad()
+        {
+            return new
+            {
+                id = "scene/load",
+                data = new
+                {
+                    filename = "rh_a1_vr_environment.json"
+                }
+            };
+        }
+
         public static object SceneGet()
         {
             return new
