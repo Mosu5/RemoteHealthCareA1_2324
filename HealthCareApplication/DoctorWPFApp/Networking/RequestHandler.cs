@@ -49,7 +49,7 @@ namespace DoctorWPFApp.Networking
                         ));
                         break;
                     case "stats/summary":
-                        ReceivedSummary?.Invoke(nameof(DoctorFormat), dataObject.ToString());
+                        ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "stats").ToString());
                         break;
                     case "session/start":
                         SessionStarted?.Invoke(nameof(RequestHandler), true);

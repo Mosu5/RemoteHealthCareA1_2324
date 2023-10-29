@@ -114,13 +114,17 @@
 
                 <TextBlock Text="Summary" Grid.Row="5" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,10,0,5"/>
 
-                <ListView ItemsSource="{Binding SelectedPatient.PatientDataCollection}" Grid.Row="6" Grid.ColumnSpan="2" Margin="10,0,10,10" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListView ItemsSource="{Binding SelectedPatient.PatientDataCollection}" Grid.Row="6" Grid.ColumnSpan="2" Margin="10,0,10,10" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Time" DisplayMemberBinding="{Binding DateTime}" />
-                            <GridViewColumn Header="Speed" DisplayMemberBinding="{Binding RecordedSpeed}" />
-                            <GridViewColumn Header="Distance" DisplayMemberBinding="{Binding RecordedDistance}" />
-                            <GridViewColumn Header="Heartrate" DisplayMemberBinding="{Binding RecordedHeartRate}" />
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="FontSize" Value="9"></Setter>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                            <GridViewColumn Header="Speed (km/s)" DisplayMemberBinding="{Binding Speed}" Width="65" />
+                            <GridViewColumn Header="Distance (m)" DisplayMemberBinding="{Binding Distance}" Width="65"/>
+                            <GridViewColumn Header="Heart rate (bpm)" DisplayMemberBinding="{Binding HeartRate}" Width="80"/>
                         </GridView>
                     </ListView.View>
                 </ListView>

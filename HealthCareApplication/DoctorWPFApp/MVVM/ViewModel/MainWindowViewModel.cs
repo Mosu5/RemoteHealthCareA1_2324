@@ -1,10 +1,13 @@
 ﻿using DoctorWPFApp.MVVM.Model;
 using DoctorWPFApp.Networking;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -70,10 +73,10 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         public RelayCommand GetSummaryCommand => new(
         async (execute) =>
-            {
-                JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
-                await ClientConn.SendJson(summaryRequest);
-            }, canExecute => !_isSessionRunning
+        {
+            JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
+            await ClientConn.SendJson(summaryRequest);
+        }, canExecute => !_isSessionRunning
         );
 
         private string _messageToSend;
@@ -299,10 +302,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         private void OnSummaryReceived(object? sender, string json)
         {
-
+            var patientDataList = JsonConvert.DeserializeObject<List<PatientData>>(json);
             Application.Current.Dispatcher.Invoke(() =>
             {
-                MessageBox.Show(json.ToString());
+                SelectedPatient.PatientDataCollection = patientDataList != null ? patientDataList : new();
+                OnPropertyChanged(nameof(SelectedPatient));
             });
         }
 
@@ -314,6 +318,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
+
 
         private async void OnSessionStopped(object? sender, bool sessionStopped)
         {
@@ -340,19 +345,16 @@ namespace DoctorWPFApp.MVVM.ViewModel
                     PatientDataCollection = new List<PatientData> {
                         new PatientData
                         {
-                            DateTime = DateTime.Now,
-                            RecordedSpeed = 1,
-                            RecordedDistance = 1,
-                            RecordedHeartRate = 1,
-                            RecordedRrInterval = 1,
+
+                            Speed = 1,
+                           Distance = 1,
+                            HeartRate = 1,
                         },
                         new PatientData
                         {
-                            DateTime = DateTime.Now,
-                            RecordedSpeed = 1,
-                            RecordedDistance = 1,
-                            RecordedHeartRate = 1,
-                            RecordedRrInterval = 1,
+                            Speed = 1,
+                            Distance = 1,
+                            HeartRate = 1,
                         },
                     }
 
