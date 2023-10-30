@@ -212,10 +212,27 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         public RelayCommand SetResistance => new(async (execute) =>
         {
-            if (string.IsNullOrEmpty(TrainerResistance)) return;
+            if (string.IsNullOrEmpty(TrainerResistance))
+            {
+                TrainerResistance = "";
+                return;
+            }
 
-            int resistanceAsInt = int.Parse(_trainerResistance);
-            if (resistanceAsInt < 0 || resistanceAsInt > 100) return;
+            int resistanceAsInt;
+            try
+            {
+                resistanceAsInt = int.Parse(_trainerResistance);
+            }
+            catch (FormatException)
+            {
+                TrainerResistance = "";
+                return;
+            }
+            if (resistanceAsInt < 0 || resistanceAsInt > 100)
+            {
+                TrainerResistance = "";
+                return;
+            }
 
             await ClientConn.SendJson(DoctorFormat.SetResistanceMessage(resistanceAsInt, SelectedPatient.Name));
 

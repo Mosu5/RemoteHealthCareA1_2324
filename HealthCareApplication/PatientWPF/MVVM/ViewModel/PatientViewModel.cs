@@ -2,6 +2,7 @@
 using PatientApp.DeviceConnection;
 using PatientApp.VrLogic;
 using PatientWPFApp.PatientLogic;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -84,11 +85,25 @@ namespace PatientWPFApp.MVVM.ViewModel
         public RelayCommand SetResistance => new RelayCommand((execute) =>
         {
             if (string.IsNullOrEmpty(TrainerResistance)) return;
-
-            int resistanceAsInt = int.Parse(_trainerResistance);
-            if (resistanceAsInt < 0 || resistanceAsInt > 100) return;
+            int resistanceAsInt;
+            try
+            {
+                resistanceAsInt = int.Parse(_trainerResistance);
+            }
+            catch (FormatException)
+            {
+                TrainerResistance = "";
+                return;
+            }
+            
+            if (resistanceAsInt < 0 || resistanceAsInt > 100)
+            {
+                TrainerResistance = "";
+                return;
+            }
 
             DeviceManager.Receiver.SetResistance(resistanceAsInt);
+            TrainerResistance = "";
         });
 
         public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
