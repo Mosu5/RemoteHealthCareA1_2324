@@ -13,8 +13,6 @@ namespace DoctorWPFApp.MVVM.Model
 
         public double Distance { get; set; }
         public double HeartRate {  get; set; }
-        public double RrInterval { get; set; }
-        public double Time { get; set; }
 
 
         // Historical Data / Logs
