@@ -107,11 +107,11 @@ namespace PatientApp.DeviceConnection.Receiver
         /// <returns>Wether the device has paired successfully</returns>
         private async Task<bool> PairDevice(BLE bleDevice, string deviceName, string serviceName, string characteristicName)
         {
-            int errorCode = 14000;
+            int errorCode = 6969;
 
             Thread t = new Thread(async () =>
             {
-                errorCode = await bleDevice.OpenDevice("Tacx Flux 00438");
+                errorCode = await bleDevice.OpenDevice(deviceName);
                 if (errorCode != 0) return;
                 errorCode = await bleDevice.SetService(serviceName);
                 if (errorCode != 0) return;
@@ -121,7 +121,7 @@ namespace PatientApp.DeviceConnection.Receiver
             t.Start();
             t.Join();
 
-            return true;
+            return errorCode == 0;
         }
 
         /// <summary>
