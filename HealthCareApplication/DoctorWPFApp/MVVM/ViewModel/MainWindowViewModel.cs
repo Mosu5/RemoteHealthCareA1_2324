@@ -32,13 +32,14 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.ReceivedChat += OnChatReceived;
             RequestHandler.SessionStopped += OnSessionStopped;
             RequestHandler.ReceivedSummary += OnSummaryReceived;
-
+            RequestHandler.ReceivedPatients += OnPatientsReceived;
+            InitPlaceHolderData();
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
             EmergencyBreakEnabled = "False";
         }
 
-        private void RequestHandler_SessionStopped(object? sender, bool e)
+        private void SessionStopped(object? sender, bool e)
         {
             throw new NotImplementedException();
         }
@@ -51,9 +52,14 @@ namespace DoctorWPFApp.MVVM.ViewModel
             JsonObject loginRequest = DoctorFormat.LoginMessage(_username, _password);
             await ClientConn.SendJson(loginRequest);
 
-            InitPlaceHolderData(); // TODO remove when not needed anymore
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
 
+        public RelayCommand GetPatientListCommand => new(async (execute) =>
+        {
+            // TODO request patientList from server
+            JsonObject GetPatientRequest = DoctorFormat.GetPatientsMessage();
+            await ClientConn.SendJson(GetPatientRequest);
+        });
 
         private bool _isSessionRunning = false;
         public RelayCommand StartStopSession => new(async (execute) =>
@@ -286,11 +292,39 @@ namespace DoctorWPFApp.MVVM.ViewModel
             MessageBox.Show("Wrong username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        private void OnPatientsReceived(object? sender, string json)
+        {
+            List<string> patientNames = JsonConvert.DeserializeObject<List<string>>(json);
+            List<Patient> tempPatients = new List<Patient>();
+            patientNames?.ForEach(patientName =>
+            {
+                tempPatients.Add(new Patient() { Name = patientName });
+            });
+
+            foreach (var p in tempPatients)
+            {
+                if (Patients.Contains(p)) continue;
+
+                Patient patient = new Patient()
+                {
+                    Name = p.Name,
+                };
+                Patients.Add(patient);
+            }
+
+            Application.Current.Dispatcher.Invoke(
+                () =>
+                {
+                    OnPropertyChanged(nameof(Patients));
+                });
+
+        }
+
         private void OnStatReceived(object? _, Statistic stat)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                SelectedPatient.Speed = stat.Speed;
+                SelectedPatient.Speed = Math.Round(stat.Speed * 3.6, 1);
                 SelectedPatient.Distance = stat.Distance;
                 SelectedPatient.HeartRate = stat.HeartRate;
                 OnPropertyChanged(nameof(SelectedPatient));
@@ -306,6 +340,8 @@ namespace DoctorWPFApp.MVVM.ViewModel
             Application.Current.Dispatcher.Invoke(() =>
             {
                 SelectedPatient.PatientDataCollection = patientDataList != null ? patientDataList : new();
+
+                patientDataList?.ForEach(patientData => patientData.Speed = Math.Round(patientData.Speed * 3.6, 1));
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
@@ -375,5 +411,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             SelectedPatient = Patients[0];
             OnPropertyChanged(nameof(SelectedPatient));
         }
+
     }
 }
