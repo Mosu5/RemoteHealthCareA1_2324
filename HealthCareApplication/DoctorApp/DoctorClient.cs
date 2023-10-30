@@ -11,6 +11,8 @@ namespace DoctorApp
     {
         static async Task Main()
         {
+            throw new NotImplementedException("Running the wrong project, use DoctorWPFApp instead!!!!!");
+
             try
             {
                 // Don't await this, so we're not stuck in an infinite loop

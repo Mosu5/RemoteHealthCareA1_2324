@@ -14,6 +14,8 @@ namespace PatientApp
     {
         static async Task Main(string[] args)
         {
+            throw new NotImplementedException("Running the wrong project, use PatientWPF instead!!!!!");
+
             // Logger will log if LogType is present
             Logger.SetTypesToLogFor(
                 LogType.GeneralInfo,
