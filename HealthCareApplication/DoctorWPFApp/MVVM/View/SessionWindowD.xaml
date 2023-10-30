@@ -21,7 +21,7 @@
         <!-- Top bar -->
         <StackPanel Grid.ColumnSpan="3" Grid.Row="0" >
             <TextBlock Text="Session screen (doctor)" FontSize="24" HorizontalAlignment="Stretch" TextAlignment="Center"  Padding="0,20,0,15" FontWeight="SemiBold" Background="#eeeeee"/>
-            <TextBlock Name="SessionStatusText" Text="No active session for current patient." FontSize="14" HorizontalAlignment="Stretch" TextAlignment="Center" Padding="0,10" Background="Azure"/>
+            <TextBlock Name="SessionStatusText" Text="{Binding StatusText}" FontSize="14" HorizontalAlignment="Stretch" TextAlignment="Center" Padding="0,10" Background="{Binding StatusTextColor}"/>
         </StackPanel>
 
         <!-- Session controls -->

@@ -37,6 +37,8 @@ namespace DoctorWPFApp.MVVM.ViewModel
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
             EmergencyBreakEnabled = "False";
+            StatusText = "No active session for current patient.";
+            StatusTextColor = Brushes.Azure;
         }
 
         private void SessionStopped(object? sender, bool e)
@@ -131,6 +133,17 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
         }
 
+        private SolidColorBrush _statusTextColor;
+        public SolidColorBrush StatusTextColor
+        {
+            get { return _statusTextColor; }
+            set
+            {
+                _statusTextColor = value;
+                OnPropertyChanged(nameof(StatusTextColor));
+            }
+        }
+
         private string _statusText;
         public string StatusText
         {
@@ -167,6 +180,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 SessionButtonColor = Brushes.LightGreen;
                 StatusText = "No active session for current patient.";
                 EmergencyBreakEnabled = "False";
+                StatusTextColor = Brushes.Azure;
             }
             else
             {
@@ -178,6 +192,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 SessionButtonColor = Brushes.Salmon;
                 StatusText = "Training is in progress for current patient.";
                 EmergencyBreakEnabled = "True";
+                StatusTextColor = Brushes.LightSalmon;
             }
             await ClientConn.SendJson(message);
         });
@@ -190,6 +205,13 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             JsonObject sessionStop = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
             JsonObject chatSend = DoctorFormat.ChatsSendMessage($"\t<<ACTIVATED THE EMERGENCY BREAK!>>", SelectedPatient.Name);
+
+            _sessionActive = false;
+            SessionButtonText = "Start";
+            SessionButtonColor = Brushes.LightGreen;
+            StatusText = "No active session for current patient.";
+            EmergencyBreakEnabled = "False";
+            StatusTextColor = Brushes.Azure;
 
             await ClientConn.SendJson(sessionStop);
 
