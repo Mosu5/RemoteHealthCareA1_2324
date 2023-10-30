@@ -1,6 +1,7 @@
 ﻿using DoctorWPFApp.MVVM.Model;
 using DoctorWPFApp.Networking;
 using Newtonsoft.Json;
+using PatientWPF.Utilities.Encryption;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,8 +49,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         public RelayCommand LoginCommand => new(async (execute) =>
         {
+
+            string hashedPass = Encryption.ComputeSha256Hash(_password);
+
             // Send the login command
-            JsonObject loginRequest = DoctorFormat.LoginMessage(_username, _password);
+            JsonObject loginRequest = DoctorFormat.LoginMessage(_username, hashedPass);
             await ClientConn.SendJson(loginRequest);
 
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PatientApp.DeviceConnection;
 using PatientApp.VrLogic;
+using PatientWPF.Utilities.Encryption;
 using PatientWPFApp.PatientLogic;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -39,7 +40,9 @@ namespace PatientWPFApp.MVVM.ViewModel
         public RelayCommand LoginCommand => new RelayCommand(async (execute) =>
         {
             // Send the login command
-            JObject loginRequest = PatientFormat.LoginMessage(_username, _password);
+            string hashedPassword = Encryption.ComputeSha256Hash(_password);
+            JObject loginRequest = PatientFormat.LoginMessage(_username, hashedPassword);
+
             // TODO fix server side issue of exception when incorrect credentials
             await ClientConn.SendJson(loginRequest);
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password));
@@ -117,14 +120,14 @@ namespace PatientWPFApp.MVVM.ViewModel
                 LogType.Debug
             );
 
-            // Initialize VR environment
-            Thread vrThread = new Thread(() =>
-            {
-                if (!VrProgram.Initialize().Result)
-                    MessageBox.Show("Could not load VR environment.\nCheck wether you are running NetworkEngine (sim.bat)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            });
-            vrThread.Start();
-            vrThread.Join();
+            //// Initialize VR environment
+            //Thread vrThread = new Thread(() =>
+            //{
+            //    if (!VrProgram.Initialize().Result)
+            //        MessageBox.Show("Could not load VR environment.\nCheck wether you are running NetworkEngine (sim.bat)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //});
+            //vrThread.Start();
+            //vrThread.Join();
 
             // Listen for requests
             Thread listenerThread = new Thread(async () => await RequestHandler.Listen());

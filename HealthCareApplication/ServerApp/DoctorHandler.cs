@@ -13,6 +13,8 @@ namespace ServerApp
     /// </summary>
     public class DoctorHandler
     {
+
+        public string command { get; set; }
         // Name of the patient
         public string PatientToRespondTo { get; set; }
 
@@ -22,7 +24,7 @@ namespace ServerApp
         public bool Handle(JsonObject packet)
         {
             // Get command and patient to send it to
-            string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
+            command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
             string userName = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
 
             // Error handling
