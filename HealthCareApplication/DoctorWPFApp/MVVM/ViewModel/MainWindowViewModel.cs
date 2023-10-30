@@ -345,7 +345,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             {
                 SelectedPatient.PatientDataCollection = patientDataList != null ? patientDataList : new();
 
-                patientDataList?.ForEach(patientData => patientData.Speed = Math.Round(patientData.Speed * 3.6, 1));
+                patientDataList?.ForEach(patientData => patientData.Speed = Math.Round(patientData.Speed, 1));
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
