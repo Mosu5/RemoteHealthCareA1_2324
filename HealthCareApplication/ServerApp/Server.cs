@@ -82,6 +82,12 @@ namespace ServerApp
                     // TODO is this correct? Not .ResponseToDoctor?
                     await ServerConn.SendJson(client, serverContext.ResponseToPatient);
 
+
+
+
+                    // Doctor needs a list of patients in the server send this before handling any commands
+                    await ServerConn.SendJson(_doctorClient, ResponseClientData.GenerateUsersInfo(Users));
+
                     return; // Close this thread since the doctor has another thread
                 }
 

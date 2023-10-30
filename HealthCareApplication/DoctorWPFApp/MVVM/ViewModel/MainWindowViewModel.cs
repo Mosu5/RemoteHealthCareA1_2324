@@ -343,6 +343,10 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         private void OnPatientsReceived(object? sender, string json)
         {
+
+            Application.Current.Dispatcher.Invoke(() => MessageBox.Show(json));
+            return;
+
             List<string> patientNames = JsonConvert.DeserializeObject<List<string>>(json);
             List<Patient> tempPatients = new List<Patient>();
             patientNames?.ForEach(patientName =>
