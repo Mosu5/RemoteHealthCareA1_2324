@@ -33,12 +33,13 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.SessionStopped += OnSessionStopped;
             RequestHandler.ReceivedSummary += OnSummaryReceived;
 
+            InitPlaceHolderData();
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
             EmergencyBreakEnabled = "False";
         }
 
-        private void RequestHandler_SessionStopped(object? sender, bool e)
+        private void SessionStopped(object? sender, bool e)
         {
             throw new NotImplementedException();
         }
@@ -51,9 +52,12 @@ namespace DoctorWPFApp.MVVM.ViewModel
             JsonObject loginRequest = DoctorFormat.LoginMessage(_username, _password);
             await ClientConn.SendJson(loginRequest);
 
-            InitPlaceHolderData(); // TODO remove when not needed anymore
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
 
+        public RelayCommand GetPatientListCommand => new(async (execute) =>
+        {
+            // TODO request patientList from server
+        });
 
         private bool _isSessionRunning = false;
         public RelayCommand StartStopSession => new(async (execute) =>
@@ -290,7 +294,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                SelectedPatient.Speed = stat.Speed;
+                SelectedPatient.Speed = Math.Round(stat.Speed * 3.6, 1);
                 SelectedPatient.Distance = stat.Distance;
                 SelectedPatient.HeartRate = stat.HeartRate;
                 OnPropertyChanged(nameof(SelectedPatient));
@@ -306,6 +310,8 @@ namespace DoctorWPFApp.MVVM.ViewModel
             Application.Current.Dispatcher.Invoke(() =>
             {
                 SelectedPatient.PatientDataCollection = patientDataList != null ? patientDataList : new();
+
+                patientDataList?.ForEach(patientData  => patientData.Speed = Math.Round(patientData.Speed * 3.6, 1));
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
@@ -375,5 +381,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             SelectedPatient = Patients[0];
             OnPropertyChanged(nameof(SelectedPatient));
         }
+
     }
 }

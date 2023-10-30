@@ -7,5 +7,6 @@ namespace DoctorWPFApp.MVVM.Model
         public double Speed { get; set; } = 0;
         public int Distance { get; set; } = 0;
         public byte HeartRate { get; set; } = 0;
+
     }
 }
