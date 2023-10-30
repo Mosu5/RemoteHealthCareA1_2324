@@ -230,16 +230,16 @@ namespace PatientApp.VrLogic
         /// </summary>
         public static async Task UpdateBikeSpeed(double speed)
         {
-            //if (!_vrConnected) return;
+            if (!_vrConnected) return;
 
-            //// Clear Panel
-            //await VrSession.ClearPanel();
+            // Clear Panel
+            await VrSession.ClearPanel();
 
-            ////// Add text to panel
-            //JObject text = await VrSession.AddText("Speed: " + Math.Round(speed * 3.6, 1) + "km/h");
-            //JObject swap = await VrSession.SwapPanel();
-            //string bikeId = await VrSession.GetNodeId("bike");
-            //await VrSession.UpdateSpeed(bikeId, speed);
+            //// Add text to panel
+            JObject text = await VrSession.AddText("Speed: " + Math.Round(speed * 3.6, 1) + "km/h");
+            JObject swap = await VrSession.SwapPanel();
+            string bikeId = await VrSession.GetNodeId("bike");
+            await VrSession.UpdateSpeed(bikeId, speed);
         }
     }
 }

@@ -20,6 +20,7 @@ namespace PatientWPF.MVVM.View
         private readonly LineSeries _heartRateGraph;
 
         private bool _sessionActive = false;
+        private bool _vrCanUpdate = true;
 
         public SessionWindow(string patientName)
         {
@@ -117,7 +118,7 @@ namespace PatientWPF.MVVM.View
             }
         }
 
-        private void OnReceiveData(object _, Statistic stat)
+        private async void OnReceiveData(object _, Statistic stat)
         {
             // Set speed to be km/h
             stat.Speed = Math.Round(stat.Speed * 3.6, 1);
@@ -131,9 +132,18 @@ namespace PatientWPF.MVVM.View
                 _speedGraph.Values.Add(stat.Speed);
                 _heartRateGraph.Values.Add((stat.HeartRate - 80) / 4);
             });
+            await ClientConn.SendJson(PatientFormat.StatsSendMessage(stat));
 
-            ClientConn.SendJson(PatientFormat.StatsSendMessage(stat)).Wait();
-            VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
+            Thread t = new Thread(() =>
+            {
+                if (_vrCanUpdate)
+                {
+                    _vrCanUpdate = false;
+                    VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
+                    _vrCanUpdate = true;
+                }
+            });
+            t.Start();
         }
 
         private async void OnSessionStarted(object _, bool __)
@@ -201,7 +211,6 @@ namespace PatientWPF.MVVM.View
         {
             JObject summaryMsg = PatientFormat.StatsSummaryMessage();
             await ClientConn.SendJson(summaryMsg);
-
         }
     }
 }
