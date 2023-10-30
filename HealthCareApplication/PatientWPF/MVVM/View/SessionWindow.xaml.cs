@@ -105,27 +105,21 @@ namespace PatientWPF.MVVM.View
 
         private void OnReceiveData(object _, Statistic stat)
         {
-            double speedKmH = Math.Round(stat.Speed * 3.6, 1);
+            // Set speed to be km/h
+            stat.Speed = Math.Round(stat.Speed * 3.6, 1);
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                CurrentSpeedText.Text = speedKmH.ToString();
-
-                int oldDistance = int.Parse(CurrentDistanceText.Text);
-                int newDistance = oldDistance + stat.Distance;
-                CurrentDistanceText.Text = newDistance.ToString();
-
+                CurrentSpeedText.Text = stat.Speed.ToString();
+                CurrentDistanceText.Text = stat.AccumulatedDistance.ToString();
                 CurrentHeartRateText.Text = stat.HeartRate.ToString();
 
-                _speedGraph.Values.Add(speedKmH);
+                _speedGraph.Values.Add(stat.Speed);
                 _heartRateGraph.Values.Add((stat.HeartRate - 80) / 4);
-
-                // Sending data in the same thread causes the UI thread to completely freeze
-                // To prevent this send data through a different thread
             });
 
             ClientConn.SendJson(PatientFormat.StatsSendMessage(stat)).Wait();
-            VrProgram.UpdateBikeSpeed(speedKmH).Wait();
+            VrProgram.UpdateBikeSpeed(stat.Speed).Wait();
         }
 
         private async void OnSessionStarted(object _, bool __)

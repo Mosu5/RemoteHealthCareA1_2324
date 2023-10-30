@@ -91,7 +91,7 @@ namespace PatientWPFApp.PatientLogic
             return BaseMessage("stats/send", new JObject()
             {
                 { "speed", statistic.Speed },
-                { "distance", statistic.Distance },
+                { "distance", statistic.AccumulatedDistance },
                 { "heartrate", statistic.HeartRate },
                 { "rrInterval", statistic.RrIntervals.ToString() }
             });

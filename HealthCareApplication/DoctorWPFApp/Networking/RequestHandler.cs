@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows;
@@ -41,9 +42,18 @@ namespace DoctorWPFApp.Networking
                         break;
                     case "stats/send":
                         JsonObject statObject = DoctorFormat.GetKey(dataObject, "stats").AsObject();
+
+                        JsonDocument jsonDoc = JsonDocument.Parse(statObject.ToString());
+
+                        // Get the decimal value from the JsonObject
+                        decimal originalValue = jsonDoc.RootElement.GetProperty("speed").GetDecimal();
+
+                        // Round the decimal value to two decimal places
+                        decimal roundedValue = Math.Round(originalValue / 3.6M, 2);
+
                         ReceivedStat?.Invoke(nameof(DoctorFormat), new Statistic
                         (
-                            double.Parse(DoctorFormat.GetKey(statObject, "speed").ToString()),
+                            (double)roundedValue,
                             int.Parse(DoctorFormat.GetKey(statObject, "distance").ToString()),
                             int.Parse(DoctorFormat.GetKey(statObject, "heartrate").ToString())
                         ));

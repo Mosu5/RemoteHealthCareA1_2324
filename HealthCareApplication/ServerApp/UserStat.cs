@@ -10,10 +10,10 @@ namespace ServerApp
     [Serializable] // Make class serializable so stats can be send easily to the doctor 
     public class UserStat
     {
-        public double speed { get; set; }
+        public float speed { get; set; }
         public int distance { get; set; }
         public byte heartrate { get; set; }
-        public UserStat(double speed, int distance, byte heartrate)
+        public UserStat(float speed, int distance, byte heartrate)
         {
             this.distance = distance;
             this.speed = speed;
