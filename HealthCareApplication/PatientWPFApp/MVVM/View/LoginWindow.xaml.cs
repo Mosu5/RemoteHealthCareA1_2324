@@ -23,6 +23,7 @@ namespace PatientWPFApp.View
     {
         public LoginWindow()
         {
+            throw new NotImplementedException("U r running the wrong project, use project PatientWPF instead!!!");
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
