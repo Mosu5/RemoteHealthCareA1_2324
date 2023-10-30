@@ -57,10 +57,10 @@ namespace PatientApp.VrLogic
             // Add a route
             PosVector[] posVectors = new PosVector[]
             {
-                    new PosVector(new int[] { -40, 0, -40 }, new int[] { 5, 0, 5 }),
-                    new PosVector(new int[] { -40, 0, 40 }, new int[] { 5, 0, -5 }),
-                    new PosVector(new int[] { 40, 0, 40 }, new int[] { -5, 0, 5 }),
-                    new PosVector(new int[] { 40, 0, -40 }, new int[] { -5, 0, -5 })
+                    new PosVector(new int[] { -40, 0, -40 }, new int[] { -30, 0, 30 }),
+                    new PosVector(new int[] { -40, 0, 40 }, new int[] { 30, 0, 30 }),
+                    new PosVector(new int[] { 40, 0, 40 }, new int[] { 30, 0, -30 }),
+                    new PosVector(new int[] { 40, 0, -40 }, new int[] { -30, 0, -30 })
             };
             JObject route = await VrSession.AddRoute(posVectors);
             Logger.Log($"Added a route: {route}", LogType.VrInfo);
@@ -99,42 +99,42 @@ namespace PatientApp.VrLogic
             // Add trees
             await VrSession.AddModelOnTerrain(
                  "tree",
-                 new Vector3(-30, 0, -1),
+                 new Vector3(-38, 0, -1),
                  1.9,
                  @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
                  0
             );
             await VrSession.AddModelOnTerrain(
                  "tree",
-                 new Vector3(-27, 0, -8),
+                 new Vector3(-32, 0, -8),
                  1.5,
                  @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
                  0
             );
             await VrSession.AddModelOnTerrain(
                  "tree",
-                 new Vector3(-31, 0, -19),
+                 new Vector3(-40, 0, -19),
                  2,
                  @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
                  0
             );
             await VrSession.AddModelOnTerrain(
                  "tree",
-                 new Vector3(-25, 0, -26),
+                 new Vector3(-30, 0, -26),
                  2.1,
                  @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
                  0
             );
             await VrSession.AddModelOnTerrain(
                  "tree",
-                 new Vector3(-30, 0, -34),
+                 new Vector3(-35, 0, -34),
                  1.7,
                  @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
                  0
             );
             await VrSession.AddModelOnTerrain(
                  "tree",
-                 new Vector3(-45, 0, 16),
+                 new Vector3(-52, 0, 16),
                  1.7,
                  @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
                  0
@@ -143,35 +143,35 @@ namespace PatientApp.VrLogic
             // Add houses
             await VrSession.AddModelOnTerrain(
                  "house",
-                 new Vector3(-52, 0, 25),
+                 new Vector3(-59, 0, 25),
                  9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  90
             );
             await VrSession.AddModelOnTerrain(
                  "house",
-                 new Vector3(-49, 0, -5),
+                 new Vector3(-59, 0, -5),
                  9,
                  @"data\NetworkEngine\models\houses\set1\house7.obj",
                  90
             );
             await VrSession.AddModelOnTerrain(
                  "house",
-                 new Vector3(-52, 0, -35),
+                 new Vector3(-59, 0, -35),
                  9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  90
             );
             await VrSession.AddModelOnTerrain(
                  "house",
-                 new Vector3(0, 0, 50),
+                 new Vector3(0, 0, 60),
                  9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  180
             );
             await VrSession.AddModelOnTerrain(
                  "house",
-                 new Vector3(30, 0, 50),
+                 new Vector3(27, 0, 58),
                  9,
                  @"data\NetworkEngine\models\houses\set1\house7.obj",
                  180
@@ -192,7 +192,7 @@ namespace PatientApp.VrLogic
             );
             await VrSession.AddModelOnTerrain(
                  "house",
-                 new Vector3(-10, 0, 28),
+                 new Vector3(-10, 0, 35),
                  9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  0
@@ -208,14 +208,14 @@ namespace PatientApp.VrLogic
             // Add cars
             await VrSession.AddModelOnTerrain(
                  "car",
-                 new Vector3(-35, 0, -11),
+                 new Vector3(-42, 0, -11),
                  1.4,
                  @"data\NetworkEngine\models\cars\generic\black.obj",
                  0
              );
             await VrSession.AddModelOnTerrain(
                  "car",
-                 new Vector3(-12, 0, 45),
+                 new Vector3(-12, 0, 52),
                  1.4,
                  @"data\NetworkEngine\models\cars\generic\white.obj",
                  90

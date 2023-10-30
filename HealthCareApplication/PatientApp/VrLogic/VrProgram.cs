@@ -57,10 +57,17 @@ namespace PatientApp.VrLogic
             // Add a route
             PosVector[] posVectors = new PosVector[]
             {
-                    new PosVector(new int[] { -40, 0, -40 }, new int[] { 5, 0, 5 }),
-                    new PosVector(new int[] { -40, 0, 40 }, new int[] { 5, 0, -5 }),
-                    new PosVector(new int[] { 40, 0, 40 }, new int[] { -5, 0, 5 }),
-                    new PosVector(new int[] { 40, 0, -40 }, new int[] { -5, 0, -5 })
+                    // turn 1
+                    new PosVector(new int[] { -40, 0, -40 }, new int[] { 0, 0, 0 }),
+
+                    //turn 2
+                    new PosVector(new int[] { -40, 0, 40 }, new int[] { 0, 0, 0 }),
+
+                    //turn 3
+                    new PosVector(new int[] { 40, 0, 40 }, new int[] { 0, 0, 0 }),
+
+                    // turn 4
+                    new PosVector(new int[] { 40, 0, -40 }, new int[] { 0, 0, 0 })
             };
             JsonObject route = await VrSession.AddRoute(posVectors);
             Logger.Log($"Added a route: {route}", LogType.VrInfo);
@@ -143,7 +150,7 @@ namespace PatientApp.VrLogic
             // Add houses
             await VrSession.AddModelOnTerrain(
                  "house",
-                 new Vector3(-52, 0, 25),
+                 new Vector3(-56, 0, 25),
                  9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  90
@@ -157,7 +164,7 @@ namespace PatientApp.VrLogic
             );
             await VrSession.AddModelOnTerrain(
                  "house",
-                 new Vector3(-52, 0, -35),
+                 new Vector3(-56, 0, -35),
                  9,
                  @"data\NetworkEngine\models\houses\set1\house6.obj",
                  90
