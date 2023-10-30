@@ -13,7 +13,6 @@ namespace PatientApp.VrLogic
     {
         private static double _initialBikeSpeed = 0;
         private static bool _vrConnected = false;
-        private static Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
         /// Builds the entire VR environment. Takes a while to complete.
@@ -232,15 +231,6 @@ namespace PatientApp.VrLogic
         public static async Task UpdateBikeSpeed(double speed)
         {
             if (!_vrConnected) return;
-
-            if (!_stopwatch.IsRunning)
-            {
-                _stopwatch.Start();
-                return;
-            }
-            else if (_stopwatch.ElapsedMilliseconds < 5000) return;
-
-            _stopwatch.Reset();
 
             // Clear Panel
             await VrSession.ClearPanel();

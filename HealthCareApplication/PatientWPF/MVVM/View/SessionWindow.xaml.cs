@@ -105,9 +105,10 @@ namespace PatientWPF.MVVM.View
 
         private void OnReceiveData(object _, Statistic stat)
         {
+            double speedKmH = Math.Round(stat.Speed * 3.6, 1);
+
             Application.Current.Dispatcher.Invoke(() =>
             {
-                double speedKmH = Math.Round(stat.Speed * 3.6, 1);
                 CurrentSpeedText.Text = speedKmH.ToString();
 
                 int oldDistance = int.Parse(CurrentDistanceText.Text);
@@ -121,13 +122,10 @@ namespace PatientWPF.MVVM.View
 
                 // Sending data in the same thread causes the UI thread to completely freeze
                 // To prevent this send data through a different thread
-                Thread bikeSpeedThread = new Thread(() =>
-                {
-                    VrProgram.UpdateBikeSpeed(speedKmH).Wait();
-                    ClientConn.SendJson(PatientFormat.StatsSendMessage(stat)).Wait();
-                });
-                bikeSpeedThread.Start();
             });
+
+            ClientConn.SendJson(PatientFormat.StatsSendMessage(stat)).Wait();
+            VrProgram.UpdateBikeSpeed(speedKmH).Wait();
         }
 
         private async void OnSessionStarted(object _, bool __)
