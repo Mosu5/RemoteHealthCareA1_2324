@@ -45,9 +45,7 @@ namespace ServerApp.States
             {
                 _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/stop", null, "ok");
 
-                // Reset response to doctor. This prevents previous messages to be sent in the wrong context
-                _context.ResponseToDoctor = null;
-                //_context.ResponseToDoctor = ResponseClientData.GenerateDoctorResponse("session/stop", null, _context.GetUserAccount().GetUserName());
+                _context.ResponseToDoctor = ResponseClientData.GenerateDoctorResponse("session/stop", null, _context.GetUserAccount().GetUserName());
 
                 // Returns Session Idle, we only want to execute in the stopped state and imediatly go to the next state
                 return new SessionStoppedState(_context).Handle(null); 

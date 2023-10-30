@@ -36,6 +36,13 @@ namespace ServerApp
 
         public void SaveUserStats(string jsonData)
         {
+            JsonElement root;
+            using (JsonDocument document = JsonDocument.Parse(jsonData))
+            {
+                // Access the root element of the JSON document
+                root = document.RootElement;
+            }
+
             string runTimeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string correctPath = Path.Combine(runTimeDirectory, this._username + @"-stats.json");
 
