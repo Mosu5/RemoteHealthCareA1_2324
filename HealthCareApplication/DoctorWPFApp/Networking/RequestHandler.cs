@@ -11,6 +11,7 @@ namespace DoctorWPFApp.Networking
     {
         // Doctor ViewModel events
         public static event EventHandler<bool>? LoggedIn;
+        public static event EventHandler<string>? ReceivedPatients;
         public static event EventHandler<Statistic>? ReceivedStat;
         public static event EventHandler<string>? ReceivedChat;
         public static event EventHandler<string>? ReceivedSummary;
@@ -37,6 +38,11 @@ namespace DoctorWPFApp.Networking
                         bool loggedIn = DoctorFormat.GetKey(dataObject, "status").ToString().Equals("ok");
                         LoggedIn?.Invoke(nameof(RequestHandler), loggedIn);
                         break;
+                    case "session/getUsers":
+                        string receivedPatients = DoctorFormat.GetKey(dataObject, "patients").ToString();
+                        ReceivedPatients?.Invoke(nameof(RequestHandler), receivedPatients);
+                        break;
+
                     case "chats/send":
                         ReceivedChat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "message").ToString());
                         break;

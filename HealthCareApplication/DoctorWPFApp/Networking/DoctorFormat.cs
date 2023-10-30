@@ -36,6 +36,10 @@ namespace DoctorWPFApp.Networking
             });
         }
 
+        public static JsonObject GetPatientsMessage()
+        {
+            return BaseMessage("session/getUsers", new JsonObject());
+        }
         public static JsonObject SessionStartMessage(string patientName)
         {
             return BaseMessage("session/start", new JsonObject() { { "username", patientName } });
