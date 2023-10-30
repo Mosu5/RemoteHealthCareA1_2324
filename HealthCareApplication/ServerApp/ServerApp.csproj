@@ -81,6 +81,7 @@
     <Compile Include="Commands\SessionStop.cs" />
     <Compile Include="Commands\Summary.cs" />
     <Compile Include="ResponseDataForClient.cs" />
+    <Compile Include="SerializedUsers.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerContext.cs" />

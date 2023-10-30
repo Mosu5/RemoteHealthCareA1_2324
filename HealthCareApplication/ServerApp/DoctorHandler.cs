@@ -65,10 +65,6 @@ namespace ServerApp
                     string value = JsonUtil.GetValueFromPacket(packet, "data", "value").ToString();
                     ResponseValue = ResponseClientData.GenerateResistanceMessage(value);
                     break;
-                case "session/getUsers":
-                    var usernameList = Server.Users.ForEach(user => user.GetUserName().To) ;
-                    ResponseValue = new JsonObject() { { "command", "session/getUsers" }, { "data", new JsonObject() { { "users", usernameLisy } } } };
-                    break;
             }
             return true;
         }
