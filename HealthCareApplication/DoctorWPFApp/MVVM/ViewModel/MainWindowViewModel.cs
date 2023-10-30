@@ -37,7 +37,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.ReceivedSummary += OnSummaryReceived;
             RequestHandler.ReceivedPatients += OnPatientsReceived;
 
-            InitPlaceHolderData();
+            //InitPlaceHolderData();
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
             EmergencyBreakEnabled = "False";
@@ -440,33 +440,33 @@ namespace DoctorWPFApp.MVVM.ViewModel
         /// <summary>
         /// TODO remove when it is not needed anymore; this is a temporary method for sample user data.
         /// </summary>
-        private void InitPlaceHolderData()
-        {
-            Patients = new ObservableCollection<Patient>
-            {
-                new Patient
-                {
-                    Name = "bob",
-                    Speed = 0,
-                    Distance = 0,
-                    HeartRate = 0,
-                    ChatMessages = new ObservableCollection<string>(),
-                    PatientDataCollection = new List<PatientData>()
-                },
-                new Patient
-                {
-                    Name = "jan",
-                    Speed = 0,
-                    Distance = 0,
-                    HeartRate = 0,
-                    ChatMessages = new ObservableCollection<string>()
-                }
-            };
-            OnPropertyChanged(nameof(Patients));
+        //private void InitPlaceHolderData()
+        //{
+        //    Patients = new ObservableCollection<Patient>
+        //    {
+        //        new Patient
+        //        {
+        //            Name = "bob",
+        //            Speed = 0,
+        //            Distance = 0,
+        //            HeartRate = 0,
+        //            ChatMessages = new ObservableCollection<string>(),
+        //            PatientDataCollection = new List<PatientData>()
+        //        },
+        //        new Patient
+        //        {
+        //            Name = "jan",
+        //            Speed = 0,
+        //            Distance = 0,
+        //            HeartRate = 0,
+        //            ChatMessages = new ObservableCollection<string>()
+        //        }
+        //    };
+        //    OnPropertyChanged(nameof(Patients));
 
-            SelectedPatient = Patients[0];
-            OnPropertyChanged(nameof(SelectedPatient));
-        }
+        //    SelectedPatient = Patients[0];
+        //    OnPropertyChanged(nameof(SelectedPatient));
+        //}
 
     }
 }
