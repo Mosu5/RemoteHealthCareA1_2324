@@ -1,4 +1,5 @@
-﻿using ServerApp.States;
+﻿using Newtonsoft.Json;
+using ServerApp.States;
 using System;
 using System.Runtime.Remoting.Contexts;
 using System.Text.Json.Nodes;
@@ -63,6 +64,10 @@ namespace ServerApp
                 case "resistance/set":
                     string value = JsonUtil.GetValueFromPacket(packet, "data", "value").ToString();
                     ResponseValue = ResponseClientData.GenerateResistanceMessage(value);
+                    break;
+                case "session/getUsers":
+                    var usernameList = Server.Users.ForEach(user => user.GetUserName().To) ;
+                    ResponseValue = new JsonObject() { { "command", "session/getUsers" }, { "data", new JsonObject() { { "users", usernameLisy } } } };
                     break;
             }
             return true;
