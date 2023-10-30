@@ -93,6 +93,9 @@ namespace PatientWPFApp.MVVM.ViewModel
 
         public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
         {
+            PatientChats.Add($"<<You activated the emergency break.>>");
+            OnPropertyChanged(nameof(PatientChats));
+
             JObject sessionStop = PatientFormat.SessionStopMessage();
             JObject chatSend = PatientFormat.ChatsSendMessage($"\t<<ACTIVATED THE EMERGENCY BREAK!>>");
 

@@ -184,6 +184,10 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
         public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
         {
+            EmergencyBreakEnabled = "False";
+            SelectedPatient.ChatMessages.Add($"<<You activated the emergency break.>>");
+            OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
+
             JsonObject sessionStop = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
             JsonObject chatSend = DoctorFormat.ChatsSendMessage($"\t<<ACTIVATED THE EMERGENCY BREAK!>>", SelectedPatient.Name);
 
