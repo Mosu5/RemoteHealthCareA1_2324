@@ -32,7 +32,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
             bool connected = await PairDevice(
                 _bleTrainer,
-                "Tacx Flux 01140",
+                "Tacx Flux 00438",
                 "6e40fec1-b5a3-f393-e0a9-e50e24dcca9e",
                 "6e40fec2-b5a3-f393-e0a9-e50e24dcca9e"
             );
@@ -43,7 +43,10 @@ namespace PatientApp.DeviceConnection.Receiver
 
                 // Subscribe to trainer events from the EmulatedReceiver class, so that whenever the EmulatedReceiver's
                 // events fire, this class's corresponding events will fire as well.
-                _emulatedReceiver.ConnectedToTrainer += (sender, _) => ConnectedToTrainer?.Invoke(sender, false);
+                _emulatedReceiver.ConnectedToTrainer += (sender, _) =>
+                {
+                    ConnectedToTrainer?.Invoke(sender, false);
+                };
                 _emulatedReceiver.ReceivedSpeed += (sender, speed) => ReceivedSpeed?.Invoke(sender, speed);
                 _emulatedReceiver.ReceivedDistance += (sender, distance) => ReceivedDistance?.Invoke(sender, distance);
 
@@ -104,25 +107,19 @@ namespace PatientApp.DeviceConnection.Receiver
         /// <returns>Wether the device has paired successfully</returns>
         private async Task<bool> PairDevice(BLE bleDevice, string deviceName, string serviceName, string characteristicName)
         {
-            int errorCode;
-            int connectionAttempts = 0;
+            int errorCode = 14000;
 
-            // Attempt to connect until the maximum amount of attempts is reached
-            do
+            Thread t = new Thread(async () =>
             {
-                if (connectionAttempts == _maxConnectionAttempts) return false;
-                connectionAttempts++;
-
-                errorCode = await bleDevice.OpenDevice(deviceName);
-            } while (errorCode != 0);
-
-            // Setting one of the device's services
-            errorCode = await bleDevice.SetService(serviceName);
-            if (errorCode != 0) return false;
-
-            // Subscribing to one of the device's characteristics
-            errorCode = await bleDevice.SubscribeToCharacteristic(characteristicName);
-            if (errorCode != 0) return false;
+                errorCode = await bleDevice.OpenDevice("Tacx Flux 00438");
+                if (errorCode != 0) return;
+                errorCode = await bleDevice.SetService(serviceName);
+                if (errorCode != 0) return;
+                errorCode = await bleDevice.SubscribeToCharacteristic(characteristicName);
+                if (errorCode != 0) return;
+            });
+            t.Start();
+            t.Join();
 
             return true;
         }

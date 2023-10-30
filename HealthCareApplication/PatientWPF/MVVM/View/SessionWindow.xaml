@@ -63,7 +63,7 @@
                 <TextBlock Name="DeviceConnectivityText" Text="Loading..." Grid.Row="6" Grid.Column="1" Margin="15,10,0,5"/>
 
                 <!-- Exit program -->
-                <Button Name="StopExitButton" Click="StopExitButton_Click" Content="Stop and exit program" Grid.Row="7" Grid.ColumnSpan="2" Background=" #FAA0A0" HorizontalAlignment="Center" Padding="15,5" Margin="0 30" FontWeight="DemiBold" />
+                <Button Name="StopExitButton" Click="StopExitButton_Click" Content="Stop and exit program" Grid.Row="7" Grid.ColumnSpan="2" Background=" #FAA0A0" HorizontalAlignment="Center" Padding="15,5" Margin="0 20" FontWeight="DemiBold" />
             </Grid>
         </Border>
         

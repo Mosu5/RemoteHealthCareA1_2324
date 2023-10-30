@@ -23,8 +23,7 @@ namespace PatientApp.DeviceConnection
         /// </summary>
         public static async Task Initialize()
         {
-            // Change to BLEReceiver in production
-            Receiver = new EmulatedReceiver();
+            Receiver = new BLEReceiver();
 
             // Subscribe to the receiver's events.
             Receiver.ReceivedSpeed += OnReceiveSpeed;
@@ -33,7 +32,7 @@ namespace PatientApp.DeviceConnection
             Receiver.ReceivedRrIntervals += OnReceiveRrIntervals;
 
             Receiver.ConnectedToTrainer += OnDeviceConnected;
-            Receiver.ConnectedToHrm += OnDeviceConnected;
+            //Receiver.ConnectedToHrm += OnDeviceConnected;
 
             await Receiver.ConnectToTrainer();
             await Receiver.ConnectToHrm();

@@ -24,14 +24,14 @@ namespace PatientApp.DeviceConnection
         {
             Speed = -1;
             _distance = -1;
-            HeartRate = -1;
+            HeartRate = 0;
             RrIntervals = new int[0];
         }
 
         public bool IsComplete()
         {
-            return Speed != -1 && Distance != -1 &&
-                HeartRate != -1 && RrIntervals != new int[0];
+            return Speed != -1 && Distance != -1;
+                //&& HeartRate != -1 && RrIntervals != new int[0];
         }
     }
 }
