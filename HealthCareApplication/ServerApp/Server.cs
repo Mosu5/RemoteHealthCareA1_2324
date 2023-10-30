@@ -1,6 +1,8 @@
+using PatientWPF.Utilities.Encryption;
 using ServerApp.States;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.Sockets;
 using System.Text.Json.Nodes;
 using System.Threading;
@@ -13,10 +15,10 @@ namespace ServerApp
         // All user accounts
         public static List<UserAccount> Users = new List<UserAccount>()
         {
-            new UserAccount("bob", "bob"),
-            new UserAccount("jan", "jan"),
-            new UserAccount("eren", "eren"),
-            new UserAccount("abc", "abc")
+            new UserAccount("bob", Encryption.ComputeSha256Hash("bob")),
+            new UserAccount("jan", Encryption.ComputeSha256Hash("jan")),
+            new UserAccount("eren", Encryption.ComputeSha256Hash("eren")),
+            new UserAccount("abc", Encryption.ComputeSha256Hash("abc"))
         };
 
         // TODO add possibility of multiple doctors connected at the same time
@@ -25,9 +27,15 @@ namespace ServerApp
         public static async Task Main(string[] args)
         {
             // Proof of concept, uitbreinding/refining later mogelijk
-            UserAccount doctor = new UserAccount("dokter", "simon");
+            UserAccount doctor = new UserAccount("dokter", Encryption.ComputeSha256Hash("simon"));
             doctor.IsDoctor = true;
             Users.Add(doctor);
+
+            foreach (var user in Users) 
+            {
+                    user.GetPassword();
+                
+            }
 
             // Start up listener for incoming connections
             ServerConn.StartListener("127.0.0.1", 8888);
@@ -73,6 +81,12 @@ namespace ServerApp
                     // Send the response of the client
                     // TODO is this correct? Not .ResponseToDoctor?
                     await ServerConn.SendJson(client, serverContext.ResponseToPatient);
+
+
+
+
+                    // Doctor needs a list of patients in the server send this before handling any commands
+                    await ServerConn.SendJson(_doctorClient, ResponseClientData.GenerateUsersInfo(Users));
 
                     return; // Close this thread since the doctor has another thread
                 }

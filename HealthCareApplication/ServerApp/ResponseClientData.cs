@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,25 @@ namespace ServerApp
                  {"command",command },
                  {"data", data }
              };
+
+        }
+
+        public static JsonObject GenerateUsersInfo(List<UserAccount> users)
+        {
+            List<string> names = new List<string>();
+            foreach (UserAccount userAcc in users)
+            {
+                names.Add(userAcc.GetUserName());
+            }
+
+            SerializedUsers serializedUsers = new SerializedUsers(names);
+
+            JsonObject jsonUsersObj = System.Text.Json.JsonSerializer.Deserialize<JsonObject>(System.Text.Json.JsonSerializer.Serialize(serializedUsers));
+            return new JsonObject()
+            {
+                {"command", "session/getUsers" },
+                {"data", new JsonObject(){{"patients", jsonUsersObj } } }
+            };
 
         }
 

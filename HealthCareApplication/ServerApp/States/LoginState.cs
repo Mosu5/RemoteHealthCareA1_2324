@@ -25,9 +25,11 @@ namespace ServerApp.States
         {
             //extracting the needed values from packet
             string username = JsonUtil.GetValueFromPacket(packet, "data", "username").ToString();
-            string password = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();
+            string hashedPassword = JsonUtil.GetValueFromPacket(packet, "data", "password").ToString();
+            
 
-            Console.WriteLine($"A client attempted to login with username '{username}' and password '{password}'");
+
+            Console.WriteLine($"A client attempted to login with username '{username}' and password '{hashedPassword}'");
 
             // If the list of users is not empty
             if (Server.Users.Any())
@@ -35,7 +37,7 @@ namespace ServerApp.States
                 // Loop through user accounts to see which one's credentials matches the credentials sent by the client.
                 foreach (UserAccount account in Server.Users)
                 {
-                    if (account.GetUserName() == username && account.GetPassword() == password)
+                    if (account.GetUserName() == username && account.GetPassword() == hashedPassword)
                     {
                         // Bind a user account to this client
                         _context.SetNewUser(account);
