@@ -28,8 +28,8 @@
         <Border BorderBrush="SkyBlue" Grid.Column="0" Grid.Row="1" BorderThickness="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" CornerRadius="20" Margin="10,10,5,10">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -47,7 +47,7 @@
 
                 <!-- Patient name -->
                 <TextBlock Text="Selected patient" Grid.Row="1" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,0,0,5"/>
-                <ComboBox Name="PatientSelection" Grid.Row="2" Margin="15,0,89,15" Grid.ColumnSpan="2" ItemsSource="{Binding Patients}" SelectedItem="{Binding SelectedPatient, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox Name="PatientSelection" Grid.Row="2" Margin="15,0,10,15" Grid.ColumnSpan="2" ItemsSource="{Binding Patients}" SelectedItem="{Binding SelectedPatient, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>
@@ -68,7 +68,6 @@
                 <!-- Exit program -->
                 <Button Name="StopExitButton" Command="{Binding StopExitCommand}" Click="StopExitButton_Click" Content="Stop and exit program" Grid.Row="7" Grid.ColumnSpan="2" Background=" #FAA0A0" HorizontalAlignment="Left" Padding="15,5" Margin="47,44,0,16" FontWeight="DemiBold" />
                 <Button Name="GetSummaryButton" Content="Get Summary" Command="{Binding GetSummaryCommand}" HorizontalAlignment="Left" Margin="47,5,0,0" Grid.Row="7" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="154" Height="22"/>
-                <Button Grid.Column="1" Content="Get Patients" Command="{Binding GetPatientListCommand}" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="-0.087,-0.251" Height="22" Width="80" Margin="39,0,0,0"/>
             </Grid>
         </Border>
 
