@@ -18,9 +18,6 @@ namespace DoctorWPFApp.MVVM.View
         public SessionWindowD()
         {
             InitializeComponent();
-
-            RequestHandler.SessionStarted += OnSessionStarted;
-            RequestHandler.SessionStopped += OnSessionStopped;
         }
 
         private void ChatsBtn_Click(object sender, RoutedEventArgs e)
@@ -38,37 +35,6 @@ namespace DoctorWPFApp.MVVM.View
             // Small delay to wait for MainWindowViewModel to send stop message, etc.
             await Task.Delay(500);
             Close();
-        }
-
-        private void OnSessionStarted(object? _, bool __)
-        {
-            // Method gets called on a different thread than the current UI thread.
-            // Therefore invoke this method within a lambda to make it possible
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                if (_sessionActive) return;
-
-                // Start a new session
-                _sessionActive = true;
-                ToggleSessionButton.Content = "Stop";
-                ToggleSessionButton.Background = Brushes.Salmon;
-            });
-        }
-
-        private void OnSessionStopped(object? _, bool __)
-        {
-            // Method gets called on a different thread than the current UI thread.
-            // Therefore invoke this method within a lambda to make it possible
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                if (!_sessionActive) return;
-
-                // Stop the session
-                _sessionActive = false;
-
-                ToggleSessionButton.Content = "Start";
-                ToggleSessionButton.Background = Brushes.LightGreen;
-            });
         }
     }
 }

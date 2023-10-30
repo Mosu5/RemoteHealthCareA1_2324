@@ -30,9 +30,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.LoggedIn += OnLoginResponse;
             RequestHandler.ReceivedStat += OnStatReceived;
             RequestHandler.ReceivedChat += OnChatReceived;
+            RequestHandler.SessionStarted += OnSessionStarted;
             RequestHandler.SessionStopped += OnSessionStopped;
             RequestHandler.ReceivedSummary += OnSummaryReceived;
             RequestHandler.ReceivedPatients += OnPatientsReceived;
+
             InitPlaceHolderData();
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
@@ -374,9 +376,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             });
         }
 
-
-
-
         private void OnSummaryReceived(object? sender, string json)
         {
             var patientDataList = JsonConvert.DeserializeObject<List<PatientData>>(json);
@@ -398,11 +397,44 @@ namespace DoctorWPFApp.MVVM.ViewModel
             });
         }
 
-
-        private async void OnSessionStopped(object? sender, bool sessionStopped)
+        private void OnSessionStarted(object? sender, bool sessionStopped)
         {
-            JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
-            await ClientConn.SendJson(summaryRequest);
+            // Method gets called on a different thread than the current UI thread.
+            // Therefore invoke this method within a lambda to make it possible
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (_sessionActive) return;
+
+                // Start a new session
+                _sessionActive = true;
+                SessionButtonText = "Stop";
+                SessionButtonColor = Brushes.Salmon;
+                EmergencyBreakEnabled = "True";
+                StatusText = "Training is in progress for current patient.";
+                StatusTextColor = Brushes.LightSalmon;
+            });
+        }
+
+        private void OnSessionStopped(object? sender, bool sessionStopped)
+        {
+            // Method gets called on a different thread than the current UI thread.
+            // Therefore invoke this method within a lambda to make it possible
+            Application.Current.Dispatcher.Invoke(async () =>
+            {
+                if (!_sessionActive) return;
+
+                // Stop the session
+                _sessionActive = false;
+
+                SessionButtonText = "Start";
+                SessionButtonColor = Brushes.LightGreen;
+                EmergencyBreakEnabled = "False";
+                StatusText = "No active session for current patient.";
+                StatusTextColor = Brushes.Azure;
+
+                JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
+                await ClientConn.SendJson(summaryRequest);
+            });
         }
 
         #endregion
@@ -417,38 +449,21 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 new Patient
                 {
                     Name = "bob",
-                    Speed = 1,
-                    Distance = 1,
-                    HeartRate = 1,
-                    ChatMessages = new ObservableCollection<string> { "Bob: bro stop ik krijg hartaanval", "Bob: fdsfdsfdsf", "Bob: dfsdffdfsdf" },
-                    PatientDataCollection = new List<PatientData> {
-                        new PatientData
-                        {
-
-                            Speed = 1,
-                           Distance = 1,
-                            HeartRate = 1,
-                        },
-                        new PatientData
-                        {
-                            Speed = 1,
-                            Distance = 1,
-                            HeartRate = 1,
-                        },
-                    }
-
+                    Speed = 0,
+                    Distance = 0,
+                    HeartRate = 0,
+                    ChatMessages = new ObservableCollection<string>(),
+                    PatientDataCollection = new List<PatientData>()
                 },
-
                 new Patient
                 {
                     Name = "jan",
-                    Speed = 2,
-                    Distance = 5,
-                    HeartRate = 3,
-                    ChatMessages = new ObservableCollection<string> { "Jan: wanneer beginnen we?" }
+                    Speed = 0,
+                    Distance = 0,
+                    HeartRate = 0,
+                    ChatMessages = new ObservableCollection<string>()
                 }
             };
-
             OnPropertyChanged(nameof(Patients));
 
             SelectedPatient = Patients[0];
