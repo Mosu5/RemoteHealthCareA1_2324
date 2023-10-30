@@ -9,10 +9,8 @@ namespace PatientApp.DeviceConnection.Receiver
 {
     public class BLEReceiver : IReceiver
     {
-        public event EventHandler<EventArgs> ConnectedToTrainer;
-        public event EventHandler<EventArgs> DisconnectedFromTrainer;
-        public event EventHandler<EventArgs> ConnectedToHrm;
-        public event EventHandler<EventArgs> DisconnectedFromHrm;
+        public event EventHandler<bool> ConnectedToTrainer;
+        public event EventHandler<bool> ConnectedToHrm;
 
         public event EventHandler<double> ReceivedSpeed;
         public event EventHandler<int> ReceivedDistance;
@@ -45,8 +43,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
                 // Subscribe to trainer events from the EmulatedReceiver class, so that whenever the EmulatedReceiver's
                 // events fire, this class's corresponding events will fire as well.
-                _emulatedReceiver.ConnectedToTrainer += (sender, _) => ConnectedToTrainer?.Invoke(sender, EventArgs.Empty);
-                _emulatedReceiver.DisconnectedFromTrainer += (sender, _) => DisconnectedFromTrainer?.Invoke(sender, EventArgs.Empty);
+                _emulatedReceiver.ConnectedToTrainer += (sender, _) => ConnectedToTrainer?.Invoke(sender, false);
                 _emulatedReceiver.ReceivedSpeed += (sender, speed) => ReceivedSpeed?.Invoke(sender, speed);
                 _emulatedReceiver.ReceivedDistance += (sender, distance) => ReceivedDistance?.Invoke(sender, distance);
 
@@ -60,7 +57,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
             // Signaling successful connection
             _trainerConnected = true;
-            ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
+            ConnectedToTrainer?.Invoke(this, true);
         }
 
         /// <summary>
@@ -86,8 +83,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
                 // Subscribe to heart rate monitor events from the EmulatedReceiver class, so that whenever the EmulatedReceiver's
                 // events fire, this class's corresponding events will fire as well.
-                _emulatedReceiver.ConnectedToHrm += (sender, _) => ConnectedToHrm?.Invoke(sender, EventArgs.Empty);
-                _emulatedReceiver.DisconnectedFromHrm += (sender, _) => DisconnectedFromHrm?.Invoke(sender, EventArgs.Empty);
+                _emulatedReceiver.ConnectedToHrm += (sender, _) => ConnectedToHrm?.Invoke(sender, false);
                 _emulatedReceiver.ReceivedHeartRate += (sender, heartRate) => ReceivedHeartRate?.Invoke(sender, heartRate);
                 _emulatedReceiver.ReceivedRrIntervals += (sender, rrInterval) => ReceivedRrIntervals?.Invoke(sender, rrInterval);
 
@@ -99,7 +95,7 @@ namespace PatientApp.DeviceConnection.Receiver
             bleHrm.SubscriptionValueChanged += ReceivedHrmMessage;
 
             // Signaling successful connection
-            ConnectedToHrm?.Invoke(this, EventArgs.Empty);
+            ConnectedToHrm?.Invoke(this, true);
         }
 
         /// <summary>

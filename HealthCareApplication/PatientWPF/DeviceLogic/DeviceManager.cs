@@ -9,6 +9,7 @@ namespace PatientApp.DeviceConnection
     {
         private static Statistic _currentStat = new Statistic(); // changed to static for hooking and unhooking delegates from events
         public static EventHandler<Statistic> OnReceiveData; // changed to static for hooking and unhooking delegates from events
+        public static EventHandler<bool> DeviceConnected;
 
         public static IReceiver Receiver;
 
@@ -31,10 +32,18 @@ namespace PatientApp.DeviceConnection
             Receiver.ReceivedHeartRate += OnReceiveHeartRate;
             Receiver.ReceivedRrIntervals += OnReceiveRrIntervals;
 
+            Receiver.ConnectedToTrainer += OnDeviceConnected;
+            Receiver.ConnectedToHrm += OnDeviceConnected;
+
             await Receiver.ConnectToTrainer();
             await Receiver.ConnectToHrm();
 
             Logger.Log("Trainer and heart rate monitor have been initialized.", LogType.GeneralInfo);
+        }
+
+        private static void OnDeviceConnected(object sender, bool isBle)
+        {
+            DeviceConnected?.Invoke(nameof(DeviceManager), isBle);
         }
 
         private static void OnReceiveSpeed(object sender, double speed)
@@ -85,7 +94,6 @@ namespace PatientApp.DeviceConnection
                 OnReceiveData?.Invoke(typeof(DeviceManager), _currentStat);
                 _currentStat = new Statistic();
             }
-
         }
     }
 }

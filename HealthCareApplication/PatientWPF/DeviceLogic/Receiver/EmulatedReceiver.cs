@@ -8,10 +8,8 @@ namespace PatientApp.DeviceConnection.Receiver
 {
     public class EmulatedReceiver : IReceiver
     {
-        public event EventHandler<EventArgs> ConnectedToTrainer;
-        public event EventHandler<EventArgs> DisconnectedFromTrainer;
-        public event EventHandler<EventArgs> ConnectedToHrm;
-        public event EventHandler<EventArgs> DisconnectedFromHrm;
+        public event EventHandler<bool> ConnectedToTrainer;
+        public event EventHandler<bool> ConnectedToHrm;
 
         public event EventHandler<double> ReceivedSpeed;
         public event EventHandler<int> ReceivedHeartRate;
@@ -53,7 +51,7 @@ namespace PatientApp.DeviceConnection.Receiver
         public async Task ConnectToTrainer()
         {
             // Emulate a successful connection
-            ConnectedToTrainer?.Invoke(this, EventArgs.Empty);
+            ConnectedToTrainer?.Invoke(this, false);
 
             // Emulate the trainer on a new thread
             var thread = new Thread(() =>
@@ -74,7 +72,7 @@ namespace PatientApp.DeviceConnection.Receiver
         public async Task ConnectToHrm()
         {
             // Signaling successful connection
-            ConnectedToHrm?.Invoke(this, EventArgs.Empty);
+            ConnectedToHrm?.Invoke(this, false);
 
             // Emulate the trainer on a new thread
             var thread = new Thread(() =>

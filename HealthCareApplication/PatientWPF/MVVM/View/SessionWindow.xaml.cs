@@ -46,6 +46,8 @@ namespace PatientWPF.MVVM.View
             RequestHandler.ReceivedResistance += OnReceivedResistance;
             RequestHandler.SummaryRequested += OnSummaryRequested;
 
+            DeviceManager.DeviceConnected += OnDeviceConnected;
+
             // Initialize BLE connection
             DeviceManager.Initialize().Wait();
         }
@@ -101,6 +103,18 @@ namespace PatientWPF.MVVM.View
             // TODO fix the server side issue of throwing an exception when the connection closes.
             ClientConn.CloseConnection();
             Close();
+        }
+
+        private void OnDeviceConnected(object _, bool isBle)
+        {
+            if (isBle)
+            {
+                DeviceConnectivityText.Text = "Yes, Bluetooth";
+            }
+            else
+            {
+                DeviceConnectivityText.Text = "No, simulated";
+            }
         }
 
         private void OnReceiveData(object _, Statistic stat)

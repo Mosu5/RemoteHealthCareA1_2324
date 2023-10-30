@@ -55,8 +55,12 @@
                 <Button Name="SetResistanceButton" Command="{Binding SetResistance}" Click="SetResistanceButton_Click" Grid.Row="4" Grid.Column="1" Margin="5,0,10,0" Content="Set" />
 
                 <!-- Patient name -->
-                <TextBlock Text="Patient name" Grid.Row="5" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,20,0,5"/>
-                <TextBlock Name="PatientNameText" Text="Loading..." Grid.Row="6" Grid.ColumnSpan="2" Margin="15,0,0,5"/>
+                <TextBlock Text="Patient name" Grid.Row="5" FontWeight="DemiBold" Margin="15,20,0,5"/>
+                <TextBlock Name="PatientNameText" Text="Loading..." Grid.Row="5" Grid.Column="1" Margin="15,20,0,5"/>
+                
+                <!-- Device connectivity -->
+                <TextBlock Text="Physical connection" Grid.Row="6" FontWeight="DemiBold" Margin="15,10,0,5"/>
+                <TextBlock Name="DeviceConnectivityText" Text="Loading..." Grid.Row="6" Grid.Column="1" Margin="15,10,0,5"/>
 
                 <!-- Exit program -->
                 <Button Name="StopExitButton" Click="StopExitButton_Click" Content="Stop and exit program" Grid.Row="7" Grid.ColumnSpan="2" Background=" #FAA0A0" HorizontalAlignment="Center" Padding="15,5" Margin="0 30" FontWeight="DemiBold" />

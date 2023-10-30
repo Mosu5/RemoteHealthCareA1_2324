@@ -5,10 +5,8 @@ namespace PatientApp.DeviceConnection.Receiver
 {
     public interface IReceiver
     {
-        event EventHandler<EventArgs> ConnectedToTrainer;
-        event EventHandler<EventArgs> DisconnectedFromTrainer;
-        event EventHandler<EventArgs> ConnectedToHrm;
-        event EventHandler<EventArgs> DisconnectedFromHrm;
+        event EventHandler<bool> ConnectedToTrainer;
+        event EventHandler<bool> ConnectedToHrm;
 
         event EventHandler<double> ReceivedSpeed;
         event EventHandler<int> ReceivedDistance;
