@@ -42,7 +42,6 @@ namespace DoctorWPFApp.Networking
                         string receivedPatients = DoctorFormat.GetKey(dataObject, "patients").ToString();
                         ReceivedPatients?.Invoke(nameof(RequestHandler), receivedPatients);
                         break;
-
                     case "chats/send":
                         ReceivedChat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "message").ToString());
                         break;
