@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using Utilities.Logging;
 
 namespace DoctorWPFApp.Networking
@@ -11,7 +15,7 @@ namespace DoctorWPFApp.Networking
     {
         // Doctor ViewModel events
         public static event EventHandler<bool>? LoggedIn;
-        public static event EventHandler<string>? ReceivedPatients;
+        public static event EventHandler<string[]>? ReceivedPatients;
         public static event EventHandler<Statistic>? ReceivedStat;
         public static event EventHandler<string>? ReceivedChat;
         public static event EventHandler<string>? ReceivedSummary;
@@ -39,8 +43,13 @@ namespace DoctorWPFApp.Networking
                         LoggedIn?.Invoke(nameof(RequestHandler), loggedIn);
                         break;
                     case "session/getUsers":
-                        string receivedPatients = DoctorFormat.GetKey(dataObject, "patients").ToString();
-                        ReceivedPatients?.Invoke(nameof(RequestHandler), receivedPatients);
+                        JsonObject receivedPatients = DoctorFormat.GetKey(dataObject, "patients").AsObject();
+                        string usernamesJson = DoctorFormat.GetKey(receivedPatients, "usernames").ToString();
+
+                        // Deserialize the JSON string into a string array
+                        string[] usernames = JsonConvert.DeserializeObject<string[]>(usernamesJson)!;
+
+                        ReceivedPatients?.Invoke(nameof(RequestHandler), usernames);
                         break;
                     case "chats/send":
                         ReceivedChat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "message").ToString());

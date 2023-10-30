@@ -5,6 +5,7 @@ using PatientWPF.Utilities.Encryption;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using System.Text.Json.Nodes;
@@ -341,35 +342,24 @@ namespace DoctorWPFApp.MVVM.ViewModel
             MessageBox.Show("Wrong username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private void OnPatientsReceived(object? sender, string json)
+        private void OnPatientsReceived(object? sender, string[] usernames)
         {
+            if (usernames is null) return;
 
-            Application.Current.Dispatcher.Invoke(() => MessageBox.Show(json));
-            return;
-
-            List<string> patientNames = JsonConvert.DeserializeObject<List<string>>(json);
-            List<Patient> tempPatients = new List<Patient>();
-            patientNames?.ForEach(patientName =>
+            foreach (string name in usernames)
             {
-                tempPatients.Add(new Patient() { Name = patientName });
-            });
-
-            foreach (var p in tempPatients)
-            {
-                if (Patients.Contains(p)) continue;
-
-                Patient patient = new Patient()
+                if (!Patients.Any(pat => pat.Name == name))
                 {
-                    Name = p.Name,
-                };
-                Patients.Add(patient);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        OnPropertyChanged(nameof(Patients));
+                        Patients.Add(new Patient { Name = name });
+                    });
+
+                }
             }
 
-            Application.Current.Dispatcher.Invoke(
-                () =>
-                {
-                    OnPropertyChanged(nameof(Patients));
-                });
+
 
         }
 
