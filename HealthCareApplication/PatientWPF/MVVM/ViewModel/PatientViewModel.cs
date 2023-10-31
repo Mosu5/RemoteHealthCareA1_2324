@@ -138,14 +138,37 @@ namespace PatientWPFApp.MVVM.ViewModel
                 LogType.Debug
             );
 
-            //// Initialize VR environment
-            //Thread vrThread = new Thread(() =>
+            // Thread t = new Thread(() =>
             //{
-            //    if (!VrProgram.Initialize().Result)
-            //        MessageBox.Show("Could not load VR environment.\nCheck wether you are running NetworkEngine (sim.bat)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            //    // Initialize BLE connection
+            //    DeviceManager.Initialize().Wait();
             //});
-            //vrThread.Start();
-            //vrThread.Join();
+            //t.Start();
+
+           
+
+
+            // Initialize VR environment
+            Thread vrThread = new Thread(() =>
+            {
+                try
+                {
+                    if (!VrProgram.Initialize().Result)
+                        MessageBox.Show("Could not load VR environment.\nCheck wether you are running NetworkEngine (sim.bat)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch(Exception e)
+                {
+
+                    throw e;
+                    //// Connection with VR failed, too bad we keep on going lol
+                    //MessageBox.Show("Failed to establish connection to VR...", "Big OOF", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    //return;
+                }
+               
+            });
+            vrThread.Start();
+            vrThread.Join();
 
             // Listen for requests
             Thread listenerThread = new Thread(async () => await RequestHandler.Listen());

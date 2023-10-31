@@ -50,7 +50,7 @@ namespace PatientWPF.MVVM.View
             DeviceManager.DeviceConnected += OnDeviceConnected;
 
             // Initialize BLE connection
-            DeviceManager.Initialize().Wait();
+            //DeviceManager.Initialize().Wait();
         }
 
         private async void ToggleSessionButton_Click(object sender, RoutedEventArgs e)
