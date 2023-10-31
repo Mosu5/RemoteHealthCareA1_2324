@@ -32,7 +32,7 @@ namespace PatientApp.DeviceConnection.Receiver
 
             bool connected = await PairDevice(
                 _bleTrainer,
-                "Tacx Flux 00438",
+                "Tacx Flux 01249",
                 "6e40fec1-b5a3-f393-e0a9-e50e24dcca9e",
                 "6e40fec2-b5a3-f393-e0a9-e50e24dcca9e"
             );
@@ -107,20 +107,21 @@ namespace PatientApp.DeviceConnection.Receiver
         /// <returns>Wether the device has paired successfully</returns>
         private async Task<bool> PairDevice(BLE bleDevice, string deviceName, string serviceName, string characteristicName)
         {
-            int errorCode = 6969;
 
-            Thread t = new Thread(async () =>
+            int errorCode = 14000;
+            Thread t = new Thread( () =>
             {
-                errorCode = await bleDevice.OpenDevice(deviceName);
+                errorCode = bleDevice.OpenDevice(deviceName).Result;
                 if (errorCode != 0) return;
-                errorCode = await bleDevice.SetService(serviceName);
+                errorCode = bleDevice.SetService(serviceName).Result;
                 if (errorCode != 0) return;
-                errorCode = await bleDevice.SubscribeToCharacteristic(characteristicName);
+                errorCode = bleDevice.SubscribeToCharacteristic(characteristicName).Result;
                 if (errorCode != 0) return;
             });
             t.Start();
             t.Join();
 
+            // Errorcode 0 means connection was succesful
             return errorCode == 0;
         }
 
