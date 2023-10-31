@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" xmlns:viewmodel="clr-namespace:DoctorWPFApp.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" xmlns:viewmodel="clr-namespace:DoctorWPFApp.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:DoctorViewModel}"
         mc:Ignorable="d"
         Title="Doctor Session Screen" ResizeMode="NoResize" Height="450" Width="800">
 

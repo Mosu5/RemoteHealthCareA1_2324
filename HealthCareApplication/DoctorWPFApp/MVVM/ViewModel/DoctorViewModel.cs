@@ -6,24 +6,20 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http.Json;
-using System.Runtime.InteropServices;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Xml.Linq;
 
 namespace DoctorWPFApp.MVVM.ViewModel
 {
     /// <summary>
     /// Handles the data between the views and the server-client logic
     /// </summary>
-    internal class MainWindowViewModel : ViewModelBase
+    internal class DoctorViewModel : ViewModelBase
     {
-        public MainWindowViewModel()
+        public DoctorViewModel()
         {
             Thread listenerThread = new(async () => await RequestHandler.Listen());
             listenerThread.Start();
@@ -37,7 +33,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.ReceivedSummary += OnSummaryReceived;
             RequestHandler.ReceivedPatients += OnPatientsReceived;
 
-            //InitPlaceHolderData();
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
             EmergencyBreakEnabled = "False";
@@ -45,238 +40,26 @@ namespace DoctorWPFApp.MVVM.ViewModel
             StatusTextColor = Brushes.Azure;
         }
 
-        private void SessionStopped(object? sender, bool e)
+        #region PatientData
+        // Contains patient data of currently selected patient
+        // Session Window will update shown data based on this property
+        private Patient _selectedPatient = new Patient(); // start with empty patient
+        public Patient SelectedPatient
         {
-            throw new NotImplementedException();
-        }
-
-        #region Commands called by the UI
-
-        public RelayCommand LoginCommand => new(async (execute) =>
-        {
-
-            string hashedPass = Encryption.ComputeSha256Hash(_password);
-
-            // Send the login command
-            JsonObject loginRequest = DoctorFormat.LoginMessage(_username, hashedPass);
-            await ClientConn.SendJson(loginRequest);
-
-        }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
-
-        public RelayCommand GetPatientListCommand => new(async (execute) =>
-        {
-            // TODO request patientList from server
-            JsonObject GetPatientRequest = DoctorFormat.GetPatientsMessage();
-            await ClientConn.SendJson(GetPatientRequest);
-        });
-
-        private bool _isSessionRunning = false;
-        public RelayCommand StartStopSession => new(async (execute) =>
-        {
-            JsonObject sessionRequest =
-                _isSessionRunning
-                ? DoctorFormat.SessionStartMessage(SelectedPatient.Name)
-                : DoctorFormat.SessionStopMessage(SelectedPatient.Name);
-
-            // Toggle boolean
-            _isSessionRunning = !_isSessionRunning;
-
-            await ClientConn.SendJson(sessionRequest);
-
-        }, canExecute => true);
-
-
-        public RelayCommand GetSummaryCommand => new(
-        async (execute) =>
-        {
-            JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
-            await ClientConn.SendJson(summaryRequest);
-        }, canExecute => !_isSessionRunning
-        );
-
-        private string _messageToSend;
-        public string MessageToSend
-        {
-            get { return _messageToSend; }
+            get { return _selectedPatient; }
             set
             {
-                _messageToSend = value;
-                OnPropertyChanged(nameof(MessageToSend));
+                if (_selectedPatient != value)
+                {
+                    _selectedPatient = value;
+                    OnPropertyChanged(nameof(SelectedPatient));
+                }
             }
         }
 
-        public RelayCommand SendChatCommand => new(async (execute) =>
-        {
-            if (string.IsNullOrEmpty(_messageToSend)) return;
-
-            SelectedPatient.ChatMessages.Add($"You: {_messageToSend}");
-            OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
-
-            JsonObject chatToServer = DoctorFormat.ChatsSendMessage(_messageToSend, SelectedPatient.Name);
-            await ClientConn.SendJson(chatToServer);
-
-            MessageToSend = "";
-        });
-
-        private string _sessionButtonText;
-        public string SessionButtonText
-        {
-            get { return _sessionButtonText; }
-            set
-            {
-                _sessionButtonText = value;
-                OnPropertyChanged(nameof(SessionButtonText));
-            }
-        }
-
-        private SolidColorBrush _sessionButtonColor;
-        public SolidColorBrush SessionButtonColor
-        {
-            get { return _sessionButtonColor; }
-            set
-            {
-                _sessionButtonColor = value;
-                OnPropertyChanged(nameof(SessionButtonColor));
-            }
-        }
-
-        private SolidColorBrush _statusTextColor;
-        public SolidColorBrush StatusTextColor
-        {
-            get { return _statusTextColor; }
-            set
-            {
-                _statusTextColor = value;
-                OnPropertyChanged(nameof(StatusTextColor));
-            }
-        }
-
-        private string _statusText;
-        public string StatusText
-        {
-            get { return _statusText; }
-            set
-            {
-                _statusText = value;
-                OnPropertyChanged(nameof(StatusText));
-            }
-        }
-
-        private string _emergencyBreakEnabled;
-        public string EmergencyBreakEnabled
-        {
-            get { return _emergencyBreakEnabled; }
-            set
-            {
-                _emergencyBreakEnabled = value;
-                OnPropertyChanged(nameof(EmergencyBreakEnabled));
-            }
-        }
-
-        private bool _sessionActive = false;
-        public RelayCommand ToggleSessionCommand => new(async (execute) =>
-        {
-            JsonObject message;
-            if (_sessionActive)
-            {
-                // Stop the session
-                message = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
-
-                _sessionActive = false;
-                SessionButtonText = "Start";
-                SessionButtonColor = Brushes.LightGreen;
-                StatusText = "No active session for current patient.";
-                EmergencyBreakEnabled = "False";
-                StatusTextColor = Brushes.Azure;
-            }
-            else
-            {
-                // Start a new session
-                message = DoctorFormat.SessionStartMessage(SelectedPatient.Name);
-
-                _sessionActive = true;
-                SessionButtonText = "Stop";
-                SessionButtonColor = Brushes.Salmon;
-                StatusText = "Training is in progress for current patient.";
-                EmergencyBreakEnabled = "True";
-                StatusTextColor = Brushes.LightSalmon;
-            }
-            await ClientConn.SendJson(message);
-        });
-
-        public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
-        {
-            EmergencyBreakEnabled = "False";
-            SelectedPatient.ChatMessages.Add($"<<You activated the emergency break.>>");
-            OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
-
-            JsonObject sessionStop = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
-            JsonObject chatSend = DoctorFormat.ChatsSendMessage($"\t<<ACTIVATED THE EMERGENCY BREAK!>>", SelectedPatient.Name);
-
-            _sessionActive = false;
-            SessionButtonText = "Start";
-            SessionButtonColor = Brushes.LightGreen;
-            StatusText = "No active session for current patient.";
-            EmergencyBreakEnabled = "False";
-            StatusTextColor = Brushes.Azure;
-
-            await ClientConn.SendJson(sessionStop);
-
-            // Introducte a small delay, because the server otherwise cannot handle the chats/send below
-            await Task.Delay(1000);
-
-            await ClientConn.SendJson(chatSend);
-        });
-
-        private string _trainerResistance;
-        public string TrainerResistance
-        {
-            get { return _trainerResistance; }
-            set
-            {
-                _trainerResistance = value;
-                OnPropertyChanged(nameof(TrainerResistance));
-            }
-        }
-
-        public RelayCommand SetResistance => new(async (execute) =>
-        {
-            if (string.IsNullOrEmpty(TrainerResistance))
-            {
-                TrainerResistance = "";
-                return;
-            }
-
-            int resistanceAsInt;
-            try
-            {
-                resistanceAsInt = int.Parse(_trainerResistance);
-            }
-            catch (FormatException)
-            {
-                TrainerResistance = "";
-                return;
-            }
-            if (resistanceAsInt < 0 || resistanceAsInt > 100)
-            {
-                TrainerResistance = "";
-                return;
-            }
-
-            await ClientConn.SendJson(DoctorFormat.SetResistanceMessage(resistanceAsInt, SelectedPatient.Name));
-
-            TrainerResistance = "";
-        });
-
-        public RelayCommand StopExitCommand => new(async (execute) =>
-        {
-            JsonObject stopMessage = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
-            await ClientConn.SendJson(stopMessage);
-
-            // TODO fix the server side issue of throwing an exception when the connection closes.
-            ClientConn.CloseConnection();
-        });
-
+        // Contains a list of currently registered patients
+        // On login, the application will receive this data and update the 
+        public ObservableCollection<Patient> Patients { get; set; } = new ObservableCollection<Patient>();
         #endregion
 
         #region Properties of commands
@@ -306,28 +89,228 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
         }
 
-        #endregion
+        private bool _sessionActive = false;
 
-        #region PatientData
-        private Patient _selectedPatient = new Patient(); // start with empty patient
-        public Patient SelectedPatient
+        private bool _isSessionRunning = false;
+
+        private string? _trainerResistance;
+        public string? TrainerResistance
         {
-            get { return _selectedPatient; }
+            get { return _trainerResistance; }
             set
             {
-                if (_selectedPatient != value)
-                {
-                    _selectedPatient = value;
-                    OnPropertyChanged(nameof(SelectedPatient));
-                }
+                _trainerResistance = value;
+                OnPropertyChanged(nameof(TrainerResistance));
             }
         }
-        public ObservableCollection<Patient> Patients { get; set; } = new ObservableCollection<Patient>();
 
+        private string? _messageToSend;
+        public string? MessageToSend
+        {
+            get { return _messageToSend; }
+            set
+            {
+                _messageToSend = value;
+                OnPropertyChanged(nameof(MessageToSend));
+            }
+        }
+
+
+        private string? _sessionButtonText;
+        public string? SessionButtonText
+        {
+            get { return _sessionButtonText; }
+            set
+            {
+                _sessionButtonText = value;
+                OnPropertyChanged(nameof(SessionButtonText));
+            }
+        }
+
+        private SolidColorBrush? _sessionButtonColor;
+        public SolidColorBrush? SessionButtonColor
+        {
+            get { return _sessionButtonColor; }
+            set
+            {
+                _sessionButtonColor = value;
+                OnPropertyChanged(nameof(SessionButtonColor));
+            }
+        }
+
+        private SolidColorBrush? _statusTextColor;
+        public SolidColorBrush? StatusTextColor
+        {
+            get { return _statusTextColor; }
+            set
+            {
+                _statusTextColor = value;
+                OnPropertyChanged(nameof(StatusTextColor));
+            }
+        }
+
+        private string? _statusText;
+        public string? StatusText
+        {
+            get { return _statusText; }
+            set
+            {
+                _statusText = value;
+                OnPropertyChanged(nameof(StatusText));
+            }
+        }
+
+        private string? _emergencyBreakEnabled;
+        public string? EmergencyBreakEnabled
+        {
+            get { return _emergencyBreakEnabled; }
+            set
+            {
+                _emergencyBreakEnabled = value;
+                OnPropertyChanged(nameof(EmergencyBreakEnabled));
+            }
+        }
+        #endregion
+
+        #region Commands called by the UI
+        public RelayCommand LoginCommand => new(async (execute) =>
+        {
+
+            string hashedPass = Encryption.ComputeSha256Hash(_password);
+
+            // Send the login command
+            JsonObject loginRequest = DoctorFormat.LoginMessage(_username, hashedPass);
+            await ClientConn.SendJson(loginRequest);
+
+        }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
+        public RelayCommand GetPatientListCommand => new(async (execute) =>
+        {
+            JsonObject GetPatientRequest = DoctorFormat.GetPatientsMessage();
+            await ClientConn.SendJson(GetPatientRequest);
+        });
+        public RelayCommand StartStopSession => new(async (execute) =>
+        {
+            JsonObject sessionRequest =
+                _isSessionRunning
+                ? DoctorFormat.SessionStartMessage(SelectedPatient.Name)
+                : DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+
+            // Toggle boolean
+            _isSessionRunning = !_isSessionRunning;
+
+            await ClientConn.SendJson(sessionRequest);
+
+        }, canExecute => true);
+        public RelayCommand GetSummaryCommand => new(
+        async (execute) =>
+        {
+            JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
+            await ClientConn.SendJson(summaryRequest);
+        }, canExecute => !_isSessionRunning
+        );
+        public RelayCommand SendChatCommand => new(async (execute) =>
+        {
+            if (string.IsNullOrEmpty(_messageToSend)) return;
+
+            SelectedPatient.ChatMessages.Add($"You: {_messageToSend}");
+            OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
+
+            JsonObject chatToServer = DoctorFormat.ChatsSendMessage(_messageToSend, SelectedPatient.Name);
+            await ClientConn.SendJson(chatToServer);
+
+            MessageToSend = "";
+        });
+        public RelayCommand ToggleSessionCommand => new(async (execute) =>
+        {
+            JsonObject message;
+            if (_sessionActive)
+            {
+                // Stop the session
+                message = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+
+                _sessionActive = false;
+                SessionButtonText = "Start";
+                SessionButtonColor = Brushes.LightGreen;
+                StatusText = "No active session for current patient.";
+                EmergencyBreakEnabled = "False";
+                StatusTextColor = Brushes.Azure;
+            }
+            else
+            {
+                // Start a new session
+                message = DoctorFormat.SessionStartMessage(SelectedPatient.Name);
+
+                _sessionActive = true;
+                SessionButtonText = "Stop";
+                SessionButtonColor = Brushes.Salmon;
+                StatusText = "Training is in progress for current patient.";
+                EmergencyBreakEnabled = "True";
+                StatusTextColor = Brushes.LightSalmon;
+            }
+            await ClientConn.SendJson(message);
+        });
+        public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
+        {
+            EmergencyBreakEnabled = "False";
+            SelectedPatient.ChatMessages.Add($"<<You activated the emergency break.>>");
+            OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
+
+            JsonObject sessionStop = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+            JsonObject chatSend = DoctorFormat.ChatsSendMessage($"\t<<ACTIVATED THE EMERGENCY BREAK!>>", SelectedPatient.Name);
+
+            _sessionActive = false;
+            SessionButtonText = "Start";
+            SessionButtonColor = Brushes.LightGreen;
+            StatusText = "No active session for current patient.";
+            EmergencyBreakEnabled = "False";
+            StatusTextColor = Brushes.Azure;
+
+            await ClientConn.SendJson(sessionStop);
+
+            // Introducte a small delay, because the server otherwise cannot handle the chats/send below
+            await Task.Delay(1000);
+
+            await ClientConn.SendJson(chatSend);
+        });
+        public RelayCommand SetResistance => new(async (execute) =>
+        {
+            if (string.IsNullOrEmpty(TrainerResistance))
+            {
+                TrainerResistance = "";
+                return;
+            }
+
+            int resistanceAsInt;
+            try
+            {
+                resistanceAsInt = int.Parse(_trainerResistance);
+            }
+            catch (FormatException)
+            {
+                TrainerResistance = "";
+                return;
+            }
+            if (resistanceAsInt < 0 || resistanceAsInt > 100)
+            {
+                TrainerResistance = "";
+                return;
+            }
+
+            await ClientConn.SendJson(DoctorFormat.SetResistanceMessage(resistanceAsInt, SelectedPatient.Name));
+
+            TrainerResistance = "";
+        });
+        public RelayCommand StopExitCommand => new(async (execute) =>
+        {
+            JsonObject stopMessage = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+            await ClientConn.SendJson(stopMessage);
+
+            // TODO fix the server side issue of throwing an exception when the connection closes.
+            ClientConn.CloseConnection();
+        });
         #endregion
 
         #region Response actions
-
         /// <summary>
         /// When a response is received from the server, give feedback to the user or switch window.
         /// </summary>
@@ -341,28 +324,39 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             MessageBox.Show("Wrong username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-
+        /// <summary>
+        /// Update the patient list to enable the dokter to request patient data from server
+        /// 
+        /// When the list of currently registered patients is received from the server,
+        /// check if there already is a patient with the same name, to avoid redudant data
+        /// </summary>
+        /// <param name="sender"> object that triggered the event </param>
+        /// <param name="usernames"> list of usernames to update patient with </param>
         private void OnPatientsReceived(object? sender, string[] usernames)
         {
             if (usernames is null) return;
 
-            foreach (string name in usernames)
+            foreach (var name in usernames)
             {
                 if (!Patients.Any(pat => pat.Name == name))
                 {
+                    // Update UI elements
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        OnPropertyChanged(nameof(Patients));
                         Patients.Add(new Patient { Name = name });
+                        OnPropertyChanged(nameof(Patients));
                     });
 
                 }
             }
-
-
-
         }
-
+        /// <summary>
+        /// Update the real-time data of the currently displayed patient
+        /// 
+        /// When trainer data is received, update patient and UI accordingly
+        /// </summary>
+        /// <param name="_"> object that triggered the event </param>
+        /// <param name="stat"> patient statistics received from server </param>
         private void OnStatReceived(object? _, Statistic stat)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -373,7 +367,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
-
+        /// <summary>
+        ///  Update the patient summary based on all historical data saved on this patient received from the server
+        /// </summary>
+        /// <param name="sender"> object that the triggered the event </param>
+        /// <param name="json"> patient summary received from server </param>
         private void OnSummaryReceived(object? sender, string json)
         {
             var patientDataList = JsonConvert.DeserializeObject<List<PatientData>>(json);
@@ -385,7 +383,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
-
         private void OnChatReceived(object? sender, string chatMessage)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -394,7 +391,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
-
         private void OnSessionStarted(object? sender, bool sessionStopped)
         {
             // Method gets called on a different thread than the current UI thread.
@@ -412,7 +408,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 StatusTextColor = Brushes.LightSalmon;
             });
         }
-
         private void OnSessionStopped(object? sender, bool sessionStopped)
         {
             // Method gets called on a different thread than the current UI thread.
@@ -434,39 +429,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 await ClientConn.SendJson(summaryRequest);
             });
         }
-
         #endregion
-
-        /// <summary>
-        /// TODO remove when it is not needed anymore; this is a temporary method for sample user data.
-        /// </summary>
-        //private void InitPlaceHolderData()
-        //{
-        //    Patients = new ObservableCollection<Patient>
-        //    {
-        //        new Patient
-        //        {
-        //            Name = "bob",
-        //            Speed = 0,
-        //            Distance = 0,
-        //            HeartRate = 0,
-        //            ChatMessages = new ObservableCollection<string>(),
-        //            PatientDataCollection = new List<PatientData>()
-        //        },
-        //        new Patient
-        //        {
-        //            Name = "jan",
-        //            Speed = 0,
-        //            Distance = 0,
-        //            HeartRate = 0,
-        //            ChatMessages = new ObservableCollection<string>()
-        //        }
-        //    };
-        //    OnPropertyChanged(nameof(Patients));
-
-        //    SelectedPatient = Patients[0];
-        //    OnPropertyChanged(nameof(SelectedPatient));
-        //}
-
     }
 }

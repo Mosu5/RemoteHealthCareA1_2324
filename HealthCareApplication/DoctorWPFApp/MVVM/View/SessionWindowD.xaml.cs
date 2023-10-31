@@ -17,7 +17,7 @@ namespace DoctorWPFApp.MVVM.View
 
         private async void StopExitButton_Click(object sender, RoutedEventArgs e)
         {
-            // Small delay to wait for MainWindowViewModel to send stop message, etc.
+            // Small delay to wait for DoctorViewModel to send stop message, etc.
             await Task.Delay(500);
             Close();
         }

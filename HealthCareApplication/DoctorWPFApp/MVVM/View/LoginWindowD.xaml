@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoctorWPFApp.MVVM.View.Components" 
         xmlns:local1="clr-namespace:DoctorWPFApp.MVVM.ViewModel"
+        xmlns:viewmodel="clr-namespace:DoctorWPFApp.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:DoctorViewModel}"
         mc:Ignorable="d"
         Title="Login - DoctorApp" ResizeMode="NoResize" Height="450" Width="800">
 
     <Window.DataContext>
-        <local1:MainWindowViewModel/>
+        <local1:DoctorViewModel/>
     </Window.DataContext>
 
     <Grid>
