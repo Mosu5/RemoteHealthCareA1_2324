@@ -47,7 +47,8 @@ namespace PatientWPF.MVVM.View
             RequestHandler.ReceivedResistance += OnReceivedResistance;
             RequestHandler.SummaryRequested += OnSummaryRequested;
 
-            DeviceManager.DeviceConnected += OnDeviceConnected;
+            DeviceManager.BikeConnected += OnBikeConnected;
+            DeviceManager.HrmConnected += OnHrmConnected;
 
             // Initialize BLE connection
             //DeviceManager.Initialize().Wait();
@@ -106,15 +107,27 @@ namespace PatientWPF.MVVM.View
             Close();
         }
 
-        private void OnDeviceConnected(object _, bool isBle)
+        private void OnBikeConnected(object _, bool isBle)
         {
             if (isBle)
             {
-                DeviceConnectivityText.Text = "Yes, Bluetooth";
+                BikeConnectivityText.Text = "Bluetooth";
             }
             else
             {
-                DeviceConnectivityText.Text = "No, simulated";
+                BikeConnectivityText.Text = "None (simulated)";
+            }
+        }
+
+        private void OnHrmConnected(object _, bool isBle)
+        {
+            if (isBle)
+            {
+                HrmConnectivityText.Text = "Bluetooth";
+            }
+            else
+            {
+                HrmConnectivityText.Text = "None (simulated)";
             }
         }
 

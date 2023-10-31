@@ -18,7 +18,6 @@ namespace PatientApp.DeviceConnection.Receiver
         public event EventHandler<int[]> ReceivedRrIntervals;
 
         private IReceiver _emulatedReceiver = null;
-        private readonly int _maxConnectionAttempts = 5;
         private readonly BLE _bleTrainer = new BLE();
         private bool _trainerConnected = false;
 
