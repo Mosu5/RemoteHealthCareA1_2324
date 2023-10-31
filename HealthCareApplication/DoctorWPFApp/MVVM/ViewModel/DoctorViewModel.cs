@@ -33,7 +33,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             RequestHandler.ReceivedSummary += OnSummaryReceived;
             RequestHandler.ReceivedPatients += OnPatientsReceived;
 
-            //InitPlaceHolderData();
             SessionButtonText = "Start";
             SessionButtonColor = Brushes.LightGreen;
             EmergencyBreakEnabled = "False";
@@ -171,12 +170,9 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(EmergencyBreakEnabled));
             }
         }
-
-
         #endregion
 
         #region Commands called by the UI
-
         public RelayCommand LoginCommand => new(async (execute) =>
         {
 
@@ -187,15 +183,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
             await ClientConn.SendJson(loginRequest);
 
         }, canExecute => !string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password)); // Checks if fields are not null or empty
-
         public RelayCommand GetPatientListCommand => new(async (execute) =>
         {
-            // TODO request patientList from server
             JsonObject GetPatientRequest = DoctorFormat.GetPatientsMessage();
             await ClientConn.SendJson(GetPatientRequest);
         });
-
-       
         public RelayCommand StartStopSession => new(async (execute) =>
         {
             JsonObject sessionRequest =
@@ -209,8 +201,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             await ClientConn.SendJson(sessionRequest);
 
         }, canExecute => true);
-
-
         public RelayCommand GetSummaryCommand => new(
         async (execute) =>
         {
@@ -218,9 +208,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             await ClientConn.SendJson(summaryRequest);
         }, canExecute => !_isSessionRunning
         );
-
-
-
         public RelayCommand SendChatCommand => new(async (execute) =>
         {
             if (string.IsNullOrEmpty(_messageToSend)) return;
@@ -233,8 +220,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             MessageToSend = "";
         });
-
-    
         public RelayCommand ToggleSessionCommand => new(async (execute) =>
         {
             JsonObject message;
@@ -264,7 +249,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             }
             await ClientConn.SendJson(message);
         });
-
         public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
         {
             EmergencyBreakEnabled = "False";
@@ -288,9 +272,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             await ClientConn.SendJson(chatSend);
         });
-
-
-
         public RelayCommand SetResistance => new(async (execute) =>
         {
             if (string.IsNullOrEmpty(TrainerResistance))
@@ -319,7 +300,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             TrainerResistance = "";
         });
-
         public RelayCommand StopExitCommand => new(async (execute) =>
         {
             JsonObject stopMessage = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
@@ -328,7 +308,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
             // TODO fix the server side issue of throwing an exception when the connection closes.
             ClientConn.CloseConnection();
         });
-
         #endregion
 
         #region Response actions
@@ -345,7 +324,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             MessageBox.Show("Wrong username or password.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-
         /// <summary>
         /// Update the patient list to enable the dokter to request patient data from server
         /// 
@@ -372,7 +350,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 }
             }
         }
-
         /// <summary>
         /// Update the real-time data of the currently displayed patient
         /// 
@@ -390,12 +367,11 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
-
         /// <summary>
-        /// 
+        ///  Update the patient summary based on all historical data saved on this patient received from the server
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="json"></param>
+        /// <param name="sender"> object that the triggered the event </param>
+        /// <param name="json"> patient summary received from server </param>
         private void OnSummaryReceived(object? sender, string json)
         {
             var patientDataList = JsonConvert.DeserializeObject<List<PatientData>>(json);
@@ -407,7 +383,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
-
         private void OnChatReceived(object? sender, string chatMessage)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -416,7 +391,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
-
         private void OnSessionStarted(object? sender, bool sessionStopped)
         {
             // Method gets called on a different thread than the current UI thread.
@@ -434,7 +408,6 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 StatusTextColor = Brushes.LightSalmon;
             });
         }
-
         private void OnSessionStopped(object? sender, bool sessionStopped)
         {
             // Method gets called on a different thread than the current UI thread.
