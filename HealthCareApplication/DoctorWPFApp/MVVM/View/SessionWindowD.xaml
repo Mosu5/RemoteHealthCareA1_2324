@@ -113,7 +113,8 @@
                 </Border>
 
                 <TextBlock Text="Summary" Grid.Row="5" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,10,0,5"/>
-
+                
+                <!-- Summary ListView -->
                 <ListView ItemsSource="{Binding SelectedPatient.PatientDataCollection}" Grid.Row="6" Grid.ColumnSpan="2" Margin="10,0,10,10" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                     <ListView.View>
                         <GridView>
@@ -154,8 +155,8 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
+                <!-- Chat output -->
                 <TextBlock Text="Chat with your patient" Grid.Row="0" Grid.ColumnSpan="2" FontSize="18" Padding="0,10" HorizontalAlignment="Stretch" TextAlignment="Center" FontWeight="DemiBold" />
-
                 <ListView Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedPatient.ChatMessages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" Margin="10,0" />
 
                 <!-- Chat input -->
@@ -163,29 +164,5 @@
                 <Button Name="SendChatButton" Command="{Binding SendChatCommand}" Content="Send" Grid.Row="2" Grid.Column="1" Margin="5,10,10,10"/>
             </Grid>
         </Border>
-
-        <!--<Grid.ColumnDefinitions>
-            <ColumnDefinition Width="31*"/>
-            <ColumnDefinition Width="183*"/>
-        </Grid.ColumnDefinitions>
-        <Label Grid.Column="1" Content="Session" HorizontalAlignment="Left" Margin="12,40,0,0" VerticalAlignment="Top" Height="47" Width="128" FontSize="30" FontWeight="Bold"/>
-        <Label Name="StatusLabel" Grid.Column="1" Content="Status: disconnected" HorizontalAlignment="Left" Margin="12,92,0,0" VerticalAlignment="Top" Height="33" Width="284" FontSize="20"/>
-        <Label Grid.Column="1" Content="Patient:" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Height="33" Width="83" FontSize="20" />
-
-        <Button Name="stopstartBtn" Grid.Column="1" Content="{Binding SessionButtonText}" HorizontalAlignment="Left" Margin="12,177,0,0" VerticalAlignment="Top" Height="39" Width="81" Background="{Binding SessionButtonColor}" FontSize="15"
-                Command="{Binding ToggleSessionCommand}"/>
-        <Button Name="statsBtn" Grid.Column="1" Content="Stats" Margin="113,177,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="39" Width="81" FontSize="15" 
-                Click="StatsBtn_Click"/>
-        <Button Name="chatsBtn" Grid.Column="1" Content="Chats" HorizontalAlignment="Left" Margin="215,177,0,0" VerticalAlignment="Top" Height="39" Width="81" FontSize="15" 
-                Click="ChatsBtn_Click"/>
-
-        <ComboBox Name="patientComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="93,130,0,0" VerticalAlignment="Top" Width="183" FontSize="20" ItemsSource="{Binding Patients}" SelectedItem="{Binding SelectedPatient, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>-->
-
     </Grid>
 </Window>

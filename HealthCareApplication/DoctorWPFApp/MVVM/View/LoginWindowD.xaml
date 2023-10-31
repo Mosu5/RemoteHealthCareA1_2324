@@ -13,12 +13,13 @@
     </Window.DataContext>
 
     <Grid>
+        <!-- Username Box -->
         <Label Content="Gebruikersnaam" HorizontalAlignment="Left" Margin="214,86,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.264,0.472" Background="White" FontWeight="Bold"/>
         <TextBox Name="gbBox" Text="{Binding Username}" HorizontalAlignment="Center" Margin="0,117,0,0" VerticalAlignment="Top" Width="372" Height="40" FontSize="20"/>
-
+        <!-- Password Box -->
         <Label Content="Wachtwoord" HorizontalAlignment="Left" Margin="214,186,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
         <local:BindablePasswordBox x:Name="passwordBox" Password="{Binding Password}"/>
-
+        <!-- Login Button -->
         <Button Name="loginBtn" Content="Login" HorizontalAlignment="Left" Margin="214,295,0,0" VerticalAlignment="Top" Height="37" Width="148" Background="#FFABF98C" Command="{Binding LoginCommand}" />
     </Grid>
 </Window>

@@ -1,6 +1,4 @@
-﻿using DoctorWPFApp.MVVM.ViewModel;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 
 namespace DoctorWPFApp.MVVM.View
 {
