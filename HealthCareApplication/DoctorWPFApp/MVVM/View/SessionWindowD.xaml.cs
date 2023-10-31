@@ -1,8 +1,4 @@
-﻿using DoctorWPFApp.Networking;
-using System.ComponentModel;
-using System.Windows.Media;
-using System.Text.Json.Nodes;
-using System.Windows;
+﻿using System.Windows;
 using System.Threading.Tasks;
 
 namespace DoctorWPFApp.MVVM.View
@@ -13,21 +9,10 @@ namespace DoctorWPFApp.MVVM.View
     /// </summary>
     public partial class SessionWindowD : Window
     {
-        private bool _sessionActive = false;
 
         public SessionWindowD()
         {
             InitializeComponent();
-        }
-
-        private void ChatsBtn_Click(object sender, RoutedEventArgs e)
-        {
-            Navigator.NavToChatWindow();
-        }
-
-        private void StatsBtn_Click(object sender, RoutedEventArgs e)
-        {
-            Navigator.NavToStatWindow();
         }
 
         private async void StopExitButton_Click(object sender, RoutedEventArgs e)
