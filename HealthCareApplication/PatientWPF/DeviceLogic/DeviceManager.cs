@@ -9,7 +9,8 @@ namespace PatientApp.DeviceConnection
     {
         private static Statistic _currentStat = new Statistic(); // changed to static for hooking and unhooking delegates from events
         public static EventHandler<Statistic> OnReceiveData; // changed to static for hooking and unhooking delegates from events
-        public static EventHandler<bool> DeviceConnected;
+        public static EventHandler<bool> BikeConnected;
+        public static EventHandler<bool> HrmConnected;
 
         public static IReceiver Receiver;
 
@@ -31,8 +32,8 @@ namespace PatientApp.DeviceConnection
             Receiver.ReceivedHeartRate += OnReceiveHeartRate;
             Receiver.ReceivedRrIntervals += OnReceiveRrIntervals;
 
-            Receiver.ConnectedToTrainer += OnDeviceConnected;
-            //Receiver.ConnectedToHrm += OnDeviceConnected;
+            Receiver.ConnectedToTrainer += OnBikeConnected;
+            Receiver.ConnectedToHrm += OnHrmConnected;
 
             await Receiver.ConnectToTrainer();
             await Receiver.ConnectToHrm();
@@ -40,9 +41,14 @@ namespace PatientApp.DeviceConnection
             Logger.Log("Trainer and heart rate monitor have been initialized.", LogType.GeneralInfo);
         }
 
-        private static void OnDeviceConnected(object sender, bool isBle)
+        private static void OnBikeConnected(object sender, bool isBle)
         {
-            DeviceConnected?.Invoke(nameof(DeviceManager), isBle);
+            BikeConnected?.Invoke(nameof(DeviceManager), isBle);
+        }
+
+        private static void OnHrmConnected(object sender, bool isBle)
+        {
+            HrmConnected?.Invoke(nameof(DeviceManager), isBle);
         }
 
         private static void OnReceiveSpeed(object sender, double speed)
@@ -52,7 +58,6 @@ namespace PatientApp.DeviceConnection
                 _currentStat.Speed = speed;
                 CheckStatComplete();
             }
-
         }
 
         private static void OnReceiveDistance(object sender, int distance)
@@ -62,7 +67,6 @@ namespace PatientApp.DeviceConnection
                 _currentStat.Distance = distance;
                 CheckStatComplete();
             }
-
         }
 
         private static void OnReceiveHeartRate(object sender, int heartRate)
@@ -72,7 +76,6 @@ namespace PatientApp.DeviceConnection
                 _currentStat.HeartRate = heartRate;
                 CheckStatComplete();
             }
-
         }
 
         private static void OnReceiveRrIntervals(object sender, int[] rrIntervals)
@@ -82,7 +85,6 @@ namespace PatientApp.DeviceConnection
                 _currentStat.RrIntervals = rrIntervals;
                 CheckStatComplete();
             }
-
         }
 
         private static void CheckStatComplete()
