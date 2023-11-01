@@ -422,17 +422,18 @@ namespace DoctorWPFApp.MVVM.ViewModel
         }
         private void OnChatReceived(object? sender, string chatMessage)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                SelectedPatient.ChatMessages.Add($"{SelectedPatient.Name}: {chatMessage}");
-                OnPropertyChanged(nameof(SelectedPatient));
-            });
             //Application.Current.Dispatcher.Invoke(() =>
             //{
-            //    Patient patient = Patients.First(p => p.Name == chatSender);
-            //    patient.ChatMessages.Add($"{patient.Name}: {chatMessage}");
-            //    OnPropertyChanged(nameof(Patients));
+            //    SelectedPatient.ChatMessages.Add($"{SelectedPatient.Name}: {chatMessage}");
+            //    OnPropertyChanged(nameof(SelectedPatient));
             //});
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Patient patient = Patients.First(p => p.Name == chatMessage.Substring(0, chatMessage.IndexOf(":")));
+                patient.ChatMessages.Add($"{chatMessage}");
+                OnPropertyChanged(nameof(Patients));
+                OnPropertyChanged(nameof(SelectedPatient));
+            });
         }
         private void OnSessionStarted(object? sender, string username)
         {

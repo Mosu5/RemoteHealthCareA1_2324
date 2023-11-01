@@ -59,7 +59,7 @@ namespace ServerApp
         private static SslStream CreateSslStream(TcpClient client)
         {
             // Load the server's SSL certificate
-            X509Certificate2 serverCertificate = new X509Certificate2(ServerConn._certificatePath, ServerConn._certificatePassword);
+            X509Certificate2 serverCertificate = new X509Certificate2(ServerConn._certificatePath, ServerConn._certificatePassword, X509KeyStorageFlags.UserKeySet);
 
             // Create an SSL stream and authenticate the client
             SslStream sslStream = new SslStream(client.GetStream(), false);
