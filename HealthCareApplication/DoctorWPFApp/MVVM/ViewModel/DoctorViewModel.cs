@@ -53,6 +53,25 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 {
                     _selectedPatient = value;
                     OnPropertyChanged(nameof(SelectedPatient));
+
+                    if (_selectedPatient.InActiveSession)
+                    {
+                        _sessionActive = true;
+                        SessionButtonText = "Stop";
+                        SessionButtonColor = Brushes.Salmon;
+                        StatusText = "Training is in progress for current patient.";
+                        EmergencyBreakEnabled = "True";
+                        StatusTextColor = Brushes.LightSalmon;
+                    }
+                    else
+                    {
+                        _sessionActive = false;
+                        SessionButtonText = "Start";
+                        SessionButtonColor = Brushes.LightGreen;
+                        StatusText = "No active session for current patient.";
+                        EmergencyBreakEnabled = "False";
+                        StatusTextColor = Brushes.Azure;
+                    }
                 }
             }
         }
@@ -234,6 +253,8 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 StatusText = "No active session for current patient.";
                 EmergencyBreakEnabled = "False";
                 StatusTextColor = Brushes.Azure;
+
+                SelectedPatient.InActiveSession = false;
             }
             else
             {
@@ -246,12 +267,13 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 StatusText = "Training is in progress for current patient.";
                 EmergencyBreakEnabled = "True";
                 StatusTextColor = Brushes.LightSalmon;
+
+                SelectedPatient.InActiveSession = true;
             }
             await ClientConn.SendJson(message);
         });
         public RelayCommand EmergencyBreak => new RelayCommand(async (execute) =>
         {
-            EmergencyBreakEnabled = "False";
             SelectedPatient.ChatMessages.Add($"<<You activated the emergency break.>>");
             OnPropertyChanged(nameof(SelectedPatient.ChatMessages));
 
@@ -264,6 +286,8 @@ namespace DoctorWPFApp.MVVM.ViewModel
             StatusText = "No active session for current patient.";
             EmergencyBreakEnabled = "False";
             StatusTextColor = Brushes.Azure;
+
+            SelectedPatient.InActiveSession = false;
 
             await ClientConn.SendJson(sessionStop);
 
@@ -302,7 +326,7 @@ namespace DoctorWPFApp.MVVM.ViewModel
         });
         public RelayCommand StopExitCommand => new((execute) =>
         {
-            Thread t = new Thread(() =>
+            Thread t = new(() =>
             {
                 JsonObject stopMessage = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
                 ClientConn.SendJson(stopMessage).Wait();
@@ -397,43 +421,69 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(SelectedPatient));
             });
         }
-        private void OnSessionStarted(object? sender, bool sessionStopped)
+        private void OnSessionStarted(object? sender, string username)
         {
             // Method gets called on a different thread than the current UI thread.
             // Therefore invoke this method within a lambda to make it possible
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (_sessionActive) return;
+                // Update correct patient session status
+                Patient patientToUpdate = GetPatientByName(username);
+                patientToUpdate.InActiveSession = true;
 
-                // Start a new session
-                _sessionActive = true;
-                SessionButtonText = "Stop";
-                SessionButtonColor = Brushes.Salmon;
-                EmergencyBreakEnabled = "True";
-                StatusText = "Training is in progress for current patient.";
-                StatusTextColor = Brushes.LightSalmon;
+                // Update SelectedPatient's session status
+                if (SelectedPatient.Name == username)
+                {
+                    // Start a new session
+                    _sessionActive = true;
+                    SessionButtonText = "Stop";
+                    SessionButtonColor = Brushes.Salmon;
+                    EmergencyBreakEnabled = "True";
+                    StatusText = "Training is in progress for current patient.";
+                    StatusTextColor = Brushes.LightSalmon;
+
+                    SelectedPatient.InActiveSession = true;
+                }
             });
         }
-        private void OnSessionStopped(object? sender, bool sessionStopped)
+
+        private void OnSessionStopped(object? sender, string username)
         {
             // Method gets called on a different thread than the current UI thread.
             // Therefore invoke this method within a lambda to make it possible
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                if (!_sessionActive) return;
+                // Update correct patient session status
+                Patient patientToUpdate = GetPatientByName(username);
+                patientToUpdate.InActiveSession = false;
 
-                // Stop the session
-                _sessionActive = false;
+                // Update SelectedPatient's session status
+                if (SelectedPatient.Name == username)
+                {
+                    // Stop the session
+                    _sessionActive = false;
+                    SessionButtonText = "Start";
+                    SessionButtonColor = Brushes.LightGreen;
+                    EmergencyBreakEnabled = "False";
+                    StatusText = "No active session for current patient.";
+                    StatusTextColor = Brushes.Azure;
 
-                SessionButtonText = "Start";
-                SessionButtonColor = Brushes.LightGreen;
-                EmergencyBreakEnabled = "False";
-                StatusText = "No active session for current patient.";
-                StatusTextColor = Brushes.Azure;
-
+                    SelectedPatient.InActiveSession = false;
+                }
+                
                 JsonObject summaryRequest = DoctorFormat.StatsSummaryMessage(SelectedPatient.Name);
-                await ClientConn.SendJson(summaryRequest);
+                // TODO uncomment in production
+                //await ClientConn.SendJson(summaryRequest);
             });
+        }
+
+        private Patient GetPatientByName(string name)
+        {
+            foreach (var patient in Patients)
+            {
+                if (patient.Name == name) return patient;
+            }
+            return null;
         }
         #endregion
     }
