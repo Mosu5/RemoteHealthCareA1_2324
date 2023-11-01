@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Utilities.Logging;
 using System.Text.Json;
+using System.Net.Security;
 
 namespace ServerApp
 {
@@ -24,6 +25,7 @@ namespace ServerApp
         public bool IsPaused { get; set; }
         public bool IsDoctor { get; set; }
         public TcpClient UserClient { get; set; }
+        public SslStream SslStream { get; set; }
 
         public UserAccount(string username, string password) 
         {

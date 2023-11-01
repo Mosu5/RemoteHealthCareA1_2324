@@ -2,7 +2,9 @@
 using PatientWPF.Utilities;
 using System;
 using System.Linq;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +15,8 @@ namespace PatientWPFApp.PatientLogic
         private static readonly Encoding _encoding = Encoding.ASCII;
 
         private static TcpClient _tcpClient;
-        private static NetworkStream _stream;
-
+        //private static NetworkStream _stream;
+        private static SslStream _sslStream;
         /// <summary>
         ///     Attempts to asynchronously connect to the server and establishes a NetworkStream that listens
         ///     to incoming messages.
@@ -26,13 +28,29 @@ namespace PatientWPFApp.PatientLogic
             if (_tcpClient != null && _tcpClient.Connected) return false;
 
             // Create new TcpClient and await the connection process to the server
-            _tcpClient = new TcpClient();
-            await _tcpClient.ConnectAsync(ipAddress, port);
+            _tcpClient = new TcpClient(ipAddress, port);
 
-            if (_tcpClient.Connected) _stream = _tcpClient.GetStream();
+            //await _tcpClient.ConnectAsync(ipAddress, port);
+            if (_tcpClient.Connected)
+            {
+                // if connected, we create the ssl stream and authenticate
+                    // else we return false;
+                _sslStream = new SslStream(_tcpClient.GetStream(), false, ValidateCertificate);
+                _sslStream.AuthenticateAsClient("localhost", null, System.Security.Authentication.SslProtocols.None, true);
+
+            }
 
             return _tcpClient.Connected;
         }
+
+        private static bool ValidateCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors errors)
+        {
+            //return true;
+            if (cert == null) return false;
+            if (cert.GetCertHashString().Equals("AA5684DC76E737B4EA33E5AB02A9BF39CA3A4961")) return true;
+            return false;
+        }
+       
 
         /// <summary>
         ///     Closes the TcpClient and NetworkStream.
@@ -42,7 +60,7 @@ namespace PatientWPFApp.PatientLogic
             // Return if not connected
             if (_tcpClient == null || !_tcpClient.Connected) return;
             _tcpClient.Close();
-            _stream.Close();
+            _sslStream.Close();
         }
 
         /// <summary>
@@ -65,7 +83,7 @@ namespace PatientWPFApp.PatientLogic
             // Concatenate payload to length data for the final message
             byte[] message = lengthData.Concat(payloadAsBytes).ToArray();
 
-            await _stream.WriteAsync(message, 0, message.Length);
+            await _sslStream.WriteAsync(message, 0, message.Length);
         }
 
         /// <summary>
@@ -84,7 +102,7 @@ namespace PatientWPFApp.PatientLogic
                 byte[] lengthArray = new byte[4];
 
                 // Read the first four bytes and put it in lengthArray
-                await _stream.ReadAsync(lengthArray, 0, lengthArray.Length);
+                await _sslStream.ReadAsync(lengthArray, 0, lengthArray.Length);
 
                 // Convert length to uint
                 uint length = BitConverter.ToUInt32(lengthArray, 0);
@@ -96,7 +114,7 @@ namespace PatientWPFApp.PatientLogic
                 while (totalBytesRead < length)
                 {
                     // Read the bytes that have just been received
-                    int bytesRead = await _stream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
+                    int bytesRead = await _sslStream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
                     totalBytesRead += bytesRead;
                 }
 

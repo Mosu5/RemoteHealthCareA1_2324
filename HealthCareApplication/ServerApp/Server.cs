@@ -2,8 +2,10 @@ using PatientWPF.Utilities.Encryption;
 using ServerApp.States;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +24,7 @@ namespace ServerApp
         };
 
         // TODO add possibility of multiple doctors connected at the same time
-        private static TcpClient _doctorClient;
+        private static SslStream _doctorSslStream;
 
         public static async Task Main(string[] args)
         {
@@ -36,6 +38,8 @@ namespace ServerApp
                     user.GetPassword();
                 
             }
+
+           
 
             // Start up listener for incoming connections
             ServerConn.StartListener("127.0.0.1", 8888);
@@ -51,20 +55,35 @@ namespace ServerApp
             }
         }
 
+
+        private static SslStream CreateSslStream(TcpClient client)
+        {
+            // Load the server's SSL certificate
+            X509Certificate2 serverCertificate = new X509Certificate2(ServerConn._certificatePath, ServerConn._certificatePassword);
+
+            // Create an SSL stream and authenticate the client
+            SslStream sslStream = new SslStream(client.GetStream(), false);
+            sslStream.AuthenticateAsServer(serverCertificate, false, SslProtocols.None, true);
+
+            return sslStream;
+        }
+
         /// <summary>
         /// Handles communication with a client by responding to it and sending messages to it.
         /// </summary>
         /// <param name="client">Object containing the concrete connection to the client</param>
         public static async Task HandlePatientAsync(TcpClient client)
         {
-            ServerContext serverContext = new ServerContext(client);
+
+            SslStream sslStream = CreateSslStream(client);
+            ServerContext serverContext = new ServerContext(client, sslStream);
 
             while (client.Connected)
             {
                 await Console.Out.WriteLineAsync($"Set server state to {serverContext.GetState()}. Looking for data...");
 
                 // Block until the client sends a message to the server
-                JsonObject data = await ServerConn.ReceiveJson(client);
+                JsonObject data = await ServerConn.ReceiveJson(sslStream);
 
                 // Dispose this thread when data is null, aka when the patient has disconnected.
                 if (data == null) return;
@@ -79,25 +98,25 @@ namespace ServerApp
                 {
                     // Create a new thread for handling the doctor
                     Thread doctorThread = new Thread(HandleDoctorAsync);
-                    doctorThread.Start(new object[] { serverContext, client });
+                    doctorThread.Start(new object[] { serverContext, client, sslStream });
 
                     // Send the response of the client
                     // TODO is this correct? Not .ResponseToDoctor?
-                    await ServerConn.SendJson(client, serverContext.ResponseToPatient);
+                    await ServerConn.SendJson(sslStream, serverContext.ResponseToPatient);
 
                     return; // Close this thread since the doctor has another thread
                 }
 
                 // Check if there was a message for the doctor. If so, send it.
-                if(_doctorClient != null && serverContext.ResponseToDoctor != null)
+                if(_doctorSslStream != null && serverContext.ResponseToDoctor != null)
                 {
                     await Console.Out.WriteLineAsync("Response to Doctor: " + serverContext.ResponseToDoctor.ToString());
-                    await ServerConn.SendJson(_doctorClient, serverContext.ResponseToDoctor);
+                    await ServerConn.SendJson(_doctorSslStream, serverContext.ResponseToDoctor);
                 }
 
                 // Send response according to updated server context
                 if (serverContext.ResponseToPatient != null)
-                    await ServerConn.SendJson(client, serverContext.ResponseToPatient);
+                    await ServerConn.SendJson(sslStream, serverContext.ResponseToPatient);
             }
         }
 
@@ -108,10 +127,11 @@ namespace ServerApp
         {
             object[] parameterArray = (object[])doctorParams;
             TcpClient tcpClient = parameterArray[1] as TcpClient;
-            _doctorClient = tcpClient;
+            SslStream doctorSslStream = parameterArray[2] as SslStream;
+            _doctorSslStream = doctorSslStream;
 
             // Doctor needs a list of patients in the server send this before handling any commands
-            await ServerConn.SendJson(_doctorClient, ResponseClientData.GenerateUsersInfo(Users));
+            await ServerConn.SendJson(_doctorSslStream, ResponseClientData.GenerateUsersInfo(Users));
 
             // TODO maybe make static
             DoctorHandler doctorHandler = new DoctorHandler(); 
@@ -119,7 +139,7 @@ namespace ServerApp
             while (tcpClient.Connected) 
             {
                 // Listen to messages from doctor
-                JsonObject data = await ServerConn.ReceiveJson(tcpClient);
+                JsonObject data = await ServerConn.ReceiveJson(doctorSslStream);
 
                 // Dispose this thread when data is null, aka when the doctor has disconnected.
                 if (data == null) return;
@@ -132,10 +152,10 @@ namespace ServerApp
                 UserAccount receivingPatient = GetUserByName(doctorHandler.PatientToRespondTo);
 
                 // Get the receiving patient's TcpClient
-                TcpClient patientToRespondTo = receivingPatient.UserClient;
+                SslStream patientSslStream = receivingPatient.SslStream;
 
                 // If so, then the doctor sent a request to a patient that is not logged in/does not exist.
-                if (patientToRespondTo == null)
+                if (patientSslStream == null)
                 {
                     // TODO better handle this edge case, the doctor still assumes that everything went well
                     return;
@@ -145,7 +165,8 @@ namespace ServerApp
                 JsonObject msgPayload = doctorHandler.ResponseValue;
 
                 // Send command from the DoctorWPFApp through server to the correct patient
-                await ServerConn.SendJson(patientToRespondTo, msgPayload);
+                await ServerConn.SendJson(patientSslStream, msgPayload);
+
             }
         }
 

@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Certificate.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="..\Utilities\Utilities.projitems" Label="Shared" />

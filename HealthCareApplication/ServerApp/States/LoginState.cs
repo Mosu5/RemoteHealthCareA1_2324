@@ -47,6 +47,7 @@ namespace ServerApp.States
 
                         // Associate the current TCPclient connecting with the currently logged in User
                         _context.GetUserAccount().UserClient = _context.tcpClient;
+                        _context.GetUserAccount().SslStream = _context.UserSslStream;
 
                         // Set the state to idle
                         return new SessionIdle(_context);

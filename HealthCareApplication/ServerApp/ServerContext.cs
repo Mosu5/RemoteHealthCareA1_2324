@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -19,11 +20,12 @@ namespace ServerApp.States
         public bool IsSessionActive { get; set; }
         public TcpClient tcpClient { get; set; }
         public List<UserStat> UserStatsBuffer;
+        public SslStream UserSslStream { get; set; }
 
         private IState currentState;
         private UserAccount _userAccount;
 
-        public ServerContext(TcpClient connectingClient)
+        public ServerContext(TcpClient connectingClient, SslStream sslStream)
         {
             // Set the current state to login and set session active to false
             currentState = new LoginState(this);
@@ -31,6 +33,7 @@ namespace ServerApp.States
 
             UserStatsBuffer = new List<UserStat>();
             tcpClient = connectingClient; // Save connecting client so the user can be associated with this client
+            UserSslStream = sslStream;
         }
 
         /// <summary>
