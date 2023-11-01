@@ -138,15 +138,15 @@ namespace PatientWPFApp.MVVM.ViewModel
                 LogType.Debug
             );
 
-            // Thread t = new Thread(() =>
-            //{
+           // Thread t = new Thread(() =>
+           //{
 
-            //    // Initialize BLE connection
-            //    DeviceManager.Initialize().Wait();
+               // Initialize BLE connection
+           DeviceManager.Initialize();
             //});
-            //t.Start();
+            // t.Start();
 
-           
+
 
 
             // Initialize VR environment
