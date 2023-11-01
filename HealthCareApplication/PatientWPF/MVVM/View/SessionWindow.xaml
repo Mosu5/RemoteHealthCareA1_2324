@@ -111,7 +111,7 @@
                 <Border BorderBrush="#444444" BorderThickness="1" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,10,0">
                     <TextBlock Name="CurrentHeartRateText" Text="0" TextAlignment="Left" Margin="5,2,0,2" Foreground="Crimson"/>
                 </Border>
-
+                  
                 <lvc:CartesianChart x:Name="StatChart" Grid.Row="4" Grid.ColumnSpan="2" Margin="5,0">
                     <lvc:CartesianChart.AxisX>
                         <lvc:Axis ShowLabels="False" />

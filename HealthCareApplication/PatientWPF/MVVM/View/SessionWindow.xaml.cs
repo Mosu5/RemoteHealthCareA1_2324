@@ -30,6 +30,7 @@ namespace PatientWPF.MVVM.View
             {
                 Values = new ChartValues<double>()
             };
+            speedGraph.PointGeometry = null;
             StatChart.Series.Add(speedGraph);
             _speedGraph = StatChart.Series[0] as LineSeries;
 
@@ -37,8 +38,11 @@ namespace PatientWPF.MVVM.View
             {
                 Values = new ChartValues<int>()
             };
+            heartRateGraph.PointGeometry = null;
             StatChart.Series.Add(heartRateGraph);
             _heartRateGraph = StatChart.Series[1] as LineSeries;
+
+
 
             PatientNameText.Text = patientName;
 
