@@ -427,6 +427,12 @@ namespace DoctorWPFApp.MVVM.ViewModel
                 SelectedPatient.ChatMessages.Add($"{SelectedPatient.Name}: {chatMessage}");
                 OnPropertyChanged(nameof(SelectedPatient));
             });
+            //Application.Current.Dispatcher.Invoke(() =>
+            //{
+            //    Patient patient = Patients.First(p => p.Name == chatSender);
+            //    patient.ChatMessages.Add($"{patient.Name}: {chatMessage}");
+            //    OnPropertyChanged(nameof(Patients));
+            //});
         }
         private void OnSessionStarted(object? sender, string username)
         {
