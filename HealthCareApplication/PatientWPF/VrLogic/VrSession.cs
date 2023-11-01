@@ -4,7 +4,6 @@ using System.Numerics;
 using System.Threading.Tasks;
 using PatientApp.VrLogic.Graphics;
 using Newtonsoft.Json.Linq;
-using Utilities;
 using Utilities.Communication;
 
 namespace PatientApp.VrLogic
@@ -412,6 +411,13 @@ namespace PatientApp.VrLogic
             return await VrCommunication.ReceiveJsonObject();
         }
 
+        public static async Task<JObject> HideRoute()
+        {
+            object hide = Formatting.RouteHide();
+            await VrCommunication.SendAsJson(Formatting.TunnelSend(_tunnelId, hide));
+            return await VrCommunication.ReceiveJsonObject();
+        }
+
         public static async Task<JObject> UpdateSpeed(string node, double speed)
         {
             object updateSpeedCommand = Formatting.RouteSpeed(node, speed);
@@ -454,7 +460,7 @@ namespace PatientApp.VrLogic
             int resolutionX = 512;
             int resolutionY = 512;
             bool castShadow = true;
-          
+
 
             object panelAddCommand = Formatting.PanelAdd(name, bikeId, position, rotation, sizeX, sizeY, resolutionX, resolutionY, castShadow);
             object tunnelMessage = Formatting.TunnelSend(_tunnelId, panelAddCommand);

@@ -47,7 +47,7 @@
 
                 <!-- Patient name -->
                 <TextBlock Text="Selected patient" Grid.Row="1" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,0,0,5"/>
-                <ComboBox Name="PatientSelection" Grid.Row="2" Margin="15,0,10,15" Grid.ColumnSpan="2" ItemsSource="{Binding Patients}" SelectedItem="{Binding SelectedPatient, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox Name="PatientSelection" Grid.Row="2" Margin="15,0,10,10" Grid.ColumnSpan="2" ItemsSource="{Binding Patients}" SelectedItem="{Binding SelectedPatient, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>
@@ -61,13 +61,13 @@
                 <Button Name="EmergencyButton" Command="{Binding EmergencyBreak}" Content="Emergency Break" Grid.Row="4" Grid.Column="1" Background="Red"  Padding="5 5" Margin="5,0" HorizontalAlignment="Stretch" FontWeight="DemiBold" IsEnabled="{Binding EmergencyBreakEnabled}" />
 
                 <!-- Trainer resistance -->
-                <TextBlock Text="Set trainer resistance (in integer %)" Grid.Row="5" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,20,0,5"/>
+                <TextBlock Text="Set trainer resistance (in integer %)" Grid.Row="5" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,10,0,5"/>
                 <TextBox Text="{Binding TrainerResistance}" Grid.Row="6" Grid.Column="0" Margin="15,0,5,0" />
                 <Button Name="SetResistanceButton" Command="{Binding SetResistance}" Grid.Row="6" Grid.Column="1" Margin="5,0,10,0" Content="Set" />
 
                 <!-- Exit program -->
-                <Button Name="StopExitButton" Command="{Binding StopExitCommand}" Click="StopExitButton_Click" Content="Stop and exit program" Grid.Row="7" Grid.ColumnSpan="2" Background=" #FAA0A0" HorizontalAlignment="Left" Padding="15,5" Margin="47,44,0,16" FontWeight="DemiBold" />
-                <Button Name="GetSummaryButton" Content="Get Summary" Command="{Binding GetSummaryCommand}" HorizontalAlignment="Left" Margin="47,5,0,0" Grid.Row="7" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="154" Height="22"/>
+                <Button Name="StopExitButton" Command="{Binding StopExitCommand}" Click="StopExitButton_Click" Content="Stop + exit" Grid.Row="7" Grid.Column="0" Background=" #FAA0A0" Padding="10,5" Margin="15" FontWeight="DemiBold" />
+                <Button Name="GetSummaryButton" Content="Get Summary" Command="{Binding GetSummaryCommand}" Grid.Row="7" VerticalAlignment="Top" Grid.Column="1" Margin="15" Padding="10,5"/>
             </Grid>
         </Border>
 

@@ -51,13 +51,13 @@
                 <Button Name="EmergencyButton" Command="{Binding EmergencyBreak}" Content="Emergency Break" Grid.Row="2" Grid.Column="1" Background="Red"  Padding="5 5" Margin="5,0" HorizontalAlignment="Stretch" FontWeight="DemiBold" IsEnabled="False" />
 
                 <!-- Trainer resistance -->
-                <TextBlock Text="Set trainer resistance (in integer %)" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,20,0,5"/>
+                <TextBlock Text="Set trainer resistance (in integer %)" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="DemiBold" Margin="15,10,0,5"/>
                 <TextBox Name="TrainerResistanceInput" Text="{Binding TrainerResistance}" Grid.Row="4" Grid.Column="0" Margin="15,0,5,0" />
                 <Button Name="SetResistanceButton" Command="{Binding SetResistance}" Click="SetResistanceButton_Click" Grid.Row="4" Grid.Column="1" Margin="5,0,10,0" Content="Set" />
 
                 <!-- Patient name -->
-                <TextBlock Text="Patient name:" Grid.Row="5" FontWeight="DemiBold" Margin="15,20,0,5"/>
-                <TextBlock Name="PatientNameText" Text="Loading..." Grid.Row="5" Grid.Column="1" Margin="15,20,0,5"/>
+                <TextBlock Text="Patient name:" Grid.Row="5" FontWeight="DemiBold" Margin="15,10,0,5"/>
+                <TextBlock Name="PatientNameText" Text="Loading..." Grid.Row="5" Grid.Column="1" Margin="15,10,0,5"/>
                 
                 <!-- Trainer connectivity -->
                 <TextBlock Text="Bike connection:" Grid.Row="6" FontWeight="DemiBold" Margin="15,10,0,5"/>

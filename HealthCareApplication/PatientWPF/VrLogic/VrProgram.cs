@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PatientApp.VrLogic.Graphics;
 using System;
 using System.Diagnostics;
@@ -220,6 +221,8 @@ namespace PatientApp.VrLogic
                  @"data\NetworkEngine\models\cars\generic\white.obj",
                  90
              );
+
+            await VrSession.HideRoute();
 
             Logger.Log("VR environment initialized", LogType.GeneralInfo);
             return true;

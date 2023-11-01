@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using Utilities.Communication;
 
 namespace DoctorWPFApp.Networking
 {

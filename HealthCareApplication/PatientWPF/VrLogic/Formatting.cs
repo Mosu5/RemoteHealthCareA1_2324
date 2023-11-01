@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using PatientApp.VrLogic.Graphics;
-using Utilities;
 using System;
 using System.Linq;
 using System.Numerics;
@@ -13,6 +12,9 @@ namespace PatientApp.VrLogic
     /// </summary>
     public class Formatting
     {
+        private static bool _goggleConnection = true;
+        private static string _cavePcName = "VR3";
+
         #region Connectivity
         public static object SessionListGet()
         {
@@ -374,6 +376,18 @@ namespace PatientApp.VrLogic
             };
         }
 
+        public static object RouteHide()
+        {
+            return new
+            {
+                id = "route/show",
+                data = new
+                {
+                    show = false
+                }
+            };
+        }
+
         public static object RouteFollow(string routeID, string nodeID, double speed)
         {
             return new
@@ -547,13 +561,21 @@ namespace PatientApp.VrLogic
             var sessionList = (JArray)serverResponse["data"];
             string sessionId = null;
 
+            string s = sessionList.ToString();
+
             foreach (var session in sessionList)
             {
                 var hostName = session?["clientinfo"]?["host"]?.ToString();
                 if (hostName == null || session?["id"] == null) continue;
 
-                if (hostName.Equals(Environment.MachineName, StringComparison.CurrentCultureIgnoreCase))
-                    sessionId = session?["id"]?.ToString();
+                if (_goggleConnection && hostName.Equals(_cavePcName))
+                {
+                    return session?["id"]?.ToString();
+                }
+                else if (hostName.Equals(Environment.MachineName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return session?["id"]?.ToString();
+                }
             }
 
             return sessionId;
