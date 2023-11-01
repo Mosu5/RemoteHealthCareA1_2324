@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.IO;
+using Utilities.Communication;
 
 namespace DoctorWPFApp.Networking
 {
