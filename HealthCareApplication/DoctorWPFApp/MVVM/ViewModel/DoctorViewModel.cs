@@ -352,6 +352,9 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
                 }
             }
+
+            // Set default value for patients
+            SelectedPatient = Patients[0];
         }
         /// <summary>
         /// Update the real-time data of the currently displayed patient
