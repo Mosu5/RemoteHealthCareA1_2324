@@ -24,7 +24,7 @@ namespace ServerApp
 
         public static void StartListener(string ipAddress, int port)
         {
-            _certificate = new X509Certificate2(_certificatePath, _certificatePassword);
+            _certificate = new X509Certificate2(_certificatePath, _certificatePassword, X509KeyStorageFlags.UserKeySet);
             _tcpListener = new TcpListener(IPAddress.Parse(ipAddress), port);
             _tcpListener.Start();
         }

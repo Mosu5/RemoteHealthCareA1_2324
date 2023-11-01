@@ -55,7 +55,9 @@ namespace DoctorWPFApp.Networking
                         ReceivedPatients?.Invoke(nameof(RequestHandler), usernames);
                         break;
                     case "chats/send":
-                        ReceivedChat?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "message").ToString());
+                        string username = DoctorFormat.GetKey(dataObject, "username").ToString();
+                        string chatMessage = DoctorFormat.GetKey(dataObject, "message").ToString();
+                        ReceivedChat?.Invoke(nameof(DoctorFormat), $"{username}: {chatMessage}");
                         break;
                     case "stats/send":
                         JsonObject statObject = DoctorFormat.GetKey(dataObject, "stats").AsObject();
@@ -65,7 +67,7 @@ namespace DoctorWPFApp.Networking
                         // Get the decimal value from the JsonObject
                         decimal originalValue = jsonDoc.RootElement.GetProperty("speed").GetDecimal();
 
-                        string username = DoctorFormat.GetKey(dataObject, "username").ToString();
+                        string statUsername = DoctorFormat.GetKey(dataObject, "username").ToString();
                         // Round the decimal value to two decimal places
                         decimal roundedValue = Math.Round(originalValue / 3.6M, 2);
 
@@ -74,8 +76,8 @@ namespace DoctorWPFApp.Networking
                             (double)roundedValue,
                             int.Parse(DoctorFormat.GetKey(statObject, "distance").ToString()),
                             int.Parse(DoctorFormat.GetKey(statObject, "heartrate").ToString()),
-                            username
-                        ));
+                            statUsername
+                        )); ;
                         break;
                     case "stats/summary":
                         ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "stats").ToString());
