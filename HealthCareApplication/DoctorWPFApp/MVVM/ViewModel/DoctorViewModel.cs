@@ -300,13 +300,16 @@ namespace DoctorWPFApp.MVVM.ViewModel
 
             TrainerResistance = "";
         });
-        public RelayCommand StopExitCommand => new(async (execute) =>
+        public RelayCommand StopExitCommand => new((execute) =>
         {
-            JsonObject stopMessage = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
-            await ClientConn.SendJson(stopMessage);
-
-            // TODO fix the server side issue of throwing an exception when the connection closes.
-            ClientConn.CloseConnection();
+            Thread t = new Thread(() =>
+            {
+                JsonObject stopMessage = DoctorFormat.SessionStopMessage(SelectedPatient.Name);
+                ClientConn.SendJson(stopMessage).Wait();
+                ClientConn.CloseConnection();
+            });
+            t.Start();
+            t.Join();
         });
         #endregion
 

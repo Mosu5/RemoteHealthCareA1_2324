@@ -99,11 +99,14 @@ namespace PatientWPF.MVVM.View
 
         private void StopExitButton_Click(object sender, RoutedEventArgs e)
         {
-            JObject stopMessage = PatientFormat.SessionStopMessage();
-            ClientConn.SendJson(stopMessage).Wait();
-
-            // TODO fix the server side issue of throwing an exception when the connection closes.
-            ClientConn.CloseConnection();
+            Thread t = new Thread(() =>
+            {
+                JObject stopMessage = PatientFormat.SessionStopMessage();
+                ClientConn.SendJson(stopMessage).Wait();
+                ClientConn.CloseConnection();
+            });
+            t.Start();
+            t.Join();
             Close();
         }
 

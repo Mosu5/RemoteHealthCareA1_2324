@@ -26,6 +26,8 @@ namespace PatientWPFApp.PatientLogic
 
             while (await ClientConn.ReceiveJson() is var message) // listening for message
             {
+                if (message == null) return;
+
                 Logger.Log($"Received: {message}", LogType.Debug);
 
                 // Get command and data field from message
