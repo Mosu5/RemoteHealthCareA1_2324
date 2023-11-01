@@ -42,7 +42,7 @@ namespace PatientWPF.MVVM.View
             StatChart.Series.Add(heartRateGraph);
             _heartRateGraph = StatChart.Series[1] as LineSeries;
 
-
+            DeviceManager.Initialize().Wait();
 
             PatientNameText.Text = patientName;
 
