@@ -64,6 +64,7 @@ namespace DoctorWPFApp.Networking
                         // Get the decimal value from the JsonObject
                         decimal originalValue = jsonDoc.RootElement.GetProperty("speed").GetDecimal();
 
+                        string username = DoctorFormat.GetKey(dataObject, "username").ToString();
                         // Round the decimal value to two decimal places
                         decimal roundedValue = Math.Round(originalValue / 3.6M, 2);
 
@@ -71,7 +72,8 @@ namespace DoctorWPFApp.Networking
                         (
                             (double)roundedValue,
                             int.Parse(DoctorFormat.GetKey(statObject, "distance").ToString()),
-                            int.Parse(DoctorFormat.GetKey(statObject, "heartrate").ToString())
+                            int.Parse(DoctorFormat.GetKey(statObject, "heartrate").ToString()),
+                            username
                         ));
                         break;
                     case "stats/summary":

@@ -391,10 +391,17 @@ namespace DoctorWPFApp.MVVM.ViewModel
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                SelectedPatient.Speed = Math.Round(stat.Speed * 3.6, 1);
-                SelectedPatient.Distance = stat.Distance;
-                SelectedPatient.HeartRate = stat.HeartRate;
+                Patient patient = Patients.FirstOrDefault(p => p.Name == stat.Username);
+
+                if (patient != null)
+                {
+                    patient.Speed = Math.Round(stat.Speed * 3.6, 1);
+                    patient.Distance = stat.Distance;
+                    patient.HeartRate = stat.HeartRate;
+                   
+                }
                 OnPropertyChanged(nameof(SelectedPatient));
+
             });
         }
         /// <summary>
