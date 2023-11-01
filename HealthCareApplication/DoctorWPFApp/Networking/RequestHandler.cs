@@ -20,8 +20,8 @@ namespace DoctorWPFApp.Networking
         public static event EventHandler<Statistic>? ReceivedStat;
         public static event EventHandler<string>? ReceivedChat;
         public static event EventHandler<string>? ReceivedSummary;
-        public static event EventHandler<bool> SessionStarted;
-        public static event EventHandler<bool> SessionStopped;
+        public static event EventHandler<string> SessionStarted;
+        public static event EventHandler<string> SessionStopped;
 
         public static async Task Listen()
         {
@@ -65,6 +65,7 @@ namespace DoctorWPFApp.Networking
                         // Get the decimal value from the JsonObject
                         decimal originalValue = jsonDoc.RootElement.GetProperty("speed").GetDecimal();
 
+                        string username = DoctorFormat.GetKey(dataObject, "username").ToString();
                         // Round the decimal value to two decimal places
                         decimal roundedValue = Math.Round(originalValue / 3.6M, 2);
 
@@ -72,17 +73,18 @@ namespace DoctorWPFApp.Networking
                         (
                             (double)roundedValue,
                             int.Parse(DoctorFormat.GetKey(statObject, "distance").ToString()),
-                            int.Parse(DoctorFormat.GetKey(statObject, "heartrate").ToString())
+                            int.Parse(DoctorFormat.GetKey(statObject, "heartrate").ToString()),
+                            username
                         ));
                         break;
                     case "stats/summary":
                         ReceivedSummary?.Invoke(nameof(DoctorFormat), DoctorFormat.GetKey(dataObject, "stats").ToString());
                         break;
                     case "session/start":
-                        SessionStarted?.Invoke(nameof(RequestHandler), true);
+                        SessionStarted?.Invoke(nameof(RequestHandler), DoctorFormat.GetKey(dataObject, "username").ToString());
                         break;
                     case "session/stop":
-                        SessionStopped?.Invoke(nameof(RequestHandler), true);                  
+                        SessionStopped?.Invoke(nameof(RequestHandler), DoctorFormat.GetKey(dataObject, "username").ToString());                  
                         break;
                     default:
                         Logger.Log($"Cannot process command '{command}'.", LogType.Warning);

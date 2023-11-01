@@ -13,14 +13,11 @@ namespace DoctorWPFApp.MVVM.Model
 
         public double Distance { get; set; }
         public double HeartRate {  get; set; }
-
+        public bool InActiveSession { get; set; } = false;
 
         // Historical Data / Logs
         public List<PatientData> PatientDataCollection { get; set; } = new();
 
         public ObservableCollection<string> ChatMessages { get; set; } = new();
-
-
-
     }
 }
