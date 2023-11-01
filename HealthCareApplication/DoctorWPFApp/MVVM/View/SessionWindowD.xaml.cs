@@ -1,5 +1,9 @@
 ﻿using System.Windows;
 using System.Threading.Tasks;
+using System.Threading;
+using DoctorWPFApp.Networking;
+using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 
 namespace DoctorWPFApp.MVVM.View
 {
@@ -9,16 +13,14 @@ namespace DoctorWPFApp.MVVM.View
     /// </summary>
     public partial class SessionWindowD : Window
     {
-
         public SessionWindowD()
         {
             InitializeComponent();
         }
 
-        private async void StopExitButton_Click(object sender, RoutedEventArgs e)
+        private void StopExitButton_Click(object sender, RoutedEventArgs e)
         {
-            // Small delay to wait for DoctorViewModel to send stop message, etc.
-            await Task.Delay(500);
+            Thread.Sleep(1000);
             Close();
         }
     }

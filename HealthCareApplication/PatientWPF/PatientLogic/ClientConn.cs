@@ -75,37 +75,44 @@ namespace PatientWPFApp.PatientLogic
         /// <exception cref="CommunicationException">When something goes wrong while receiving data from the server.</exception>
         public static async Task<JObject> ReceiveJson()
         {
-            if (_tcpClient == null || !_tcpClient.Connected)
-                throw new CommunicationException(
-                    "There is no active communication between the client application and the server.");
-
-            byte[] lengthArray = new byte[4];
-
-            // Read the first four bytes and put it in lengthArray
-            await _stream.ReadAsync(lengthArray, 0, lengthArray.Length);
-
-            // Convert length to uint
-            uint length = BitConverter.ToUInt32(lengthArray, 0);
-
-            byte[] payloadBuffer = new byte[length];
-            int totalBytesRead = 0;
-
-            // Read until amount of bytes read exceeds the length of the length variable
-            while (totalBytesRead < length)
+            try
             {
-                // Read the bytes that have just been received
-                int bytesRead = await _stream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
-                totalBytesRead += bytesRead;
+                if (_tcpClient == null || !_tcpClient.Connected)
+                    throw new CommunicationException(
+                        "There is no active communication between the client application and the server.");
+
+                byte[] lengthArray = new byte[4];
+
+                // Read the first four bytes and put it in lengthArray
+                await _stream.ReadAsync(lengthArray, 0, lengthArray.Length);
+
+                // Convert length to uint
+                uint length = BitConverter.ToUInt32(lengthArray, 0);
+
+                byte[] payloadBuffer = new byte[length];
+                int totalBytesRead = 0;
+
+                // Read until amount of bytes read exceeds the length of the length variable
+                while (totalBytesRead < length)
+                {
+                    // Read the bytes that have just been received
+                    int bytesRead = await _stream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
+                    totalBytesRead += bytesRead;
+                }
+
+                // Deserialize message
+                var messageAsString = _encoding.GetString(payloadBuffer, 0, totalBytesRead);
+                JObject deserializedMessage = JObject.Parse(messageAsString);
+
+                if (deserializedMessage == null)
+                    throw new CommunicationException("Something went wrong while receiving a message from the server.");
+
+                return deserializedMessage;
             }
-
-            // Deserialize message
-            var messageAsString = _encoding.GetString(payloadBuffer, 0, totalBytesRead);
-            JObject deserializedMessage = JObject.Parse(messageAsString);
-
-            if (deserializedMessage == null)
-                throw new CommunicationException("Something went wrong while receiving a message from the server.");
-
-            return deserializedMessage;
+            catch (ObjectDisposedException)
+            {
+                return null;
+            }
         }
     }
 }
