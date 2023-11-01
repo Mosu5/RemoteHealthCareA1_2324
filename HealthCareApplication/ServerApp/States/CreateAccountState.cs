@@ -35,20 +35,20 @@ namespace ServerApp.States
                 if (account.GetUserName() == username)
                 {
                     //context.ResponseToClient = AccCreationFailed("Username is already being used by an account. Please Login or use another username to create an account");
-                    _context.ResponseToPatient = ResponseDataForClient.GenerateResponse("create account", null, "error");
+                    _context.ResponseToPatient = ResponseClientData.GenerateResponse("create account", null, "error");
                     return new LoginState(_context);
                 }
                 else
                 {
                     //context.ResponseToClient = AccSuccesfullCreated();
-                    _context.ResponseToPatient = ResponseDataForClient.GenerateResponse("create account", null, "ok");
+                    _context.ResponseToPatient = ResponseClientData.GenerateResponse("create account", null, "ok");
                     Server.Users.Add(new UserAccount(username, password));
                     return new SessionIdle(_context);
                 }
             }
             //Account Creation Failed so it stays in CreateAccountState
             //context.ResponseToClient = AccCreationFailed("Account creation Failed because");
-            _context.ResponseToPatient = ResponseDataForClient.GenerateResponse("create account", null, "error");
+            _context.ResponseToPatient = ResponseClientData.GenerateResponse("create account", null, "error");
             return this;
         }
     }
