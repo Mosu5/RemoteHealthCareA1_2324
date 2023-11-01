@@ -46,12 +46,6 @@ namespace PatientWPF.MVVM.View
             RequestHandler.SessionStopped += OnSessionStopped;
             RequestHandler.ReceivedResistance += OnReceivedResistance;
             RequestHandler.SummaryRequested += OnSummaryRequested;
-
-            DeviceManager.BikeConnected += OnBikeConnected;
-            DeviceManager.HrmConnected += OnHrmConnected;
-
-            // Initialize BLE connection
-            //DeviceManager.Initialize().Wait();
         }
 
         private async void ToggleSessionButton_Click(object sender, RoutedEventArgs e)
@@ -108,30 +102,6 @@ namespace PatientWPF.MVVM.View
             t.Start();
             t.Join();
             Close();
-        }
-
-        private void OnBikeConnected(object _, bool isBle)
-        {
-            if (isBle)
-            {
-                BikeConnectivityText.Text = "Bluetooth";
-            }
-            else
-            {
-                BikeConnectivityText.Text = "None (simulated)";
-            }
-        }
-
-        private void OnHrmConnected(object _, bool isBle)
-        {
-            if (isBle)
-            {
-                HrmConnectivityText.Text = "Bluetooth";
-            }
-            else
-            {
-                HrmConnectivityText.Text = "None (simulated)";
-            }
         }
 
         private async void OnReceiveData(object _, Statistic stat)

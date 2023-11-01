@@ -125,6 +125,28 @@ namespace PatientWPFApp.MVVM.ViewModel
             await ClientConn.SendJson(chatSend);
         });
 
+        private string _bikeConnectivityText;
+        public string BikeConnectivityText
+        {
+            get { return _bikeConnectivityText; }
+            set
+            {
+                _bikeConnectivityText = value;
+                OnPropertyChanged(nameof(BikeConnectivityText));
+            }
+        }
+
+        private string _hrmConnectivityText;
+        public string HrmConnectivityText
+        {
+            get { return _hrmConnectivityText; }
+            set
+            {
+                _hrmConnectivityText = value;
+                OnPropertyChanged(nameof(HrmConnectivityText));
+            }
+        }
+
         public PatientViewModel()
         {
             // Logger will log if LogType is present
@@ -138,37 +160,23 @@ namespace PatientWPFApp.MVVM.ViewModel
                 LogType.Debug
             );
 
-           // Thread t = new Thread(() =>
-           //{
-
-               // Initialize BLE connection
-           DeviceManager.Initialize();
-            //});
-            // t.Start();
-
-
-
+            DeviceManager.BikeConnected += OnBikeConnected;
+            DeviceManager.HrmConnected += OnHrmConnected;
 
             // Initialize VR environment
             Thread vrThread = new Thread(() =>
             {
-                try
-                {
-                    if (!VrProgram.Initialize().Result)
-                        MessageBox.Show("Could not load VR environment.\nCheck wether you are running NetworkEngine (sim.bat)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                catch(Exception e)
-                {
-
-                    throw e;
-                    //// Connection with VR failed, too bad we keep on going lol
-                    //MessageBox.Show("Failed to establish connection to VR...", "Big OOF", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    //return;
-                }
-               
+                if (!VrProgram.Initialize().Result)
+                    MessageBox.Show("Could not load VR environment.\nCheck wether you are running NetworkEngine (sim.bat)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             });
             vrThread.Start();
             vrThread.Join();
+
+            Thread t = new Thread(() =>
+            {
+                DeviceManager.Initialize().Wait();
+            });
+            t.Start();
 
             // Listen for requests
             Thread listenerThread = new Thread(async () => await RequestHandler.Listen());
@@ -202,6 +210,30 @@ namespace PatientWPFApp.MVVM.ViewModel
                 PatientChats.Add(chatMessage);
                 OnPropertyChanged(nameof(PatientChats));
             });
+        }
+
+        private void OnBikeConnected(object _, bool isBle)
+        {
+            if (isBle)
+            {
+                BikeConnectivityText = "Bluetooth";
+            }
+            else
+            {
+                BikeConnectivityText = "None (simulated)";
+            }
+        }
+
+        private void OnHrmConnected(object _, bool isBle)
+        {
+            if (isBle)
+            {
+                HrmConnectivityText = "Bluetooth";
+            }
+            else
+            {
+                HrmConnectivityText = "None (simulated)";
+            }
         }
     }
 }

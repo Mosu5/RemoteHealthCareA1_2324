@@ -61,11 +61,11 @@
                 
                 <!-- Trainer connectivity -->
                 <TextBlock Text="Bike connection:" Grid.Row="6" FontWeight="DemiBold" Margin="15,10,0,5"/>
-                <TextBlock Name="BikeConnectivityText" Text="Loading..." Grid.Row="6" Grid.Column="1" Margin="15,10,0,5"/>
+                <TextBlock Text="{Binding BikeConnectivityText}" Grid.Row="6" Grid.Column="1" Margin="15,10,0,5"/>
 
                 <!-- HRM connectivity -->
                 <TextBlock Text="HRM connection:" Grid.Row="7" FontWeight="DemiBold" Margin="15,10,0,5"/>
-                <TextBlock Name="HrmConnectivityText" Text="Loading..." Grid.Row="7" Grid.Column="1" Margin="15,10,0,5"/>
+                <TextBlock Text="{Binding HrmConnectivityText}" Grid.Row="7" Grid.Column="1" Margin="15,10,0,5"/>
 
                 <!-- Exit program -->
                 <Button Name="StopExitButton" Click="StopExitButton_Click" Content="Stop and exit program" Grid.Row="8" Grid.ColumnSpan="2" Background=" #FAA0A0" HorizontalAlignment="Center" Padding="15,5" Margin="0 10" FontWeight="DemiBold" />
