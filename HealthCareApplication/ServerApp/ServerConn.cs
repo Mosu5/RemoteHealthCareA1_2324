@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Net;
 using Utilities.Communication;
+using System.IO;
 
 namespace ServerApp
 {
@@ -52,31 +53,39 @@ namespace ServerApp
         /// <exception cref="CommunicationException">When something goes wrong while receiving data from the VR server.</exception>
         public static async Task<JsonObject> ReceiveJson(TcpClient client)
         {
-            NetworkStream clientStream = client.GetStream();
-            byte[] lengthArray = new byte[4];
-
-            // Read the first four bytes and put it in lengthArray
-            await clientStream.ReadAsync(lengthArray, 0, lengthArray.Length);
-
-            // Convert length to uint
-            uint length = BitConverter.ToUInt32(lengthArray, 0);
-
-            byte[] payloadBuffer = new byte[length];
-            int totalBytesRead = 0;
-
-            // Read until amount of bytes read exceeds the length of the length variable
-            while (totalBytesRead < length)
+            try
             {
-                // Read the bytes that have just been received
-                int bytesRead = await clientStream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
-                totalBytesRead += bytesRead;
+                NetworkStream clientStream = client.GetStream();
+                byte[] lengthArray = new byte[4];
+
+                // Read the first four bytes and put it in lengthArray
+                await clientStream.ReadAsync(lengthArray, 0, lengthArray.Length);
+
+                // Convert length to uint
+                uint length = BitConverter.ToUInt32(lengthArray, 0);
+
+                byte[] payloadBuffer = new byte[length];
+                int totalBytesRead = 0;
+
+                // Read until amount of bytes read exceeds the length of the length variable
+                while (totalBytesRead < length)
+                {
+                    // Read the bytes that have just been received
+                    int bytesRead = await clientStream.ReadAsync(payloadBuffer, totalBytesRead, payloadBuffer.Length - totalBytesRead);
+                    totalBytesRead += bytesRead;
+                }
+
+                // Deserialize message
+                var messageAsString = _encoding.GetString(payloadBuffer, 0, totalBytesRead);
+                JsonObject deserializedMessage = JsonSerializer.Deserialize<JsonObject>(messageAsString)?.AsObject();
+
+                return deserializedMessage;
             }
-
-            // Deserialize message
-            var messageAsString = _encoding.GetString(payloadBuffer, 0, totalBytesRead);
-            JsonObject deserializedMessage = JsonSerializer.Deserialize<JsonObject>(messageAsString)?.AsObject();
-
-            return deserializedMessage;
+            catch (IOException)
+            {
+                Console.WriteLine("A client has disconnected.");
+                return null;
+            }
         }
     }
 }

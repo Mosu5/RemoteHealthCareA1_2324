@@ -66,6 +66,9 @@ namespace ServerApp
                 // Block until the client sends a message to the server
                 JsonObject data = await ServerConn.ReceiveJson(client);
 
+                // Dispose this thread when data is null, aka when the patient has disconnected.
+                if (data == null) return;
+
                 await Console.Out.WriteLineAsync($"Client ({client.Client.RemoteEndPoint}) sent: {data}");
 
                 // Update the server context, it might transition to a new state.
@@ -117,6 +120,9 @@ namespace ServerApp
             {
                 // Listen to messages from doctor
                 JsonObject data = await ServerConn.ReceiveJson(tcpClient);
+
+                // Dispose this thread when data is null, aka when the doctor has disconnected.
+                if (data == null) return;
 
                 // Determine the data for the patient by the doctor handler.
                 // If the data was malformed, go to the next iteration of the while loop.
