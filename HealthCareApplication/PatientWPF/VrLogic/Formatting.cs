@@ -12,7 +12,7 @@ namespace PatientApp.VrLogic
     /// </summary>
     public class Formatting
     {
-        private static bool _goggleConnection = false;
+        private static bool _goggleConnection = true;
         private static string _cavePcName = "VR3";
 
         #region Connectivity
