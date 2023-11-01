@@ -172,10 +172,12 @@ namespace PatientWPFApp.MVVM.ViewModel
             vrThread.Start();
             vrThread.Join();
 
-            //Thread t = new Thread(() =>
-            //{
-            //});
-            //t.Start();
+            Thread t = new Thread(() =>
+            {
+                Thread.Sleep(500);
+                DeviceManager.Initialize().Wait();
+            });
+            t.Start();
 
             // Listen for requests
             Thread listenerThread = new Thread(async () => await RequestHandler.Listen());
