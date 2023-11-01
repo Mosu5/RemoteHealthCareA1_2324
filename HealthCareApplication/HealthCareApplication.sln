@@ -1,19 +1,14 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeConnection", "BikeConnection\BikeConnection.csproj", "{8A040D3B-BD57-4003-9C6E-ACD47E3903AB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VRConnection", "VRConnection\VRConnection.csproj", "{CC84E220-1049-4D69-8111-FD0B64220CDA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientApp", "PatientApp\PatientApp.csproj", "{5821A55F-3D57-4980-B30F-804D3C633471}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerApp", "ServerApp\ServerApp.csproj", "{AC0094F7-68F6-47DD-84E1-D45A52889FE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorApp", "DoctorApp\DoctorApp.csproj", "{5872C8BD-0523-4EE1-B8DC-8C1452D4ACC9}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utilities", "Utilities\Utilities.shproj", "{4043F5E6-1029-4579-847F-717671096DE6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoctorWPFApp", "DoctorWPFApp\DoctorWPFApp.csproj", "{CED67010-5975-43B8-A85F-96E8452F5FB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientWPF", "PatientWPF\PatientWPF.csproj", "{63D1A443-EEB4-483E-9974-BF9E9808754B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,26 +16,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8A040D3B-BD57-4003-9C6E-ACD47E3903AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A040D3B-BD57-4003-9C6E-ACD47E3903AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A040D3B-BD57-4003-9C6E-ACD47E3903AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A040D3B-BD57-4003-9C6E-ACD47E3903AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC84E220-1049-4D69-8111-FD0B64220CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC84E220-1049-4D69-8111-FD0B64220CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC84E220-1049-4D69-8111-FD0B64220CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC84E220-1049-4D69-8111-FD0B64220CDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5821A55F-3D57-4980-B30F-804D3C633471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5821A55F-3D57-4980-B30F-804D3C633471}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5821A55F-3D57-4980-B30F-804D3C633471}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5821A55F-3D57-4980-B30F-804D3C633471}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC0094F7-68F6-47DD-84E1-D45A52889FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC0094F7-68F6-47DD-84E1-D45A52889FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC0094F7-68F6-47DD-84E1-D45A52889FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC0094F7-68F6-47DD-84E1-D45A52889FE3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5872C8BD-0523-4EE1-B8DC-8C1452D4ACC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5872C8BD-0523-4EE1-B8DC-8C1452D4ACC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5872C8BD-0523-4EE1-B8DC-8C1452D4ACC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5872C8BD-0523-4EE1-B8DC-8C1452D4ACC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED67010-5975-43B8-A85F-96E8452F5FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63D1A443-EEB4-483E-9974-BF9E9808754B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63D1A443-EEB4-483E-9974-BF9E9808754B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63D1A443-EEB4-483E-9974-BF9E9808754B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63D1A443-EEB4-483E-9974-BF9E9808754B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,8 +37,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Utilities\Utilities.projitems*{4043f5e6-1029-4579-847f-717671096de6}*SharedItemsImports = 13
-		Utilities\Utilities.projitems*{5821a55f-3d57-4980-b30f-804d3c633471}*SharedItemsImports = 4
-		Utilities\Utilities.projitems*{5872c8bd-0523-4ee1-b8dc-8c1452d4acc9}*SharedItemsImports = 4
+		Utilities\Utilities.projitems*{63d1a443-eeb4-483e-9974-bf9e9808754b}*SharedItemsImports = 5
 		Utilities\Utilities.projitems*{ac0094f7-68f6-47dd-84e1-d45a52889fe3}*SharedItemsImports = 4
+		Utilities\Utilities.projitems*{ced67010-5975-43b8-a85f-96e8452f5fb2}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

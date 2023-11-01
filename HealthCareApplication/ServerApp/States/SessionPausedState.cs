@@ -1,16 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Nodes;
 
 namespace ServerApp.States
 {
     internal class SessionPausedState : IState
     {
-        public void Handle()
+        private readonly ServerContext _context;
+
+        public SessionPausedState(ServerContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public IState Handle(JsonObject packet)
+        {
+            //Getting needed values from the packet
+            string command = JsonUtil.GetValueFromPacket(packet, "command").ToString();
+
+            //checking if the command equals session/pause
+            if (command == "session/resume")
+            {
+                _context.GetUserAccount().IsPaused = false;
+                _context.GetUserAccount().HasActiveSession = true;
+                _context.ResponseToPatient = ResponseClientData.GenerateResponse("session/resume", null, "ok");
+                _context.IsSessionActive = true;
+                return new SessionActiveState(_context);
+            }
+            return this;
         }
     }
 }

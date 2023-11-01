@@ -1,0 +1,26 @@
+﻿<Window x:Class="DoctorWPFApp.MVVM.View.LoginWindowD"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DoctorWPFApp.MVVM.View.Components" 
+        xmlns:local1="clr-namespace:DoctorWPFApp.MVVM.ViewModel"
+        xmlns:viewmodel="clr-namespace:DoctorWPFApp.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:DoctorViewModel}"
+        mc:Ignorable="d"
+        Title="Login - DoctorApp" ResizeMode="NoResize" Height="450" Width="800">
+
+    <Window.DataContext>
+        <local1:DoctorViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <!-- Username Box -->
+        <Label Content="Gebruikersnaam" HorizontalAlignment="Left" Margin="214,86,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.264,0.472" Background="White" FontWeight="Bold"/>
+        <TextBox Name="gbBox" Text="{Binding Username}" HorizontalAlignment="Center" Margin="0,117,0,0" VerticalAlignment="Top" Width="372" Height="40" FontSize="20"/>
+        <!-- Password Box -->
+        <Label Content="Wachtwoord" HorizontalAlignment="Left" Margin="214,186,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <local:BindablePasswordBox x:Name="passwordBox" Password="{Binding Password}"/>
+        <!-- Login Button -->
+        <Button Name="loginBtn" Content="Login" HorizontalAlignment="Left" Margin="214,295,0,0" VerticalAlignment="Top" Height="37" Width="148" Background="#FFABF98C" Command="{Binding LoginCommand}" />
+    </Grid>
+</Window>

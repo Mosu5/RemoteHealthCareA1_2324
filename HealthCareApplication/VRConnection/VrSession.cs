@@ -1,13 +1,7 @@
-using System.Drawing;
 using System.Numerics;
 using System.Text.Json.Nodes;
-using System.Xml.Linq;
 using VRConnection.Communication;
 using VRConnection.Graphics;
-using System;
-using System.IO;
-using System.Text.Json;
-using Newtonsoft.Json.Linq;
 
 namespace VRConnection;
 
@@ -166,6 +160,15 @@ public class VrSession
         await VrCommunication.SendAsJson(tunnelMessage);
         return await VrCommunication.ReceiveJsonObject();
     }
+    public async Task<JsonObject> UpdateSkybox(String rt, String lf, String up, String dn, String bk, String ft)
+    {
+        object setSkyCommand = Formatting.SkyboxUpdate(rt, lf, up, dn, bk, ft);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, setSkyCommand);
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
+    }
+
     #endregion
 
     #region Terrain
@@ -174,9 +177,9 @@ public class VrSession
     /// with the height map generated using Perlin noise.
     /// </summary>
     /// <returns>A string concatenation of all responses sent by the server while creating the terrain.</returns>
-    public async Task<string> AddHillTerrain(int length, int width, Vector3 position, Vector3 rotation)
+    public async Task<string> AddHillTerrain(int length, int width, Vector3 position, Vector3 rotation, int height)
     {
-        float[] heightMap = PerlinNoiseGenerator.GenerateHeightMap(20);
+        float[] heightMap = PerlinNoiseGenerator.GenerateHeightMap(height);
 
         JsonObject terrainData = await AddTerrainData(length, width, heightMap);
         JsonObject terrainNode = await AddTerrainNode(position, rotation);
@@ -257,13 +260,13 @@ public class VrSession
     /// <param name="position">position array containing x, y, z</param>
     /// <param name="scale">ses scaling of model</param>
     /// <param name="fileName"> filepath of the obj file of the model</param>
-    public async Task<JsonObject> AddModelOnTerrain(string name, Vector3 position, double scale, string fileName)
+    public async Task<JsonObject> AddModelOnTerrain(string name, Vector3 position, double scale, string fileName, int rotation)
     {
         // Get height of terrain at position
         var heightJson = await GetTerrainHeight(position);
         position.Y = heightJson; // set height of model to height of terrain
 
-        var modelAddCommand = Formatting.Add3DObject(name, position, scale, fileName);
+        var modelAddCommand = Formatting.Add3DObject(name, position, scale, fileName, rotation);
         var tunnelMessage = Formatting.TunnelSend(_tunnelId, modelAddCommand);
 
         await VrCommunication.SendAsJson(tunnelMessage);
@@ -313,8 +316,9 @@ public class VrSession
             var modelAddCommand = Formatting.Add3DObject(
                 $"tree{i}",
                 position,
-                1,
-                @"data\NetworkEngine\models\trees\fantasy\tree7.obj"
+                1.5,
+                @"data\NetworkEngine\models\trees\fantasy\tree7.obj",
+                0
             );
 
             var tunnelMessage = Formatting.TunnelSend(_tunnelId, modelAddCommand);
@@ -324,6 +328,30 @@ public class VrSession
         }
 
         return jsonResponses; // return array of json responses
+    }
+
+    /// <summary>
+    /// Put head on bike
+    /// </summary>
+    /// <param name="cameraID"> ID of camera</param> 
+    /// <param name="bikeID"> ID of bike </param>
+    /// <returns> Response from server </returns>
+    public async Task<JsonObject> HeadOnBike(string cameraID, string bikeID)
+    {
+        object headOnBike = Formatting.SceneNodeUpdate(cameraID, bikeID);
+        object tunnelMessage = Formatting.TunnelSend(_tunnelId, headOnBike);
+        
+        //TODO move to another method
+        string headId = await GetNodeId("Head");
+        Vector3 rotation = new Vector3(0, 0,0);
+        object turnHead = Formatting.SceneNodeUpdate(headId, rotation);
+        object tunnelMessage1 = Formatting.TunnelSend(_tunnelId, headOnBike);
+
+        await VrCommunication.SendAsJson(tunnelMessage1);
+        await VrCommunication.ReceiveJsonObject();
+
+        await VrCommunication.SendAsJson(tunnelMessage);
+        return await VrCommunication.ReceiveJsonObject();
     }
     #endregion
 
@@ -350,6 +378,7 @@ public class VrSession
         return routeId;
     }
 
+
     /// <summary>
     /// Let an object follow the route
     /// </summary>
@@ -372,12 +401,10 @@ public class VrSession
     public async Task<JsonObject> AddRoad(string routeId)
     {
         // command data
-        string normal = @"data\NetworkEngine\textures\terrain\ground_cracked_n.jpg";
-        string diffuse = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
-        string specular = @"data\NetworkEngine\textures\terrain\ground_mud2_s.jpg";
+        string normal = @"data\NetworkEngine\textures\terrain\ground_mud2_d.jpg";
 
         // create command and send to VR
-        object roadAddCommand = Formatting.RoadAdd(routeId, diffuse, normal, specular);
+        object roadAddCommand = Formatting.RoadAdd(routeId, normal);
         object tunnelMessage = Formatting.TunnelSend(_tunnelId, roadAddCommand);
 
         await VrCommunication.SendAsJson(tunnelMessage);
@@ -405,37 +432,9 @@ public class VrSession
         return await VrCommunication.ReceiveJsonObject();
     }
     
-    public async Task<JsonObject> AddText()
+    public async Task<JsonObject> AddText(string text)
     {
         string panelID = await GetNodeId("panel1");
-        string text = "";
-        string line;
-        string textsuper = "";
-        using (StreamReader fileReader = File.OpenText(@"C:\temp\mytest1.json"))
-        {
-                line = fileReader.ReadLine();
-            
-                // Parse each line as a JSON object
-                JObject jsonObject = JObject.Parse(line);
-
-                // Access properties in the JSON object
-                string dataType = jsonObject["DataType"].ToString();
-                JToken valueToken = jsonObject["Value"];
-
-                if (valueToken.Type == JTokenType.Float)
-                {
-                    double value = (double)valueToken;
-                    text = $"DataType: {dataType}, Value: {value}";
-                    Console.WriteLine(text);
-                }
-                else if (valueToken.Type == JTokenType.Array)
-                {
-                    int[] valueArray = valueToken.ToObject<int[]>();
-                    text = $"DataType: {dataType}, Value (Array): [{string.Join(", ", valueArray)}]";
-                    Console.WriteLine(text);
-                }
-                
-        }
         
       object textAddCommand = Formatting.TextAdd(panelID, text);
       object tunnelMessage = Formatting.TunnelSend(_tunnelId, textAddCommand);

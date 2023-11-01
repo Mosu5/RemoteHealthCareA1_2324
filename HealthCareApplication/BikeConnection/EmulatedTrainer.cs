@@ -123,7 +123,7 @@ namespace BikeConnection
         {
             this.elapsedTime++;
             this.distance++;
-            ResetDistance();//Check the 
+            //ResetDistance();//Check the 
             if (elapsedTime % 5 == 0)//Changes terrain each 5 secs
             {
                 currentTerrain = (TerrainType)random.Next(0, 3);
