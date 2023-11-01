@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using Utilities.Logging;
+using Utilities.Communication;
 
 namespace DoctorWPFApp.Networking
 {
