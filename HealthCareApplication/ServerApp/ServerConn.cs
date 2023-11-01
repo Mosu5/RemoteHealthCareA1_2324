@@ -9,7 +9,6 @@ using System.Net;
 using Utilities.Communication;
 using System.IO;
 using System.Net.Security;
-using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ServerApp

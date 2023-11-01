@@ -22,7 +22,7 @@ namespace ServerApp.States
          
             if (command == "stats/send")
             {
-                float speed = (float)Math.Round(double.Parse(JsonUtil.GetValueFromPacket(packet, "data", "speed").ToString()), 2);
+                float speed = (float)Math.Round(double.Parse(JsonUtil.GetValueFromPacket(packet, "data", "speed").ToString()) /10d, 2);
                 int distance = int.Parse(JsonUtil.GetValueFromPacket(packet, "data", "distance").ToString());
                 byte heartRate = byte.Parse(JsonUtil.GetValueFromPacket(packet, "data", "heartrate").ToString());
 
