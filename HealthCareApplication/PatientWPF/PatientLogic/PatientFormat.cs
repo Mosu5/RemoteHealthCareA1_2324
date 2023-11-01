@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using PatientApp.DeviceConnection;
-using PatientWPF.Utilities;
+using Utilities;
 using System;
+using Utilities.Communication;
 
 namespace PatientWPFApp.PatientLogic
 {
