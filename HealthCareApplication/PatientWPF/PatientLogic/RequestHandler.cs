@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
-using PatientWPF.Utilities;
+using Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities.Logging;
+using Utilities.Communication;
 
 namespace PatientWPFApp.PatientLogic
 {

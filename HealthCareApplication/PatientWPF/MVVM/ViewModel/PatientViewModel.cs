@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PatientApp.DeviceConnection;
 using PatientApp.VrLogic;
-using PatientWPF.Utilities.Encryption;
+using Utilities.Encryption;
 using PatientWPFApp.PatientLogic;
 using System;
 using System.Collections.ObjectModel;

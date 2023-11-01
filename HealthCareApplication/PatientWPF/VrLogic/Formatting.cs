@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using PatientApp.VrLogic.Graphics;
-using PatientWPF.Utilities;
+using Utilities;
 using System;
 using System.Linq;
 using System.Numerics;
+using Utilities.Communication;
 
 namespace PatientApp.VrLogic
 {

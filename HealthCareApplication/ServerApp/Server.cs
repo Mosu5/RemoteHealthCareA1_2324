@@ -1,4 +1,4 @@
-using PatientWPF.Utilities.Encryption;
+using Utilities.Encryption;
 using ServerApp.States;
 using System;
 using System.Collections.Generic;

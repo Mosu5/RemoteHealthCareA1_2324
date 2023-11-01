@@ -6,33 +6,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatientWPF.Utilities.Encryption
+namespace Utilities.Encryption
 {
     /// <summary>
     /// Class used for encryption, decryption and comparison of values
     /// </summary>
     public static class Encryption
     {
-
-        public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)
-        {
-            HashAlgorithm algorithm = new SHA256Managed();
-
-            byte[] plainTextWithSaltBytes =
-              new byte[plainText.Length + salt.Length];
-
-            for (int i = 0; i < plainText.Length; i++)
-            {
-                plainTextWithSaltBytes[i] = plainText[i];
-            }
-            for (int i = 0; i < salt.Length; i++)
-            {
-                plainTextWithSaltBytes[plainText.Length + i] = salt[i];
-            }
-
-            return algorithm.ComputeHash(plainTextWithSaltBytes);
-        }
-
         public static string ComputeSha256Hash(string rawData)
         {
             // Create a SHA256
@@ -50,27 +30,5 @@ namespace PatientWPF.Utilities.Encryption
                 return builder.ToString();
             }
         }
-
-
-        public static bool CompareValues(byte[] array1, byte[] array2)
-        {
-            if (array1.Length != array2.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < array1.Length; i++)
-            {
-                if (array1[i] != array2[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-
-
     }
 }

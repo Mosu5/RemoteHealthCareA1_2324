@@ -1,7 +1,7 @@
 ﻿using DoctorWPFApp.MVVM.Model;
 using DoctorWPFApp.Networking;
 using Newtonsoft.Json;
-using PatientWPF.Utilities.Encryption;
+using Utilities.Encryption;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

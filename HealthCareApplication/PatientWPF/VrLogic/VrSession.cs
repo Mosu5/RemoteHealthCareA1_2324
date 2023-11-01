@@ -4,7 +4,8 @@ using System.Numerics;
 using System.Threading.Tasks;
 using PatientApp.VrLogic.Graphics;
 using Newtonsoft.Json.Linq;
-using PatientWPF.Utilities;
+using Utilities;
+using Utilities.Communication;
 
 namespace PatientApp.VrLogic
 {
