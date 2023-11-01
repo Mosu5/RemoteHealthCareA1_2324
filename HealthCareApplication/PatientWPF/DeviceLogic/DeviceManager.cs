@@ -24,7 +24,7 @@ namespace PatientApp.DeviceConnection
         /// </summary>
         public static async Task Initialize()
         {
-            Receiver = new EmulatedReceiver();
+            Receiver = new BLEReceiver();
 
             // Subscribe to the receiver's events.
             Receiver.ReceivedSpeed += OnReceiveSpeed;
